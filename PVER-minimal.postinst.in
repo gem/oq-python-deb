@@ -11,13 +11,13 @@ fi
 
 case "$1" in
     configure)
-        # Create empty directories in /usr/local
-        if [ ! -e /opt/openquake/usr/local/lib/@OPVER@ ]; then
-            mkdir -p /opt/openquake/usr/local/lib/@OPVER@ 2> /dev/null || true
-            chmod 2775 /opt/openquake/usr/local/lib/@OPVER@ 2> /dev/null || true
-            chown root:staff /opt/openquake/usr/local/lib/@OPVER@ 2> /dev/null || true
+        # Create empty directories in /usr
+        if [ ! -e /opt/openquake/usr/lib/@OPVER@ ]; then
+            mkdir -p /opt/openquake/usr/lib/@OPVER@ 2> /dev/null || true
+            chmod 2775 /opt/openquake/usr/lib/@OPVER@ 2> /dev/null || true
+            chown root:staff /opt/openquake/usr/lib/@OPVER@ 2> /dev/null || true
         fi
-	localsite=/opt/openquake/usr/local/lib/@OPVER@/dist-packages
+	localsite=/opt/openquake/usr/lib/@OPVER@/dist-packages
         if [ ! -e $localsite ]; then
             mkdir -p $localsite 2> /dev/null || true
             chmod 2775 $localsite 2> /dev/null || true
