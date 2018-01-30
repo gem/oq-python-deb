@@ -1,0 +1,17 @@
+Index: b/Python/pyhash.c
+===================================================================
+--- a/Python/pyhash.c
++++ b/Python/pyhash.c
+@@ -384,7 +384,12 @@ siphash24(const void *src, Py_ssize_t sr
+     PY_UINT8_T *m;
+ 
+     while (src_sz >= 8) {
++#if defined(__ARM_EABI__) && defined(__ARMEL__)
++        PY_UINT64_T mi;
++        memcpy(&mi, in, sizeof(PY_UINT64_T));
++#else   
+         PY_UINT64_T mi = _le64toh(*in);
++#endif
+         in += 1;
+         src_sz -= 8;
+         v3 ^= mi;
