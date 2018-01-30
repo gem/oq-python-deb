@@ -31,8 +31,8 @@ distutils-init.diff
 tempfile-minimal.diff
 disable-some-tests.diff
 # issue21264.diff
-ensurepip-wheels.diff
-ensurepip-disabled.diff
+# ensurepip-wheels.diff
+# ensurepip-disabled.diff
 mpdecimal-version.diff
 mangle-fstack-protector.diff
 reproducible-buildinfo.diff
@@ -42,3 +42,4 @@ pyhash.diff
 lib2to3-no-pgen-caching.diff
 bpo-27945.diff
 CVE-2017-1000158.patch
+use_deb_schema_for_pip_install

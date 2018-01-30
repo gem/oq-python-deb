@@ -1,6 +1,7 @@
 #! /bin/sh
 
 set -e
+set -x
 
 if [ ! -f /etc/@PVER@/sitecustomize.py ]; then
     cat <<-EOF
@@ -11,12 +12,12 @@ fi
 case "$1" in
     configure)
         # Create empty directories in /usr/local
-        if [ ! -e /usr/local/lib/@PVER@ ]; then
-            mkdir -p /usr/local/lib/@PVER@ 2> /dev/null || true
-            chmod 2775 /usr/local/lib/@PVER@ 2> /dev/null || true
-            chown root:staff /usr/local/lib/@PVER@ 2> /dev/null || true
+        if [ ! -e /opt/openquake/usr/local/lib/@OPVER@ ]; then
+            mkdir -p /opt/openquake/usr/local/lib/@OPVER@ 2> /dev/null || true
+            chmod 2775 /opt/openquake/usr/local/lib/@OPVER@ 2> /dev/null || true
+            chown root:staff /opt/openquake/usr/local/lib/@OPVER@ 2> /dev/null || true
         fi
-	localsite=/usr/local/lib/@PVER@/dist-packages
+	localsite=/opt/openquake/usr/local/lib/@OPVER@/dist-packages
         if [ ! -e $localsite ]; then
             mkdir -p $localsite 2> /dev/null || true
             chmod 2775 $localsite 2> /dev/null || true
@@ -35,17 +36,17 @@ if [ "$1" = configure ]; then
     # only available before removal of the packaging package
     rm -f /etc/@PVER@/sysconfig.cfg
 
-    if ls -L /usr/lib/@PVER@/sitecustomize.py >/dev/null 2>&1; then
+    if ls -L /opt/openquake/usr/lib/@OPVER@/sitecustomize.py >/dev/null 2>&1; then
 	filt='cat'
     else
 	filt='fgrep -v sitecustomize.py'
     fi
     files=$(dpkg -L lib@PVER@-minimal@HOST_QUAL@ \
-		| sed -n '/^\/usr\/lib\/@PVER@\/.*\.py$/p' | $filt)
+		| sed -n '/^\/opt\/openquake\/usr\/lib\/@OPVER@\/.*\.py$/p' | $filt)
     if [ -n "$files" ]; then
-	/usr/bin/@PVER@ -E -S /usr/lib/@PVER@/py_compile.py $files
+	/opt/openquake/usr/bin/@OPVER@ -E -S /opt/openquake/usr/lib/@OPVER@/py_compile.py $files
 	if grep -sq '^byte-compile[^#]*optimize' /etc/python/debian_config; then
-	    /usr/bin/@PVER@ -E -S -O /usr/lib/@PVER@/py_compile.py $files
+	    /opt/openquake/usr/bin/@OPVER@ -E -S -O /opt/openquake/usr/lib/@OPVER@/py_compile.py $files
 	fi
     else
 	echo >&2 "@PVER@-minimal: can't get files for byte-compilation"
@@ -55,7 +56,7 @@ if [ "$1" = configure ]; then
     #    || [ -f /var/lib/python/@PVER@_installed ]; then
     #	bc=yes
     #fi
-    if ! grep -sq '^supported-versions[^#]*@PVER@' /usr/share/python/debian_defaults
+    if ! grep -sq '^supported-versions[^#]*@OPVER@' /usr/share/python/debian_defaults
     then
 	# FIXME: byte compile anyway?
 	bc=no
@@ -66,7 +67,7 @@ if [ "$1" = configure ]; then
 	    echo "Linking and byte-compiling packages for runtime @PVER@..."
 	fi
 	version=$(dpkg -s @PVER@-minimal | awk '/^Version:/ {print $2}')
-	for hook in /usr/share/python3/runtime.d/*.rtinstall; do
+	for hook in /opt/openquake/usr/share/python3/runtime.d/*.rtinstall; do
 	    [ -x $hook ] || continue
 	    $hook rtinstall @PVER@ "$2" "$version"
 	done

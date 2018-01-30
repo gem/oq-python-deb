@@ -70,7 +70,8 @@ distrelease  := $(shell lsb_release -cs)
 VER=3.5
 SVER=3.5.0~b1
 NVER=3.6
-PVER=python$(VER)
+OPVER=python$(VER)
+PVER=oq-python$(VER)
 EXT_VER=$(subst .,,$(VER))
 PRIORITY=$(shell echo $(VER) | tr -d '.')0
 
@@ -101,7 +102,7 @@ with_tk := no
 with_interp := static
 #with_interp := shared
 
-PY_INTERPRETER = /usr/bin/python$(VER)
+PY_INTERPRETER = /opt/openquake/usr/bin/python$(VER)
 
 ifeq ($(DEFAULT_VERSION),yes)
   PY_PRIO = standard
@@ -315,12 +316,12 @@ stamps/stamp-build-shared-debug: stamps/stamp-configure-shared-debug
 	touch stamps/stamp-build-shared-debug
 
 common_configure_args = \
-		--prefix=/usr \
+		--prefix=/opt/openquake/usr \
 		--enable-ipv6 \
 		--enable-loadable-sqlite-extensions \
 		--with-dbmliborder=bdb:gdbm \
 		--with-computed-gotos \
-		--without-ensurepip \
+		--with-ensurepip \
 		--with-system-expat \
 		--with-system-libmpdec \
 
@@ -669,7 +670,8 @@ stamps/stamp-build-doc: stamps/stamp-doc-html
 	touch stamps/stamp-build-doc
 
 control-file:
-	sed -e "s/@PVER@/$(PVER)/g" \
+	sed -e "s/@OPVER@/$(OPVER)/g" \
+	    -e "s/@PVER@/$(PVER)/g" \
 	    -e "s/@VER@/$(VER)/g" \
 	    -e "s/@PYSTDDEP@/$(PYSTDDEP)/g" \
 	    -e "s/@PRIO@/$(PY_PRIO)/g" \
@@ -714,7 +716,7 @@ clean: control-file
 	rm -rf $(TEST_DIR) debian/testdir
 
 	for f in debian/*.in; do \
-	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
+	  f2=`echo $$f | sed "s,OPVER,$(OPVER),g;s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
 	  if [ $$f2 != debian/control ] && [ $$f2 != debian/source.lintian-overrides ]; then \
 	    rm -f $$f2; \
 	  fi; \
@@ -726,9 +728,9 @@ stamps/stamp-control:
 	: # We have to prepare the various control files
 
 	for f in debian/*.in; do \
-	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
+	  f2=`echo $$f | sed "s,OPVER,$(OPVER),g;s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
 	  if [ $$f2 != debian/control ]; then \
-	    sed -e "s/@PVER@/$(PVER)/g;s/@VER@/$(VER)/g;s/@SVER@/$(SVER)/g" \
+	    sed -e "s/@OPVER@/$(OPVER)/g;s/@PVER@/$(PVER)/g;s/@VER@/$(VER)/g;s/@SVER@/$(SVER)/g" \
 		    -e "s/@PRIORITY@/$(PRIORITY)/g" \
 		    -e "s,@SCRIPTDIR@,/$(scriptdir),g" \
 		    -e "s,@INFO@,$(info_docs),g" \
@@ -757,7 +759,7 @@ stamps/stamp-install: stamps/stamp-build control-file stamps/stamp-control
 
 	: # make install into tmp and subsequently move the files into
 	: # their packages' directories.
-	install -d $(d)/usr
+	install -d $(d)/opt/openquake/usr
 ifeq ($(with_interp),static)
 	$(MAKE) -C $(buildd_static) install DESTDIR=$(CURDIR)/$(d)
 	sed -e '/^OPT/s,-O3,-O2,' \
@@ -765,109 +767,110 @@ ifeq ($(with_interp),static)
 	    -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
 	    -e '/BLDLIBRARY/s/-L\. //' \
 		$(buildd_shared)/$(shell cat $(buildd_shared)/pybuilddir.txt)/_sysconfigdata.py \
-		> $(d)/$(scriptdir)/_sysconfigdata.py
+		> $(d)/opt/openquake/$(scriptdir)/_sysconfigdata.py
 else
 	$(MAKE) -C $(buildd_shared) install DESTDIR=$(CURDIR)/$(d)
 endif
-	mkdir -p $(d)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)m
-	mv $(d)/usr/include/$(PVER)m/pyconfig.h \
-		$(d)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)m/.
-	rm -f $(d)/$(scriptdir)/lib-dynload/*.py
+	echo "MOP5-$(CURDIR)/$(d)/opt/openquake"
+	mkdir -p $(d)/opt/openquake/usr/include/$(DEB_HOST_MULTIARCH)/$(OPVER)m
+	mv $(d)/opt/openquake/usr/include/$(OPVER)m/pyconfig.h \
+		$(d)/opt/openquake/usr/include/$(DEB_HOST_MULTIARCH)/$(OPVER)m/.
+	rm -f $(d)/opt/openquake/$(scriptdir)/lib-dynload/*.py
 	sed -i 's/ -O3 / -O2 /g;s/$(LTO_CFLAGS)//g;s/-fprofile-use *-fprofile-correction//g' \
-		$(d)/$(scriptdir)/_sysconfigdata.py
-	mkdir -p $(d)/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)
-	mv $(d)/$(scriptdir)/_sysconfigdata.py \
-	  $(d)/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_m.py
-	cp -p debian/_sysconfigdata.py $(d)/$(scriptdir)/
+		$(d)/opt/openquake/$(scriptdir)/_sysconfigdata.py
+	mkdir -p $(d)/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)
+	mv $(d)/opt/openquake/$(scriptdir)/_sysconfigdata.py \
+	  $(d)/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_m.py
+	cp -p debian/_sysconfigdata.py $(d)/opt/openquake/$(scriptdir)/
 
 	: # work around issue 24226
 	sed -i 's/^\(def[^:]*:\) *\(.*\)/\1\n    \2/' \
-	  $(d)/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/IN.py
+	  $(d)/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/IN.py
 
-	-find $(d)/usr/lib/python$(VER) -name '*_failed*.so'
-	find $(d)/usr/lib/python$(VER) -name '*_failed*.so' | xargs -r rm -f
+	-find $(d)/opt/openquake/usr/lib/python$(VER) -name '*_failed*.so'
+	find $(d)/opt/openquake/usr/lib/python$(VER) -name '*_failed*.so' | xargs -r rm -f
 
-	for i in $(d)/$(scriptdir)/lib-dynload/*.so; do \
+	for i in $(d)/opt/openquake/$(scriptdir)/lib-dynload/*.so; do \
 	  case "$$i" in *$(DEB_HOST_MULTIARCH)*) continue; esac; \
 	  b=$$(basename $$i .cpython-$(EXT_VER)m.so); \
 	  d=$${b}.cpython-$(EXT_VER)m-$(DEB_HOST_MULTIARCH).so; \
-	  mv $$i $(d)/$(scriptdir)/lib-dynload/$$d; \
+	  mv $$i $(d)/opt/openquake/$(scriptdir)/lib-dynload/$$d; \
 	done
 
-	mv $(d)/usr/lib/libpython*.a $(d)/usr/lib/$(DEB_HOST_MULTIARCH)/
+	mv $(d)/opt/openquake/usr/lib/libpython*.a $(d)/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/
 
-	mkdir -p $(d)/usr/lib/python3
-	mv $(d)/usr/lib/python$(VER)/site-packages \
-		$(d)/usr/lib/python3/dist-packages
-	rm -f $(d)/usr/lib/python3/dist-packages/README
+	mkdir -p $(d)/opt/openquake/usr/lib/python3
+	mv $(d)/opt/openquake/usr/lib/python$(VER)/site-packages \
+		$(d)/opt/openquake/usr/lib/python3/dist-packages
+	rm -f $(d)/opt/openquake/usr/lib/python3/dist-packages/README
 
 	: # remove files, which are not packaged
-	rm -rf $(d)/usr/lib/python$(VER)/ctypes/macholib
-	rm -f $(d)/$(scriptdir)/plat-*/regen
-	rm -f $(d)/$(scriptdir)/lib2to3/*.pickle
-	rm -f $(d)/usr/share/man/man1/python3.1
+	rm -rf $(d)/opt/openquake/usr/lib/python$(VER)/ctypes/macholib
+	rm -f $(d)/opt/openquake/$(scriptdir)/plat-*/regen
+	rm -f $(d)/opt/openquake/$(scriptdir)/lib2to3/*.pickle
+	rm -f $(d)/opt/openquake/usr/share/man/man1/python3.1
 
-	if [ -d $(d)/$(scriptdir)/ensurepip/_bundled ]; then \
-	  echo "don't ship the prebuilt ensurepip/_bundled wheels."; \
-	  rm -rf $(d)/$(scriptdir)/ensurepip/_bundled; \
-	fi
-
-	: # cannot build it, zlib maintainer won't provide a mingw build
-	find $(d) -name 'wininst*.exe' | xargs -r rm -f
-
-	: # fix some file permissions
-	chmod a-x $(d)/$(scriptdir)/{runpy,fractions,lib2to3/refactor,tkinter/tix}.py
-	chmod a-x $(d)/$(scriptdir)/test/test_pathlib.py
-
-#	: # move manpages to new names
-#	if [ -d $(d)/usr/man/man1 ]; then \
-#	    mkdir -p $(d)/usr/share/man
-#	    mv $(d)/usr/man/man1/* $(d)/usr/share/man/man1/; \
-#	    rm -rf $(d)/usr/man/; \
+#	if [ -d $(d)/opt/openquake/$(scriptdir)/ensurepip/_bundled ]; then \
+#	  echo "don't ship the prebuilt ensurepip/_bundled wheels."; \
+#	  rm -rf $(d)/opt/openquake/$(scriptdir)/ensurepip/_bundled; \
 #	fi
 
-	mkdir -p $(d)/usr/share/man/man1
-	cp -p Misc/python.man $(d)/usr/share/man/man1/python$(VER).1
-	ln -sf python$(VER).1 $(d)/usr/share/man/man1/python$(VER)m.1
-	cp -p debian/pydoc.1 $(d)/usr/share/man/man1/pydoc$(VER).1
+	: # cannot build it, zlib maintainer won't provide a mingw build
+	find $(d)/opt/openquake -name 'wininst*.exe' | xargs -r rm -f
+
+	: # fix some file permissions
+	chmod a-x $(d)/opt/openquake/$(scriptdir)/{runpy,fractions,lib2to3/refactor,tkinter/tix}.py
+	chmod a-x $(d)/opt/openquake/$(scriptdir)/test/test_pathlib.py
+
+#	: # move manpages to new names
+#	if [ -d $(d)/opt/openquake/usr/man/man1 ]; then \
+#	    mkdir -p $(d)/opt/openquake/usr/share/man
+#	    mv $(d)/opt/openquake/usr/man/man1/* $(d)/opt/openquake/usr/share/man/man1/; \
+#	    rm -rf $(d)/opt/openquake/usr/man/; \
+#	fi
+
+	mkdir -p $(d)/opt/openquake/usr/share/man/man1
+	cp -p Misc/python.man $(d)/opt/openquake/usr/share/man/man1/python$(VER).1
+	ln -sf python$(VER).1 $(d)/opt/openquake/usr/share/man/man1/python$(VER)m.1
+	cp -p debian/pydoc.1 $(d)/opt/openquake/usr/share/man/man1/pydoc$(VER).1
 
 	: # Symlinks to /usr/bin for some tools
-	ln -sf ../lib/python$(VER)/pdb.py $(d)/usr/bin/pdb$(VER)
-	cp -p debian/pdb.1 $(d)/usr/share/man/man1/pdb$(VER).1
-	cp -p debian/2to3-3.1 $(d)/usr/share/man/man1/2to3-$(VER).1
-	cp -p debian/pysetup3.1 $(d)/usr/share/man/man1/pysetup$(VER).1
-	cp -p debian/pyvenv3.1 $(d)/usr/share/man/man1/pyvenv-$(VER).1
+	ln -sf ../lib/python$(VER)/pdb.py $(d)/opt/openquake/usr/bin/pdb$(VER)
+	cp -p debian/pdb.1 $(d)/opt/openquake/usr/share/man/man1/pdb$(VER).1
+	cp -p debian/2to3-3.1 $(d)/opt/openquake/usr/share/man/man1/2to3-$(VER).1
+	cp -p debian/pysetup3.1 $(d)/opt/openquake/usr/share/man/man1/pysetup$(VER).1
+	cp -p debian/pyvenv3.1 $(d)/opt/openquake/usr/share/man/man1/pyvenv-$(VER).1
 
 	: # versioned install only
-	rm -f $(d)/usr/bin/{2to3,idle3,pydoc3,pysetup3,python3,python3-config}
-	rm -f $(d)/usr/lib/*/pkgconfig/python3.pc
+	: # rm -f $(d)/opt/openquake/usr/bin/{2to3,idle3,pydoc3,pysetup3,python3,python3-config}
+	: # rm -f $(d)/opt/openquake/usr/lib/*/pkgconfig/python3.pc
 
 	dh_installdirs -p$(p_lib) \
-		usr/lib/$(DEB_HOST_MULTIARCH) \
-		$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH) \
+		opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH) \
+		opt/openquake/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH) \
 		usr/share/doc
 	: # install the shared library
 	cp -p $(buildd_shared)/libpython$(VER)m.so.1.0 \
-		$(d_lib)/usr/lib/$(DEB_HOST_MULTIARCH)/
+		$(d_lib)/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/
 	dh_link -p$(p_lib) \
-	    /usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so.1.0 \
-		/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so.1 \
-	    /usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so.1 \
-		/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so \
-	    /usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so.1 \
-		/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/libpython$(VER).so
+	    /opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so.1.0 \
+		/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so.1 \
+	    /opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so.1 \
+		/opt/openquake/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so \
+	    /opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so.1 \
+		/opt/openquake/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/libpython$(VER).so
 
 	ln -sf $(p_base) $(d_lib)/usr/share/doc/$(p_lib)
 
-	ln -sf libpython$(VER)m.so.1 $(d)/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so
+	ln -sf libpython$(VER)m.so.1 $(d)/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.so
 
 ifeq ($(with_interp),shared)
 	: # install the statically linked runtime
-	install -m755 $(buildd_static)/python $(d)/usr/bin/python$(VER)-static
+	install -m755 $(buildd_static)/python $(d)/opt/openquake/usr/bin/python$(VER)-static
 endif
 
-	cp -p Tools/i18n/pygettext.py $(d)/usr/bin/pygettext$(VER)
-	cp -p debian/pygettext.1 $(d)/usr/share/man/man1/pygettext$(VER).1
+	cp -p Tools/i18n/pygettext.py $(d)/opt/openquake/usr/bin/pygettext$(VER)
+	cp -p debian/pygettext.1 $(d)/opt/openquake/usr/share/man/man1/pygettext$(VER).1
 
 	: # install the Makefile of the shared python build
 	sed -e '/^OPT/s,-O3,-O2,' \
@@ -875,45 +878,45 @@ endif
 	    -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
 	    -e '/BLDLIBRARY/s/-L\. //' \
 		$(buildd_shared)/Makefile \
-		> $(d)/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/Makefile
+		> $(d)/opt/openquake/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/Makefile
 
 	: # Move the minimal libraries into $(p_lmin).
 	dh_installdirs -p$(p_lmin) \
 		etc/$(PVER) \
-		usr/bin \
-		usr/share/man/man1 \
-		$(scriptdir)/lib-dynload
-	-cd $(d); for i in $(MIN_EXTS); do \
+		opt/openquake/usr/bin \
+		opt/openquake/usr/share/man/man1 \
+		opt/openquake/$(scriptdir)/lib-dynload
+	-cd $(d)/opt/openquake; for i in $(MIN_EXTS); do \
 			test -e $(scriptdir)/lib-dynload/$$i.*.so \
 			  && echo $(scriptdir)/lib-dynload/$$i.*.so; \
 		  done
 
 	$(dh_compat2) dh_movefiles -p$(p_lmin) --sourcedir=$(d) \
-		$(foreach i,$(MIN_MODS),$(scriptdir)/$(i).py) \
-		$(foreach i,$(MIN_PACKAGES),$(scriptdir)/$(i)) \
-		$(foreach i,$(MIN_ENCODINGS),$(scriptdir)/$(i)) \
-		$(scriptdir)/site.py \
-		$(scriptdir)/_sysconfigdata.py \
-		$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_m.py \
+		$(foreach i,$(MIN_MODS),opt/openquake/$(scriptdir)/$(i).py) \
+		$(foreach i,$(MIN_PACKAGES),opt/openquake/$(scriptdir)/$(i)) \
+		$(foreach i,$(MIN_ENCODINGS),opt/openquake/$(scriptdir)/$(i)) \
+		opt/openquake/$(scriptdir)/site.py \
+		opt/openquake/$(scriptdir)/_sysconfigdata.py \
+		opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_m.py \
 		`cd $(d); for i in $(MIN_EXTS); do \
-			test -e $(scriptdir)/lib-dynload/$$i.*.so \
-			  && echo $(scriptdir)/lib-dynload/$$i.*.so; \
+			test -e opt/openquake/$(scriptdir)/lib-dynload/$$i.*.so \
+			  && echo opt/openquake/$(scriptdir)/lib-dynload/$$i.*.so; \
 		  done`
-	ls -l  $(d_lmin)/$(scriptdir)/lib-dynload/*.so
+	ls -l  $(d_lmin)/opt/openquake/$(scriptdir)/lib-dynload/*.so
 
 	: # Move the binary into $(p_min).
 	dh_installdirs -p$(p_min) \
-		usr/bin \
-		usr/share/man/man1
+		opt/openquake/usr/bin \
+		opt/openquake/usr/share/man/man1
 	$(dh_compat2) dh_movefiles -p$(p_min) --sourcedir=$(d) \
-		usr/bin/python$(VER) \
-		usr/bin/python$(VER)m \
-		usr/share/man/man1/python$(VER).1 \
-		usr/share/man/man1/python$(VER)m.1
+		opt/openquake/usr/bin/python$(VER) \
+		opt/openquake/usr/bin/python$(VER)m \
+		opt/openquake/usr/share/man/man1/python$(VER).1 \
+		opt/openquake/usr/share/man/man1/python$(VER)m.1
 
 	rv=0; \
 	for i in $(MIN_EXTS); do \
-	  if [ -f $(d)/$(scriptdir)/lib-dynload/$$i.so ]; then \
+	  if [ -f $(d)/opt/openquake/$(scriptdir)/lib-dynload/$$i.so ]; then \
 	    echo >&2 "extension $$i not mentioned in Setup.dist"; \
 	    rv=1; \
 	  fi; \
@@ -923,132 +926,132 @@ endif
 	: # Install sitecustomize.py
 	cp -p debian/sitecustomize.py $(d_lmin)/etc/$(PVER)/
 	dh_link -p$(p_lmin) \
-		/etc/$(PVER)/sitecustomize.py /$(scriptdir)/sitecustomize.py
+		/etc/$(PVER)/sitecustomize.py /opt/openquake/$(scriptdir)/sitecustomize.py
 
 	: # Move the static library and the header files into $(p_dev).
-#	mv $(d)/usr/share/include/python$(VER)/* $(d)/usr/include/python$(VER)/.
-#	rm -rf $(d)/usr/share/include
+#	mv $(d)/opt/openquake/usr/share/include/python$(VER)/* $(d)/opt/openquake/usr/include/python$(VER)/.
+#	rm -rf $(d)/opt/openquake/usr/share/include
 
-	cp $(d)/usr/bin/$(PVER)m-config $(d)/usr/bin/$(DEB_HOST_MULTIARCH)-$(PVER)m-config
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)m-config $(d)/usr/bin/$(DEB_HOST_MULTIARCH)-$(PVER)-config
+	cp $(d)/opt/openquake/usr/bin/$(OPVER)m-config $(d)/opt/openquake/usr/bin/$(DEB_HOST_MULTIARCH)-$(OPVER)m-config
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)m-config $(d)/opt/openquake/usr/bin/$(DEB_HOST_MULTIARCH)-$(OPVER)-config
 
 	dh_installdirs -p$(p_ldev) \
-		usr/bin \
-		$(scriptdir) \
-		usr/include \
-		usr/share/man/man1
+		opt/openquake/usr/bin \
+		opt/openquake/$(scriptdir) \
+		opt/openquake/usr/include \
+		opt/openquake/usr/share/man/man1
 
 	$(dh_compat2) dh_movefiles -p$(p_ldev) --sourcedir=$(d) \
-		usr/bin/$(DEB_HOST_MULTIARCH)-$(PVER)*-config \
-		usr/lib/python$(VER)/config-$(VER)m-$(DEB_HOST_MULTIARCH) \
-		usr/include \
-		usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.{a,so} \
-		usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER)*.pc \
-		usr/lib/python$(VER)/distutils/command/wininst-*.exe
+		opt/openquake/usr/bin/$(DEB_HOST_MULTIARCH)-$(OPVER)*-config \
+		opt/openquake/usr/lib/python$(VER)/config-$(VER)m-$(DEB_HOST_MULTIARCH) \
+		opt/openquake/usr/include \
+		opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.{a,so} \
+		opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER)*.pc \
+		opt/openquake/usr/lib/python$(VER)/distutils/command/wininst-*.exe
 
-	sed 's/@subdir@/$(PVER)m/;s/@header@/pyconfig.h/' \
-		debian/multiarch.h.in > $(d_ldev)/usr/include/$(PVER)m/pyconfig.h
+	sed 's/@subdir@/$(OPVER)m/;s/@header@/pyconfig.h/' \
+		debian/multiarch.h.in > $(d_ldev)/opt/openquake/usr/include/$(OPVER)m/pyconfig.h
 
 	sed -i \
 	    -e '/^Cflags:/s,$$, -I$${includedir}/$(DEB_HOST_MULTIARCH)/python$(VER)m,' \
 	    -e '/^libdir=/d;s/-L\$${libdir} *//' \
-		$(d_ldev)/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER).pc
+		$(d_ldev)/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER).pc
 
 	dh_link -p$(p_ldev) \
-	    /usr/lib/$(PVER)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/libpython$(VER)m.a \
-		/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.a
+	    /opt/openquake/usr/lib/$(OPVER)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/libpython$(VER)m.a \
+		/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)m.a
 
 	cp -p $(buildd_shared)/libpython$(VER)m-pic.a \
-		$(d_ldev)/usr/lib/python$(VER)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/
+		$(d_ldev)/opt/openquake/usr/lib/python$(VER)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/
 
 	: # symlinks for the "old" include directory name
-	ln -sf python$(VER)m $(d_ldev)/usr/include/python$(VER)
+	ln -sf python$(VER)m $(d_ldev)/opt/openquake/usr/include/python$(VER)
 
 	dh_installdirs -p$(p_dev) \
-		usr/share/doc/python$(VER) \
-		usr/share/man/man1 \
-		$(scriptdir) \
-		$(scriptdir)/doc/html
+		usr/share/doc/$(PVER) \
+		opt/openquake/usr/share/man/man1 \
+		opt/openquake/$(scriptdir) \
+		opt/openquake/$(scriptdir)/doc/html
 	cp -p Misc/HISTORY Misc/README.valgrind Misc/gdbinit \
 		debian/README.maintainers \
 		debian/test_results $(buildd_static)/pybench.log \
-	    $(d_dev)/usr/share/doc/python$(VER)/
+	    $(d_dev)/usr/share/doc/$(PVER)/
 
 	$(dh_compat2) dh_movefiles -p$(p_dev) --sourcedir=$(d) \
-		usr/bin/python$(VER)*-config
+		opt/openquake/usr/bin/python$(VER)*-config
 
 	: # in $(p_ldev), prefix python-config with triplets
 	cp -p debian/python3-config.1 \
-		$(d_ldev)/usr/share/man/man1/$(DEB_HOST_MULTIARCH)-$(PVER)m-config.1
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)m-config.1.gz \
-		$(d_ldev)/usr/share/man/man1/$(DEB_HOST_MULTIARCH)-$(PVER)-config.1.gz
+		$(d_ldev)/opt/openquake/usr/share/man/man1/$(DEB_HOST_MULTIARCH)-$(OPVER)m-config.1
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)m-config.1.gz \
+		$(d_ldev)/opt/openquake/usr/share/man/man1/$(DEB_HOST_MULTIARCH)-$(OPVER)-config.1.gz
 ifneq ($(DEB_HOST_MULTIARCH),$(DEB_HOST_GNU_TYPE))
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)m-config \
-		$(d_ldev)/usr/bin/$(DEB_HOST_GNU_TYPE)-$(PVER)m-config
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)-config \
-		$(d_ldev)/usr/bin/$(DEB_HOST_GNU_TYPE)-$(PVER)-config
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)-config.1.gz \
-		$(d_ldev)/usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-$(PVER)-config.1.gz
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)-config.1.gz \
-		$(d_ldev)/usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-$(PVER)m-config.1.gz
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)m-config \
+		$(d_ldev)/opt/openquake/usr/bin/$(DEB_HOST_GNU_TYPE)-$(OPVER)m-config
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)-config \
+		$(d_ldev)/opt/openquake/usr/bin/$(DEB_HOST_GNU_TYPE)-$(OPVER)-config
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)-config.1.gz \
+		$(d_ldev)/opt/openquake/usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-$(OPVER)-config.1.gz
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)-config.1.gz \
+		$(d_ldev)/opt/openquake/usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-$(OPVER)m-config.1.gz
 endif
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)m-config $(d_dev)/usr/bin/$(PVER)m-config
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)m-config.1.gz $(d_dev)/usr/share/man/man1/$(PVER)m-config.1.gz
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)m-config $(d_dev)/opt/openquake/usr/bin/$(OPVER)m-config
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)m-config.1.gz $(d_dev)/opt/openquake/usr/share/man/man1/$(OPVER)m-config.1.gz
 
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)-config $(d_dev)/usr/bin/$(PVER)-config
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)-config.1.gz $(d_dev)/usr/share/man/man1/$(PVER)-config.1.gz
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)-config $(d_dev)/opt/openquake/usr/bin/$(OPVER)-config
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)-config.1.gz $(d_dev)/opt/openquake/usr/share/man/man1/$(OPVER)-config.1.gz
 
 ifeq ($(with_tk),yes)
 	: # Move the Tkinter files into $(p_tk).
 	dh_installdirs -p$(p_tk) \
-		$(scriptdir) \
-		usr/lib/python$(VER)/lib-dynload
+		opt/openquake/$(scriptdir) \
+		opt/openquake/usr/lib/python$(VER)/lib-dynload
 	$(dh_compat2) dh_movefiles -p$(p_tk) --sourcedir=$(d) \
-		usr/lib/python$(VER)/lib-dynload/_tkinter*.so
+		opt/openquake/usr/lib/python$(VER)/lib-dynload/_tkinter*.so
 endif
 
 	: # The test framework into $(p_lbase)
 	$(dh_compat2) dh_movefiles -p$(p_lbase) --sourcedir=$(d) \
-		$(scriptdir)/test/{regrtest.py,support,__init__.py,pystone.py}
+		opt/openquake/$(scriptdir)/test/{regrtest.py,support,__init__.py,pystone.py}
 
 	: # The complete testsuite into $(p_lbase)
 	$(dh_compat2) dh_movefiles -p$(p_ltst) --sourcedir=$(d) \
-		$(scriptdir)/test \
-		$(scriptdir)/ctypes/test \
-		$(scriptdir)/distutils/tests \
-		$(scriptdir)/lib2to3/tests \
-		$(scriptdir)/sqlite3/test \
-		$(scriptdir)/idlelib/idle_test \
-		$(scriptdir)/tkinter/test \
-		$(scriptdir)/unittest/test
+		opt/openquake/$(scriptdir)/test \
+		opt/openquake/$(scriptdir)/ctypes/test \
+		opt/openquake/$(scriptdir)/distutils/tests \
+		opt/openquake/$(scriptdir)/lib2to3/tests \
+		opt/openquake/$(scriptdir)/sqlite3/test \
+		opt/openquake/$(scriptdir)/idlelib/idle_test \
+		opt/openquake/$(scriptdir)/tkinter/test \
+		opt/openquake/$(scriptdir)/unittest/test
 	: # test_ctypes fails with test_macholib.py installed
-	rm -f $(d_ltst)/$(scriptdir)/ctypes/test/test_macholib.py
+	rm -f $(d_ltst)/opt/openquake/$(scriptdir)/ctypes/test/test_macholib.py
 	: # test_bdist_wininst fails, '*.exe' files are not installed
-	rm -f $(d_ltst)/$(scriptdir)/distutils/tests/test_bdist_wininst.py
+	rm -f $(d_ltst)/opt/openquake/$(scriptdir)/distutils/tests/test_bdist_wininst.py
 
 	: # fixed upstream ...
-	chmod -x $(d_ltst)/$(scriptdir)/test/{test_dbm_gnu,test_dbm_ndbm}.py
+	chmod -x $(d_ltst)/opt/openquake/$(scriptdir)/test/{test_dbm_gnu,test_dbm_ndbm}.py
 
 	: # Move the demos and tools into $(p_exam)'s doc directory
 	dh_installdirs -p$(p_exam) \
-		usr/share/doc/python$(VER)/examples
+		usr/share/doc/$(PVER)/examples
 	$(dh_compat2) dh_movefiles -p$(p_exam) --sourcedir=$(d) \
-		$(scriptdir)/turtledemo
+		opt/openquake/$(scriptdir)/turtledemo
 
-	cp -rp Tools/* $(d_exam)/usr/share/doc/python$(VER)/examples/
-	rm -rf $(d_exam)/usr/share/doc/python$(VER)/examples/Tools/{buildbot,msi}
+	cp -rp Tools/* $(d_exam)/usr/share/doc/$(PVER)/examples/
+	rm -rf $(d_exam)/usr/share/doc/$(PVER)/examples/Tools/{buildbot,msi}
 	: # XXX: We don't need rgb.txt, we'll use our own:
-	rm -rf $(d_exam)/usr/share/doc/python$(VER)/examples/Tools/pynche/X
+	rm -rf $(d_exam)/usr/share/doc/$(PVER)/examples/Tools/pynche/X
 
 	: # IDLE
-	mv $(d)/usr/bin/idle$(VER) $(d)/usr/bin/idle-python$(VER)
-	rm -f $(d)/usr/lib/python$(VER)/idlelib/idle.bat
+	mv $(d)/opt/openquake/usr/bin/idle$(VER) $(d)/opt/openquake/usr/bin/idle-python$(VER)
+	rm -f $(d)/opt/openquake/usr/lib/python$(VER)/idlelib/idle.bat
 	dh_installdirs -p$(p_idle) \
-		usr/bin \
-		usr/share/man/man1
+		opt/openquake/usr/bin \
+		opt/openquake/usr/share/man/man1
 	$(dh_compat2) dh_movefiles -p$(p_idle) --sourcedir=$(d) \
-		usr/bin/idle-python$(VER)
-	cp -p debian/idle-$(PVER).1 $(d_idle)/usr/share/man/man1/
+		opt/openquake/usr/bin/idle-python$(VER)
+	cp -p debian/idle-$(PVER).1 $(d_idle)/opt/openquake/usr/share/man/man1/
 
 	: # Replace all '#!' calls to python with $(PY_INTERPRETER)
 	: # and make them executable
@@ -1075,9 +1078,9 @@ endif
 	dh_installchangelogs -p$(p_idle) Lib/idlelib/ChangeLog
 	dh_installdocs -p$(p_idle) Lib/idlelib/{NEWS,README,TODO,extend}.txt
 
-	mkdir -p $(d_idle)/usr/share/applications
+	mkdir -p $(d_idle)/opt/openquake/usr/share/applications
 	cp -p debian/idle.desktop \
-		$(d_idle)/usr/share/applications/idle-$(PVER).desktop
+		$(d_idle)/opt/openquake/usr/share/applications/idle-$(PVER).desktop
 
 	: # those packages have own README.Debian's
 	install -m 644 -p debian/README.$(p_base) \
@@ -1090,43 +1093,44 @@ endif
 
 	: # pyvenv and ensurepip files into $(p_venv)
 	dh_installdirs -p$(p_venv) \
-		usr/bin \
-		usr/share/man/man1 \
-		usr/lib/python$(VER)
+		opt/openquake/usr/bin \
+		opt/openquake/usr/share/man/man1 \
+		opt/openquake/usr/lib/python$(VER)
 	dh_movefiles -p$(p_venv) \
-		usr/bin/pyvenv-$(VER) \
-		usr/share/man/man1/pyvenv-$(VER).1 \
-		usr/lib/python$(VER)/ensurepip
+		opt/openquake/usr/bin/pyvenv-$(VER) \
+		opt/openquake/usr/share/man/man1/pyvenv-$(VER).1 \
+		opt/openquake/usr/lib/python$(VER)/ensurepip
 
 	: # library files into $(p_lbase)
 	dh_installdirs -p$(p_lbase) \
-		usr/lib
+		opt/openquake/usr/lib
 	dh_movefiles -p$(p_lbase) \
-		usr/lib/python$(VER)
+		opt/openquake/usr/lib/python$(VER)
 
 	: # The rest goes into $(p_base)
-	mkdir -p $(d)/usr/lib/python3/dist-packages
-	(cd $(d) && tar cf - .) | (cd $(d_base) && tar xpf -)
-	rm -f $(d_base)/usr/bin/python
-	rm -f $(d_base)/usr/bin/pyvenv
+	mkdir -p $(d)/opt/openquake/usr/lib/python3/dist-packages
+	mkdir -p $(d_base)/opt/openquake
+	(cd $(d)/opt/openquake && tar cf - .) | (cd $(d_base)/opt/openquake && tar xpf -)
+	rm -f $(d_base)/opt/openquake/usr/bin/python
+	rm -f $(d_base)/opt/openquake/usr/bin/pyvenv
 
 	: # Install menu icon
 	dh_installdirs -p$(p_base) usr/share/pixmaps
 	cp -p debian/pylogo.xpm $(d_base)/usr/share/pixmaps/$(PVER).xpm
 
 	: # generate binfmt file
-	mkdir -p $(d_min)/usr/share/binfmts
+	mkdir -p $(d_min)/opt/openquake/usr/share/binfmts
 ifeq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
-	$(buildd_static)/python debian/mkbinfmt.py $(PVER) \
-		> $(d_min)/usr/share/binfmts/$(PVER)
+	$(buildd_static)/python debian/mkbinfmt.py $(OPVER) \
+		> $(d_min)/opt/openquake/usr/share/binfmts/$(OPVER)
 else
-	$(PVER) debian/mkbinfmt.py $(PVER) > $(d_min)/usr/share/binfmts/$(PVER)
+	$(OPVER) debian/mkbinfmt.py $(OPVER) > $(d_min)/opt/openquake/usr/share/binfmts/$(OPVER)
 endif
 
 	: # desktop entry
-	mkdir -p $(d_base)/usr/share/applications
+	mkdir -p $(d_base)/opt/openquake/usr/share/applications
 	cp -p debian/$(PVER).desktop \
-		$(d_base)/usr/share/applications/$(PVER).desktop
+		$(d_base)/opt/openquake/usr/share/applications/$(PVER).desktop
 
 	: # remove some things
 	-find debian -name .cvsignore | xargs rm -f
@@ -1144,147 +1148,147 @@ endif
 	    -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
 	    -e '/BLDLIBRARY/s/-L\. //' \
 		$(buildd_shdebug)/Makefile \
-		> $(d)-dbg/$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH)/Makefile
+		> $(d)-dbg/opt/openquake/$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH)/Makefile
 	sed -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
 	    -e '/BLDLIBRARY/s/-L\. //' \
 		$(buildd_shdebug)/$(shell cat $(buildd_shdebug)/pybuilddir.txt)/_sysconfigdata.py \
-		> $(d)-dbg/$(scriptdir)/_sysconfigdata.py
+		> $(d)-dbg/opt/openquake/$(scriptdir)/_sysconfigdata.py
 	rm -f $(d)-dbg/$(scriptdir)/lib-dynload/_sysconfigdata.py
 	sed -i 's/ -O3 / -O2 /g;s/$(LTO_CFLAGS)//g;s/-fprofile-use *-fprofile-correction//g' \
-		$(d)-dbg/$(scriptdir)/_sysconfigdata.py
-	mv $(d)-dbg/$(scriptdir)/_sysconfigdata.py \
-	  $(d)-dbg/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_dm.py
+		$(d)-dbg/opt/openquake/$(scriptdir)/_sysconfigdata.py
+	mv $(d)-dbg/opt/openquake/$(scriptdir)/_sysconfigdata.py \
+	  $(d)-dbg/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_dm.py
 
-	mv $(d)-dbg/usr/lib/libpython*.a $(d)-dbg/usr/lib/$(DEB_HOST_MULTIARCH)/
+	mv $(d)-dbg/opt/openquake/usr/lib/libpython*.a $(d)-dbg/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/
 
-	for i in $(d)-dbg/$(scriptdir)/lib-dynload/*.so; do \
+	for i in $(d)-dbg/opt/openquake/$(scriptdir)/lib-dynload/*.so; do \
 	  case "$$i" in *$(DEB_HOST_MULTIARCH)*) continue; esac; \
 	  b=$$(basename $$i .cpython-$(EXT_VER)dm.so); \
 	  d=$${b}.cpython-$(EXT_VER)dm-$(DEB_HOST_MULTIARCH).so; \
-	  mv $$i $(d)-dbg/$(scriptdir)/lib-dynload/$$d; \
+	  mv $$i $(d)-dbg/opt/openquake/$(scriptdir)/lib-dynload/$$d; \
 	done
 
 	dh_installdirs -p$(p_ldbg) \
-		usr/bin \
-		usr/share/man/man1 \
-		$(scriptdir)/lib-dynload \
-		$(scriptdir)/plat-$(DEB_HOST_MULTIARCH) \
-		usr/include/$(PVER)dm \
-		usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)dm \
-		usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig
+		opt/openquake/usr/bin \
+		opt/openquake/usr/share/man/man1 \
+		opt/openquake/$(scriptdir)/lib-dynload \
+		opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH) \
+		opt/openquake/usr/include/$(OPVER)dm \
+		opt/openquake/usr/include/$(DEB_HOST_MULTIARCH)/$(OPVER)dm \
+		opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig
 
-	cp -p $(d)-dbg/$(scriptdir)/lib-dynload/*.so \
-		$(d_ldbg)/$(scriptdir)/lib-dynload/
-	cp -p $(d)-dbg/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_dm.py \
-		$(d_ldbg)/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/
+	cp -p $(d)-dbg/opt/openquake/$(scriptdir)/lib-dynload/*.so \
+		$(d_ldbg)/opt/openquake/$(scriptdir)/lib-dynload/
+	cp -p $(d)-dbg/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_dm.py \
+		$(d_ldbg)/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/
 	cp -p $(buildd_shdebug)/libpython$(VER)dm.so.1.0 \
-		$(d_ldbg)/usr/lib/$(DEB_HOST_MULTIARCH)/
+		$(d_ldbg)/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/
 	dh_link -p$(p_ldbg) \
-	    /usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so.1.0 \
-		/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so.1 \
-	    /usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so.1 \
-		/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so
+	    /opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so.1.0 \
+		/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so.1 \
+	    /opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so.1 \
+		/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so
 	sed -e '/^Libs:/s,-lpython$(VER),-lpython$(VER)dm,' \
 	  -e '/^Cflags:/s,$$, -I$${includedir}/$(DEB_HOST_MULTIARCH)/python$(VER)dm,' \
 	  -e '/^libdir=/d;s/-L\$${libdir} *//' \
-	  $(d)-dbg/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER).pc \
-	  > $(d_ldbg)/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER)-dbg.pc
+	  $(d)-dbg/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER).pc \
+	  > $(d_ldbg)/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER)-dbg.pc
 
 	dh_installdirs -p$(p_dbg) \
-		usr/bin \
-		usr/share/man/man1 \
+		opt/openquake/usr/bin \
+		opt/openquake/usr/share/man/man1 \
 		usr/share/doc/$(p_base)
 	cp -p Misc/SpecialBuilds.txt $(d_dbg)/usr/share/doc/$(p_base)/
 	cp -p debian/$(PVER)-dbg.README.Debian \
 		$(d_dbg)/usr/share/doc/$(p_base)/README.debug
-	cp -p $(buildd_debug)/python $(d_dbg)/usr/bin/$(PVER)dm
-	ln -sf python$(VER)dm $(d_dbg)/usr/bin/$(PVER)-dbg
+	cp -p $(buildd_debug)/python $(d_dbg)/opt/openquake/usr/bin/$(OPVER)dm
+	ln -sf $(OPVER)dm $(d_dbg)/opt/openquake/usr/bin/$(OPVER)-dbg
 
 ifneq ($(with_tk),yes)
-	rm -f $(d_ldbg)/$(scriptdir)/lib-dynload/_tkinter*.so
-	rm -f $(d_ldbg)/usr/lib/debug/$(scriptdir)/lib-dynload/_tkinter*.so
+	rm -f $(d_ldbg)/opt/openquake/$(scriptdir)/lib-dynload/_tkinter*.so
+	rm -f $(d_ldbg)/opt/openquake/usr/lib/debug/$(scriptdir)/lib-dynload/_tkinter*.so
 endif
 ifneq ($(with_gdbm),yes)
-	rm -f $(d_ldbg)/$(scriptdir)/lib-dynload/_gdbm*.so
-	rm -f $(d_ldbg)/usr/lib/debug/$(scriptdir)/lib-dynload/_gdbm*.so
+	rm -f $(d_ldbg)/opt/openquake/$(scriptdir)/lib-dynload/_gdbm*.so
+	rm -f $(d_ldbg)/opt/openquake/usr/lib/debug/$(scriptdir)/lib-dynload/_gdbm*.so
 endif
 
-	cp -a $(d)-dbg/$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH) \
-		$(d_ldbg)/$(scriptdir)/
+	cp -a $(d)-dbg/opt/openquake/$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH) \
+		$(d_ldbg)/opt/openquake/$(scriptdir)/
 	dh_link -p$(p_ldbg) \
-	    /usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so \
-		/$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so \
-	    /usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so \
-		/$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH)/libpython$(VER).so \
-	    /$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.a \
-	    	/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.a
+	    /opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so \
+		/opt/openquake/$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so \
+	    /opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so \
+		/opt/openquake/$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH)/libpython$(VER).so \
+	    /opt/openquake/$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.a \
+		/opt/openquake/usr/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.a
 
-	for i in $(d_ldev)/usr/include/$(PVER)m/*; do \
+	for i in $(d_ldev)/opt/openquake/usr/include/$(OPVER)m/*; do \
 	  i=$$(basename $$i); \
 	  case $$i in pyconfig.h) continue; esac; \
-	  ln -sf ../$(PVER)m/$$i $(d_ldbg)/usr/include/$(PVER)dm/$$i; \
+	  ln -sf ../$(PVER)m/$$i $(d_ldbg)/opt/openquake/usr/include/$(OPVER)dm/$$i; \
 	done
-	cp -p $(buildd_debug)/pyconfig.h $(d_ldbg)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)dm/
-	sed 's/@subdir@/$(PVER)dm/;s/@header@/pyconfig.h/' \
-		debian/multiarch.h.in > $(d_ldbg)/usr/include/$(PVER)dm/pyconfig.h
+	cp -p $(buildd_debug)/pyconfig.h $(d_ldbg)/opt/openquake/usr/include/$(DEB_HOST_MULTIARCH)/$(OPVER)dm/
+	sed 's/@subdir@/$(OPVER)dm/;s/@header@/pyconfig.h/' \
+		debian/multiarch.h.in > $(d_ldbg)/opt/openquake/usr/include/$(OPVER)dm/pyconfig.h
 
-	ln -sf $(PVER).1.gz $(d_dbg)/usr/share/man/man1/$(PVER)-dbg.1.gz
+	ln -sf $(OPVER).1.gz $(d_dbg)/opt/openquake/usr/share/man/man1/$(OPVER)-dbg.1.gz
 
 	: # in $(p_ldbg), prefix python-config with triplets
-	cp $(d)-dbg/usr/bin/$(PVER)dm-config \
-		$(d_ldbg)/usr/bin/$(DEB_HOST_MULTIARCH)-$(PVER)dm-config
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)dm-config \
-		$(d_ldbg)/usr/bin/$(DEB_HOST_MULTIARCH)-$(PVER)-dbg-config
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)m-config.1.gz \
-		$(d_ldbg)/usr/share/man/man1/$(DEB_HOST_MULTIARCH)-$(PVER)dm-config.1.gz
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)m-config.1.gz \
-		$(d_ldbg)/usr/share/man/man1/$(DEB_HOST_MULTIARCH)-$(PVER)-dbg-config.1.gz
+	cp $(d)-dbg/opt/openquake/usr/bin/$(OPVER)dm-config \
+		$(d_ldbg)/opt/openquake/usr/bin/$(DEB_HOST_MULTIARCH)-$(OPVER)dm-config
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)dm-config \
+		$(d_ldbg)/opt/openquake/usr/bin/$(DEB_HOST_MULTIARCH)-$(OPVER)-dbg-config
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)m-config.1.gz \
+		$(d_ldbg)/opt/openquake/usr/share/man/man1/$(DEB_HOST_MULTIARCH)-$(OPVER)dm-config.1.gz
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)m-config.1.gz \
+		$(d_ldbg)/opt/openquake/usr/share/man/man1/$(DEB_HOST_MULTIARCH)-$(OPVER)-dbg-config.1.gz
 ifneq ($(DEB_HOST_MULTIARCH),$(DEB_HOST_GNU_TYPE))
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)dm-config \
-		$(d_ldbg)/usr/bin/$(DEB_HOST_GNU_TYPE)-$(PVER)dm-config
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)-config.1.gz \
-		$(d_ldbg)/usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-$(PVER)dm-config.1.gz
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)dm-config \
-		$(d_ldbg)/usr/bin/$(DEB_HOST_GNU_TYPE)-$(PVER)-dbg-config
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)dm-config.1.gz \
-		$(d_ldbg)/usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-$(PVER)-dbg-config.1.gz
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)dm-config \
+		$(d_ldbg)/opt/openquake/usr/bin/$(DEB_HOST_GNU_TYPE)-$(OPVER)dm-config
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)-config.1.gz \
+		$(d_ldbg)/opt/openquake/usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-$(OPVER)dm-config.1.gz
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)dm-config \
+		$(d_ldbg)/opt/openquake/usr/bin/$(DEB_HOST_GNU_TYPE)-$(OPVER)-dbg-config
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)dm-config.1.gz \
+		$(d_ldbg)/opt/openquake/usr/share/man/man1/$(DEB_HOST_GNU_TYPE)-$(OPVER)-dbg-config.1.gz
 endif
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)dm-config $(d_dbg)/usr/bin/$(PVER)dm-config
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)dm-config.1.gz $(d_dbg)/usr/share/man/man1/$(PVER)dm-config.1.gz
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)dm-config $(d_dbg)/opt/openquake/usr/bin/$(OPVER)dm-config
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)dm-config.1.gz $(d_dbg)/opt/openquake/usr/share/man/man1/$(OPVER)dm-config.1.gz
 
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)-dbg-config $(d_dbg)/usr/bin/$(PVER)-dbg-config
-	ln -sf $(DEB_HOST_MULTIARCH)-$(PVER)-dbg-config.1.gz $(d_dbg)/usr/share/man/man1/$(PVER)-dbg-config.1.gz
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)-dbg-config $(d_dbg)/opt/openquake/usr/bin/$(OPVER)-dbg-config
+	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)-dbg-config.1.gz $(d_dbg)/opt/openquake/usr/share/man/man1/$(OPVER)-dbg-config.1.gz
 
 	: # symlinks for the "old" include / config directory names
-	ln -sf $(PVER)-config.1.gz $(d_dbg)/usr/share/man/man1/$(PVER)-dbg-config.1.gz
-	ln -sf $(PVER).1.gz $(d_dbg)/usr/share/man/man1/$(PVER)dm.1.gz
-	ln -sf $(PVER)-config.1.gz $(d_dbg)/usr/share/man/man1/$(PVER)dm-config.1.gz
+	ln -sf $(OPVER)-config.1.gz $(d_dbg)/opt/openquake/usr/share/man/man1/$(OPVER)-dbg-config.1.gz
+	ln -sf $(OPVER).1.gz $(d_dbg)/opt/openquake/usr/share/man/man1/$(OPVER)dm.1.gz
+	ln -sf $(OPVER)-config.1.gz $(d_dbg)/opt/openquake/usr/share/man/man1/$(OPVER)dm-config.1.gz
 
 ifeq ($(with_udeb),yes)
 	: # Copy the most important files from $(p_min) into $(p_udeb).
 	dh_installdirs -p$(p_udeb) \
-		etc/$(PVER) \
-		usr/bin \
-		usr/include/$(PVER)mu \
-		$(scriptdir)/lib-dynload \
-		$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)
-	cp -p $(d_min)/usr/bin/python$(VER) $(d_udeb)/usr/bin/
-	ln -sf python$(VER)mu $(d_udeb)/usr/bin/python$(VER)
-	ln -sf python$(VER) $(d_udeb)/usr/bin/python3
-	cp -p $(foreach i,$(MIN_MODS),$(d_min)/$(scriptdir)/$(i).py) \
-		$(d_udeb)/$(scriptdir)/
-	cp -a $(foreach i,$(MIN_PACKAGES),$(d_min)/$(scriptdir)/$(i)) \
-		$(d_udeb)/$(scriptdir)/
-	cp -p $(foreach i,$(MIN_ENCODINGS),$(d_min)/$(scriptdir)/$(i)) \
-		$(d_udeb)/$(scriptdir)/
-	cp -p $(d_min)/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/Makefile \
-		$(d_udeb)/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/
-	cp -p $(d_min)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)m/pyconfig.h \
-		$(d_udeb)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)m/
-	cp -p $(d_min)/$(scriptdir)/site.py $(d_udeb)/$(scriptdir)/
+		etc/$(OPVER) \
+		opt/openquake/usr/bin \
+		opt/openquake/usr/include/$(OPVER)mu \
+		opt/openquake/$(scriptdir)/lib-dynload \
+		opt/openquake/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)
+	cp -p $(d_min)/opt/openquake/usr/bin/python$(VER) $(d_udeb)/opt/openquake/usr/bin/
+	ln -sf python$(VER)mu $(d_udeb)/opt/openquake/usr/bin/python$(VER)
+	ln -sf python$(VER) $(d_udeb)/opt/openquake/usr/bin/python3
+	cp -p $(foreach i,$(MIN_MODS),$(d_min)/opt/openquake/$(scriptdir)/$(i).py) \
+		$(d_udeb)/opt/openquake/$(scriptdir)/
+	cp -a $(foreach i,$(MIN_PACKAGES),$(d_min)/opt/openquake/$(scriptdir)/$(i)) \
+		$(d_udeb)/opt/openquake/$(scriptdir)/
+	cp -p $(foreach i,$(MIN_ENCODINGS),$(d_min)/opt/openquake/$(scriptdir)/$(i)) \
+		$(d_udeb)/opt/openquake/$(scriptdir)/
+	cp -p $(d_min)/opt/openquake/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/Makefile \
+		$(d_udeb)/opt/openquake/$(scriptdir)/config-$(VER)m-$(DEB_HOST_MULTIARCH)/
+	cp -p $(d_min)/opt/openquake/usr/include/$(DEB_HOST_MULTIARCH)/$(OPVER)m/pyconfig.h \
+		$(d_udeb)/opt/openquake/usr/include/$(DEB_HOST_MULTIARCH)/$(OPVER)m/
+	cp -p $(d_min)/opt/openquake/$(scriptdir)/site.py $(d_udeb)/opt/openquake/$(scriptdir)/
 	cp -p debian/sitecustomize.py $(d_udeb)/etc/$(PVER)/
 	dh_link -p$(p_udeb) /etc/$(PVER)/sitecustomize.py \
-		/$(scriptdir)/sitecustomize.py
+		/opt/openquake/$(scriptdir)/sitecustomize.py
 endif
 
 	for i in debian/*.overrides; do \
@@ -1314,10 +1318,10 @@ binary-indep: build-indep install stamps/stamp-control
 	: # devhelp docs
 	cd $(buildd_static) && ./python ../debian/pyhtml2devhelp.py \
 		../$(d_doc)/usr/share/doc/$(p_base)/html index.html $(VER) \
-		> ../$(d_doc)/usr/share/doc/$(p_base)/html/$(PVER).devhelp
-	gzip -9nv $(d_doc)/usr/share/doc/$(p_base)/html/$(PVER).devhelp
+		> ../$(d_doc)/usr/share/doc/$(p_base)/html/$(OPVER).devhelp
+	gzip -9nv $(d_doc)/usr/share/doc/$(p_base)/html/$(OPVER).devhelp
 	dh_link -p$(p_doc) \
-		/usr/share/doc/$(p_base)/html /usr/share/devhelp/books/$(PVER)
+		/usr/share/doc/$(p_base)/html /usr/share/devhelp/books/$(OPVER)
 
 	for i in $(p_ltst); do \
 	  rm -rf debian/$$i/usr/share/doc/$$i; \
@@ -1379,20 +1383,20 @@ endif
 	find $(d_ldbg) $(d_ldev) -name '*.a' ! -type l \
 		| xargs -n 1 $(DEB_HOST_GNU_TYPE)-objcopy -p --remove-section=.gnu.lto_.*
 	dh_strip -a -N$(p_dbg) -N$(p_ldbg) -Xdebug -Xdbg --dbg-package=$(p_dbg)
-	mkdir -p $(d_dbg)/usr/share/gdb/auto-load/usr/bin
-	cp Tools/gdb/libpython.py $(d_dbg)/usr/share/gdb/auto-load/usr/bin/$(PVER)m-gdb.py
-	ln -sf $(PVER)m-gdb.py $(d_dbg)/usr/share/gdb/auto-load/usr/bin/$(PVER)-gdb.py
-	ln -sf $(PVER)m-gdb.py $(d_dbg)/usr/share/gdb/auto-load/usr/bin/$(PVER)dm-gdb.py
-	ln -sf $(PVER)m-gdb.py $(d_dbg)/usr/share/gdb/auto-load/usr/bin/$(PVER)-dbg-gdb.py
-	mkdir -p $(d_dbg)/usr/share/gdb/auto-load/usr/lib/$(DEB_HOST_MULTIARCH)
-	ln -sf ../../bin/$(PVER)m-gdb.py \
-		$(d_dbg)/usr/share/gdb/auto-load/usr/lib/$(DEB_HOST_MULTIARCH)/lib$(PVER)m.so.1.0-gdb.py
-	ln -sf ../../bin/$(PVER)m-gdb.py \
-		$(d_dbg)/usr/share/gdb/auto-load/usr/lib/$(DEB_HOST_MULTIARCH)/lib$(PVER)dm.so.1.0-gdb.py
+	mkdir -p $(d_dbg)/opt/openquake/usr/share/gdb/auto-load/usr/bin
+	cp Tools/gdb/libpython.py $(d_dbg)/opt/openquake/usr/share/gdb/auto-load/usr/bin/$(OPVER)m-gdb.py
+	ln -sf $(OPVER)m-gdb.py $(d_dbg)/opt/openquake/usr/share/gdb/auto-load/usr/bin/$(OPVER)-gdb.py
+	ln -sf $(OPVER)m-gdb.py $(d_dbg)/opt/openquake/usr/share/gdb/auto-load/usr/bin/$(OPVER)dm-gdb.py
+	ln -sf $(OPVER)m-gdb.py $(d_dbg)/opt/openquake/usr/share/gdb/auto-load/usr/bin/$(OPVER)-dbg-gdb.py
+	mkdir -p $(d_dbg)/opt/openquake/usr/share/gdb/auto-load/usr/lib/$(DEB_HOST_MULTIARCH)
+	ln -sf ../../bin/$(OPVER)m-gdb.py \
+		$(d_dbg)/opt/openquake/usr/share/gdb/auto-load/usr/lib/$(DEB_HOST_MULTIARCH)/lib$(OPVER)m.so.1.0-gdb.py
+	ln -sf ../../bin/$(OPVER)m-gdb.py \
+		$(d_dbg)/opt/openquake/usr/share/gdb/auto-load/usr/lib/$(DEB_HOST_MULTIARCH)/lib$(OPVER)dm.so.1.0-gdb.py
 	dh_link -a
 	dh_compress -a -X.py
 	dh_fixperms -a
-	chmod 644 $(d_lmin)/$(scriptdir)/token.py
+	chmod 644 $(d_lmin)/opt/openquake/$(scriptdir)/token.py
 
 	: # make python scripts starting with '#!' executable
 	for i in `find debian -mindepth 3 -type f ! -name '*.dpatch' ! -perm 755`; do \

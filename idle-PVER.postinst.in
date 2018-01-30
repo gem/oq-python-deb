@@ -6,16 +6,16 @@
 
 set -e
 
-DIRLIST="/usr/lib/python@VER@/idlelib"
+DIRLIST="/opt/openquake/usr/lib/python@VER@/idlelib"
 
 case "$1" in
     configure|abort-upgrade|abort-remove|abort-deconfigure)
 
         for i in $DIRLIST ; do
-	    /usr/bin/@PVER@ /usr/lib/@PVER@/compileall.py -q $i
+	    /opt/openquake/usr/bin/@OPVER@ /opt/openquake/usr/lib/@OPVER@/compileall.py -q $i
 	    if grep -sq '^byte-compile[^#]*optimize' /etc/python/debian_config
 	    then
-		/usr/bin/@PVER@ -O /usr/lib/@PVER@/compileall.py -q $i
+		/opt/openquake/usr/bin/@OPVER@ -O /opt/openquake/usr/lib/@OPVER@/compileall.py -q $i
 	    fi
 	done
     ;;

@@ -1,0 +1,58 @@
+Index: oq-python3.5-3.5.3/Lib/ensurepip/__init__.py
+===================================================================
+--- oq-python3.5-3.5.3.orig/Lib/ensurepip/__init__.py
++++ oq-python3.5-3.5.3/Lib/ensurepip/__init__.py
+@@ -113,6 +113,11 @@ def bootstrap(*, root=None, upgrade=Fals
+         if verbosity:
+             args += ["-" + "v" * verbosity]
+ 
++        # if os.environ.get('GEM_PKG_ENSUREPIP_PREFIX', None):
++        #     args += ["--prefix=%s" % os.environ.get(
++        #         'GEM_PKG_ENSUREPIP_PREFIX')]
++        # args += ["--install-option=\"--install-layout=deb\""]
++
+         _run_pip(args + [p[0] for p in _PROJECTS], additional_paths)
+ 
+ def _uninstall_helper(*, verbosity=0):
+Index: oq-python3.5-3.5.3/Makefile.pre.in
+===================================================================
+--- oq-python3.5-3.5.3.orig/Makefile.pre.in
++++ oq-python3.5-3.5.3/Makefile.pre.in
+@@ -1048,8 +1048,9 @@ install: @FRAMEWORKINSTALLFIRST@ commoni
+ 			upgrade) ensurepip="--upgrade" ;; \
+ 			install|*) ensurepip="" ;; \
+ 		esac; \
++		export GEM_PKG_ENSUREPIP_PREFIX=opt/openquake/usr ; \
+ 		$(RUNSHARED) $(PYTHON_FOR_BUILD) -m ensurepip \
+-			$$ensurepip --root=$(DESTDIR)/ ; \
++			$$ensurepip --default-pip --root=$(DESTDIR)/ ; \
+ 	fi
+ 
+ altinstall: commoninstall
+@@ -1058,8 +1059,9 @@ altinstall: commoninstall
+ 			upgrade) ensurepip="--altinstall --upgrade" ;; \
+ 			install|*) ensurepip="--altinstall" ;; \
+ 		esac; \
++		export GEM_PKG_ENSUREPIP_PREFIX=opt/openquake/usr ; \
+ 		$(RUNSHARED) $(PYTHON_FOR_BUILD) -m ensurepip \
+-			$$ensurepip --root=$(DESTDIR)/ ; \
++			$$ensurepip --default-pip --root=$(DESTDIR)/ ; \
+ 	fi
+ 
+ commoninstall:  @FRAMEWORKALTINSTALLFIRST@ \
+Index: oq-python3.5-3.5.3/Lib/distutils/command/install.py
+===================================================================
+--- oq-python3.5-3.5.3.orig/Lib/distutils/command/install.py
++++ oq-python3.5-3.5.3/Lib/distutils/command/install.py
+@@ -469,7 +469,10 @@ class install(Command):
+                 if os.path.normpath(self.prefix) == '/usr/local':
+                     self.prefix = self.exec_prefix = '/usr'
+                     self.install_base = self.install_platbase = '/usr'
+-                self.select_scheme("unix_local")
++                # oq-python is already a 'local' folder so we use normal
++                # 'unix_prefix' schema
++                # self.select_scheme("unix_local")
++                self.select_scheme("deb_system")
+ 
+     def finalize_other(self):
+         """Finalizes options for non-posix platforms"""
