@@ -3,7 +3,7 @@
 set -e
 
 if [ "$1" = "purge" ]; then
-    rm -rf /opt/openquake/usr/lib/python-wheels
+    rm -rf /opt/openquake/lib/python-wheels
     rm -rf /opt/openquake/var/lib/python-wheels
 fi
 
