@@ -842,6 +842,8 @@ endif
 	cp -p debian/pyvenv3.1 $(d)/opt/openquake/share/man/man1/pyvenv-$(VER).1
 
 	: # versioned install only
+	: # idle3 is replaced by idle-python3
+	rm -f $(d)/opt/openquake/bin/idle3
 	: # rm -f $(d)/opt/openquake/bin/{2to3,idle3,pydoc3,pysetup3,python3,python3-config}
 	: # rm -f $(d)/opt/openquake/lib/*/pkgconfig/python3.pc
 
@@ -1045,6 +1047,8 @@ endif
 
 	: # IDLE
 	mv $(d)/opt/openquake/bin/idle$(VER) $(d)/opt/openquake/bin/idle-python$(VER)
+	ln -s idle-python$(VER) $(d)/opt/openquake/bin/idle-python3
+
 	rm -f $(d)/opt/openquake/lib/python$(VER)/idlelib/idle.bat
 	dh_installdirs -p$(p_idle) \
 		opt/openquake/bin \
