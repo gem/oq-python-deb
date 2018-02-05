@@ -1,3 +1,10 @@
+oq-python3.5 (3.5.3-1ubuntu0~17.04.3~gem18~trusty01) trusty; urgency=medium
+
+  * Disabled optimizations
+  * Add /opt/openquake as prefix and some other changes to the filesystem scheme
+
+ -- Matteo Nastasi (GEM Foundation) <nastasi@openquake.org>  Mon, 05 Feb 2018 17:55:01 +0100
+
 oq-python3.5 (3.5.3-1ubuntu0~17.04.2) zesty-security; urgency=medium
 
   * SECURITY UPDATE: integer overflow in the PyBytes_DecodeEscape
