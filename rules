@@ -131,7 +131,7 @@ ifneq (,$(filter $(distrelease),sid stretch experimental))
   bd_gcc = gcc (>= 4:6.3),
 endif
 ifeq (,$(filter $(distrelease),lenny etch squeeze wheezy lucid maverick natty oneiric precise quantal raring saucy trusty))
-  bd_dpkgdev = dpkg-dev (>= 1.17.11),
+  bd_dpkgdev = dpkg-dev (>= 1.17.5),
 endif
 
 CC=$(DEB_HOST_GNU_TYPE)-gcc
@@ -178,6 +178,15 @@ ifneq (,$(findstring noopt, $(DEB_BUILD_OPTIONS)))
     EXTRA_OPT_CFLAGS = -O0
     with_pgo =
     with_lto =
+else
+    # GEM: disable optimizations if gcc version less than 4.9
+    ifeq ($(shell dpkg --compare-versions $$($(CC) --version \
+                    | sed -n '/^$(CC)/s,.* ,,p') lt 4.9 && echo yes),yes)
+        OPT_CFLAGS := $(filter-out -O%, $(OPT_CFLAGS))
+        EXTRA_OPT_CFLAGS = -O0
+        with_pgo =
+        with_lto =
+    endif
 endif
 
 ifeq ($(with_lto),yes)
