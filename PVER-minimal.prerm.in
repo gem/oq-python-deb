@@ -17,7 +17,7 @@ case "$1" in
 	#     update-binfmts --package @PVER@ --remove @PVER@ /usr/bin/@PVER@
 	# fi
 
-	localsite=/usr/local/lib/@PVER@/dist-packages
+	localsite=/opt/openquake/lib/@OPVER@/dist-packages
 	[ -d $localsite ] && rmdir $localsite 2>/dev/null || true
 	[ -d $(dirname $localsite) ] \
 	    && rmdir $(dirname $localsite) 2>/dev/null || true

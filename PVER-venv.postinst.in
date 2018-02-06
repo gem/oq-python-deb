@@ -4,7 +4,7 @@ set -e
 
 case "$1" in
     configure)
-    files=$(dpkg -L @PVER@-venv | sed -n '/^\/opt\/openquake\/usr\/lib\/@PVER@\/.*\.py$/p')
+    files=$(dpkg -L @PVER@-venv | sed -n '/^\/opt\/openquake\/lib\/@OPVER@\/.*\.py$/p')
     if [ -n "$files" ]; then
 	/opt/openquake/bin/@OPVER@ -E -S /opt/openquake/lib/@OPVER@/py_compile.py $files
 	if grep -sq '^byte-compile[^#]*optimize' /etc/python/debian_config; then
