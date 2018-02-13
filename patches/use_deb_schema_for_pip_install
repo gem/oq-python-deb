@@ -24,7 +24,16 @@ Index: oq-python3.5-3.5.3/Lib/distutils/command/install.py
 ===================================================================
 --- oq-python3.5-3.5.3.orig/Lib/distutils/command/install.py
 +++ oq-python3.5-3.5.3/Lib/distutils/command/install.py
-@@ -469,7 +469,10 @@ class install(Command):
+@@ -411,6 +411,8 @@ class install(Command):
+ 
+     def finalize_unix(self):
+         """Finalizes options for posix platforms."""
++        if os.environ.get('GEM_DEBIAN_INSTALL_LAYOUT', None):
++            self.install_layout = os.environ.get('GEM_DEBIAN_INSTALL_LAYOUT')
+         if self.install_base is not None or self.install_platbase is not None:
+             if ((self.install_lib is None and
+                  self.install_purelib is None and
+@@ -469,7 +471,10 @@ class install(Command):
                  if os.path.normpath(self.prefix) == '/usr/local':
                      self.prefix = self.exec_prefix = '/usr'
                      self.install_base = self.install_platbase = '/usr'
