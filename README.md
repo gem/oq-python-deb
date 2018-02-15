@@ -16,7 +16,6 @@ To recompile the code:
   * remove all patches with `quilt pop -a` command
   * rename `debian` folder to `debian.orig`
   * clone `oq-python-deb` repository to debian folder with command
-
     `git clone https://github.com/gem/oq-python-deb.git debian`
   * apply all new patches with `quilt push -a` command
   * if you want to build binaries quickly use:
