@@ -1,4 +1,4 @@
-oq-python3.5 (3.5.3-1ubuntu0~17.04.3~gem21~trusty01) trusty; urgency=medium
+oq-python3.5 (3.5.3-1ubuntu0~gem01~xenial01) xenial; urgency=medium
 
   * Disabled optimizations
   * Add /opt/openquake as prefix and some other changes to the filesystem scheme
