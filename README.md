@@ -16,12 +16,13 @@ To recompile the code:
   * remove all patches with `quilt pop -a` command
   * rename `debian` folder to `debian.orig`
   * clone `oq-python-deb` repository to debian folder with command  
-    `git clone https://github.com/gem/oq-python-deb.git debian`
-  * apply all new patches with `quilt push -a` command
-  * if you want to build binaries quickly use::q `export DEB_BUILD_OPTIONS="noopt notest nocheck nobench parallel=16" ; dpkg-buildpackage -rfakeroot -us -uc`
-  * if you want to build binaries use:
-    `export DEB_BUILD_OPTIONS="parallel=16" ; dpkg-buildpackage -rfakeroot -us -uc`
-  * if you want to build sources to be uploaded:
-    `export DEB_BUILD_OPTIONS="parallel=16" ; dpkg-buildpackage -S -sa`
-  * if you want to change something in the original package scope create new patch and manage it
-    with quilt (keep track of the patches changes with git)
+`git clone https://github.com/gem/oq-python-deb.git debian`
+  * apply all new patches with:  
+`quilt push -a`
+  * if you want to build binaries quickly use:  
+`export DEB_BUILD_OPTIONS="noopt notest nocheck nobench parallel=16" ; dpkg-buildpackage -rfakeroot -us -uc`
+  * if you want to build binaries use:  
+`export DEB_BUILD_OPTIONS="parallel=16" ; dpkg-buildpackage -rfakeroot -us -uc`
+  * if you want to build sources to be uploaded:  
+`export DEB_BUILD_OPTIONS="parallel=16" ; dpkg-buildpackage -S -sa`
+  * if you want to change something in the original package scope create new patch and manage it with quilt (keep track of the patches changes with git)
