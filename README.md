@@ -18,8 +18,7 @@ To recompile the code:
   * clone `oq-python-deb` repository to debian folder with command
     `git clone https://github.com/gem/oq-python-deb.git debian`
   * apply all new patches with `quilt push -a` command
-  * if you want to build binaries quickly use:
-    `export DEB_BUILD_OPTIONS="noopt notest nocheck nobench parallel=16" ; dpkg-buildpackage -rfakeroot -us -uc`
+  * if you want to build binaries quickly use: \ `export DEB_BUILD_OPTIONS="noopt notest nocheck nobench parallel=16" ; dpkg-buildpackage -rfakeroot -us -uc`
   * if you want to build binaries use:
     `export DEB_BUILD_OPTIONS="parallel=16" ; dpkg-buildpackage -rfakeroot -us -uc`
   * if you want to build sources to be uploaded:
