@@ -37,8 +37,7 @@ Package: @PVER@-venv
 Architecture: any
 Multi-Arch: allowed
 Priority: @PRIO@
-Depends: @PVER@ (= ${binary:Version}),
- python-pip-whl (>= 8.1.0-2), ${shlibs:Depends}, ${misc:Depends},
+Depends: @PVER@ (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
 Description: Interactive high-level object-oriented language (pyvenv binary, version @VER@)
  Python is a high-level, interactive, object-oriented language. Its @VER@ version
  includes an extensive class library with lots of goodies for
