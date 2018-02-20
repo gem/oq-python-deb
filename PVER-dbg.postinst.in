@@ -3,30 +3,30 @@
 set -e
 
 if [ "$1" = configure ]; then
-    files=$(dpkg -L lib@PVER@-dbg@HOST_QUAL@ | sed -n '/^\/usr\/lib\/@PVER@\/.*\.py$/p')
+    files=$(dpkg -L lib@PVER@-dbg@HOST_QUAL@ | sed -n '/^\/opt\/openquake\/usr\/lib\/@PVER@\/.*\.py$/p')
     if [ -n "$files" ]; then
-	/usr/bin/@PVER@ -E -S /usr/lib/@PVER@/py_compile.py $files
+	/opt/openquake/bin/@OPVER@ -E -S /opt/openquake//usr/lib/@OPVER@/py_compile.py $files
 	if grep -sq '^byte-compile[^#]*optimize' /etc/python/debian_config; then
-	    /usr/bin/@PVER@ -E -S -O /usr/lib/@PVER@/py_compile.py $files
+	    /opt/openquake/bin/@OPVER@ -E -S -O /opt/openquake/lib/@OPVER@/py_compile.py $files
 	fi
     else
 	echo >&2 "@PVER@-dbg: can't get files for byte-compilation"
     fi
 
-  if [ -d /usr/include/@PVER@_d ] && [ ! -h /usr/include/@PVER@_d ]; then
-    if rmdir /usr/include/@PVER@_d 2> /dev/null; then
-      ln -sf @PVER@dmu /usr/include/@PVER@_d
+  if [ -d /opt/openquake/include/@OPVER@_d ] && [ ! -h /opt/openquake/include/@OPVER@_d ]; then
+    if rmdir /opt/openquake/include/@OPVER@_d 2> /dev/null; then
+      ln -sf @PVER@dmu /opt/openquake/include/@OPVER@_d
     else
       echo >&2 "WARNING: non-empty directory on upgrade: /usr/include/@PVER@_d"
-      ls -l /usr/include/@PVER@_d
+      ls -l /opt/openquake/include/@OPVER@_d
     fi
   fi
-  if [ -d /usr/lib/@PVER@/config_d ] && [ ! -h /usr/lib/@PVER@/config_d ]; then
-    if rmdir /usr/lib/@PVER@/config_d 2> /dev/null; then
-      ln -sf config-dmu /usr/lib/@PVER@/config_d
+  if [ -d /opt/openquake/lib/@OPVER@/config_d ] && [ ! -h /opt/openquake/lib/@OPVER@/config_d ]; then
+    if rmdir /opt/openquake/lib/@OPVER@/config_d 2> /dev/null; then
+      ln -sf config-dmu /opt/openquake/lib/@OPVER@/config_d
     else
       echo >&2 "WARNING: non-empty directory on upgrade: /usr/lib/@PVER@/config_d"
-      ls -l /usr/lib/@PVER@/config_d
+      ls -l /opt/openquake/lib/@OPVER@/config_d
     fi
   fi
 fi

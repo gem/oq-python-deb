@@ -11,8 +11,8 @@ remove_bytecode()
 	| xargs --max-chars="$max" echo \
 	| while read files; do rm -f $files; done
     # source and bytecode filename mismatch
-    rm -f /usr/lib/@PVER@/__pycache__/__phello__.cpython-*.py*
-    find /usr/lib/python3 /usr/lib/@PVER@ \
+    rm -f /opt/openquake/lib/@OPVER@/__pycache__/__phello__.cpython-*.py*
+    find /opt/openquake/lib/python3 /opt/openquake/lib/@OPVER@ \
 	\( -name dist-packages -prune \) -o \
 	\( -name __pycache__ -type d -empty -print \) \
 	| xargs -r rm -rf

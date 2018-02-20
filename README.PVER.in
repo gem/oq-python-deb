@@ -49,7 +49,7 @@ install a C extension, you need @PVER@-dev.
 
 a) Locally installed Python add-ons
 
-    /usr/local/lib/@PVER@/site-packages/
+    /opt/openquake/lib/@PVER@/site-packages/
     /usr/local/lib/site-python/ (version-independent modules)
 
 b) Python add-ons packaged for Debian
@@ -57,9 +57,8 @@ b) Python add-ons packaged for Debian
     /usr/lib/@PVER@/site-packages/
     /usr/lib/site-python/ (version-independent modules)
 
-Note that no package must install files directly into /usr/lib/@PVER@/
-or /usr/local/lib/@PVER@/. Only the site-packages directory is allowed
-for third-party extensions.
+Note that no package must install files directly into /opt/openquake/lib/@PVER@/.
+Only the site-packages directory is allowed for third-party extensions.
 
 Use of the new `package' scheme is strongly encouraged. The `ni' interface
 is obsolete in python 1.5.
@@ -73,7 +72,7 @@ Installing extensions for local use only:
 Consider using distutils ...
 
 Most extensions use Python's Makefile.pre.in. Note that Makefile.pre.in
-by default will install files into /usr/lib/, not into /usr/local/lib/,
+by default will install files into /opt/openquake/lib/, not into /opt/openquake/local/lib/,
 which is not allowed for local extensions. You'll have to change the
 Makefile accordingly. Most times, "make prefix=/usr/local install" will
 work.
