@@ -23,9 +23,10 @@ case "$1" in
             chown root:staff $localsite 2> /dev/null || true
         fi
 
-	if which update-binfmts >/dev/null; then
-	    update-binfmts --import @PVER@
-	fi
+        # Unofficial python: binfmts not required
+        # if which update-binfmts >/dev/null; then
+        #    update-binfmts --import @PVER@
+        # fi
 
     ;;
 esac
@@ -65,11 +66,11 @@ if [ "$1" = configure ]; then
 	if [ "$DEBIAN_FRONTEND" != noninteractive ]; then
 	    echo "Linking and byte-compiling packages for runtime @PVER@..."
 	fi
-	version=$(dpkg -s @PVER@-minimal | awk '/^Version:/ {print $2}')
-	for hook in /opt/openquake/share/python3/runtime.d/*.rtinstall; do
-	    [ -x $hook ] || continue
-	    $hook rtinstall @PVER@ "$2" "$version"
-	done
+	# version=$(dpkg -s @PVER@-minimal | awk '/^Version:/ {print $2}')
+	# for hook in /opt/openquake/share/python3/runtime.d/*.rtinstall; do
+	#     [ -x $hook ] || continue
+	#     $hook rtinstall @PVER@ "$2" "$version"
+	# done
 	if [ -f /var/lib/python/@PVER@_installed ]; then
 	    rm -f /var/lib/python/@PVER@_installed
 	    rmdir --ignore-fail-on-non-empty /var/lib/python 2>/dev/null
