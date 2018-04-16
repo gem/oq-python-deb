@@ -1,4 +1,0 @@
-# DP: updates from the 3.5 branch (until 2017-01-xx, 105592:47bf09270027).
-
-# hg diff -r v3.5.2 | filterdiff --exclude=.hgignore --exclude=.hgeol --exclude=.hgtags --remove-timestamps
-

@@ -28,9 +28,9 @@ Index: b/Lib/distutils/sysconfig.py
 ===================================================================
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
-@@ -102,6 +102,9 @@ def get_python_inc(plat_specific=0, pref
+@@ -99,6 +99,9 @@ def get_python_inc(plat_specific=0, pref
                  incdir = os.path.join(get_config_var('srcdir'), 'Include')
-             return os.path.normpath(incdir)
+                 return os.path.normpath(incdir)
          python_dir = 'python' + get_python_version() + build_flags
 +        if not python_build and plat_specific:
 +            import sysconfig
@@ -38,7 +38,7 @@ Index: b/Lib/distutils/sysconfig.py
          return os.path.join(prefix, "include", python_dir)
      elif os.name == "nt":
          return os.path.join(prefix, "include")
-@@ -260,6 +263,8 @@ def get_makefile_filename():
+@@ -257,6 +260,8 @@ def get_makefile_filename():
          return os.path.join(_sys_home or project_base, "Makefile")
      lib_dir = get_python_lib(plat_specific=0, standard_lib=1)
      config_file = 'config-{}{}'.format(get_python_version(), build_flags)
@@ -51,7 +51,7 @@ Index: b/Makefile.pre.in
 ===================================================================
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -780,6 +780,7 @@ Modules/signalmodule.o: $(srcdir)/Module
+@@ -759,6 +759,7 @@ Modules/signalmodule.o: $(srcdir)/Module
  
  Python/dynload_shlib.o: $(srcdir)/Python/dynload_shlib.c Makefile
  	$(CC) -c $(PY_CORE_CFLAGS) \
@@ -59,7 +59,7 @@ Index: b/Makefile.pre.in
  		-DSOABI='"$(SOABI)"' \
  		-o $@ $(srcdir)/Python/dynload_shlib.c
  
-@@ -791,6 +792,7 @@ Python/dynload_hpux.o: $(srcdir)/Python/
+@@ -770,6 +771,7 @@ Python/dynload_hpux.o: $(srcdir)/Python/
  Python/sysmodule.o: $(srcdir)/Python/sysmodule.c Makefile
  	$(CC) -c $(PY_CORE_CFLAGS) \
  		-DABIFLAGS='"$(ABIFLAGS)"' \
@@ -67,7 +67,7 @@ Index: b/Makefile.pre.in
  		-o $@ $(srcdir)/Python/sysmodule.c
  
  $(IO_OBJS): $(IO_H)
-@@ -1334,6 +1336,10 @@ libinstall:	build_all $(srcdir)/Lib/$(PL
+@@ -1336,6 +1338,10 @@ libinstall:	build_all $(srcdir)/Lib/$(PL
  $(srcdir)/Lib/$(PLATDIR):
  	mkdir $(srcdir)/Lib/$(PLATDIR)
  	cp $(srcdir)/Lib/plat-generic/regen $(srcdir)/Lib/$(PLATDIR)/regen
@@ -78,14 +78,14 @@ Index: b/Makefile.pre.in
  	export PATH; PATH="`pwd`:$$PATH"; \
  	export PYTHONPATH; PYTHONPATH="`pwd`/Lib"; \
  	export DYLD_FRAMEWORK_PATH; DYLD_FRAMEWORK_PATH="`pwd`"; \
-@@ -1384,7 +1390,7 @@ inclinstall:
+@@ -1386,7 +1392,7 @@ inclinstall:
  LIBPL=		@LIBPL@
  
  # pkgconfig directory
 -LIBPC=		$(LIBDIR)/pkgconfig
 +LIBPC=		$(LIBDIR)/$(MULTIARCH)/pkgconfig
  
- libainstall:	all python-config
+ libainstall:	@DEF_MAKE_RULE@ python-config
  	@for i in $(LIBDIR) $(LIBPL) $(LIBPC); \
 Index: b/Python/sysmodule.c
 ===================================================================
@@ -111,7 +111,7 @@ Index: b/configure.ac
 ===================================================================
 --- a/configure.ac
 +++ b/configure.ac
-@@ -883,7 +883,12 @@ if test x$PLATFORM_TRIPLET != x && test
+@@ -874,7 +874,12 @@ if test x$PLATFORM_TRIPLET != x && test
      AC_MSG_ERROR([internal configure error for the platform triplet, please file a bug report])
    fi
  fi
@@ -125,7 +125,7 @@ Index: b/configure.ac
  AC_SUBST(PLATDIR)
  AC_SUBST(PLATFORM_TRIPLET)
  
-@@ -4539,7 +4544,7 @@ AC_MSG_RESULT($LDVERSION)
+@@ -4550,7 +4555,7 @@ AC_MSG_RESULT($LDVERSION)
  
  dnl define LIBPL after ABIFLAGS and LDVERSION is defined.
  AC_SUBST(PY_ENABLE_SHARED)

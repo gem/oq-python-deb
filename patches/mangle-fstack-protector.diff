@@ -13,7 +13,7 @@ Index: b/Lib/distutils/sysconfig.py
  
  from .errors import DistutilsPlatformError
  
-@@ -200,6 +201,10 @@ def customize_compiler(compiler):
+@@ -197,6 +198,10 @@ def customize_compiler(compiler):
              cc = newcc
          if 'CXX' in os.environ:
              cxx = os.environ['CXX']

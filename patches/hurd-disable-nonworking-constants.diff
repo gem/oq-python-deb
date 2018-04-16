@@ -21,7 +21,7 @@ Index: b/Modules/posixmodule.c
 ===================================================================
 --- a/Modules/posixmodule.c
 +++ b/Modules/posixmodule.c
-@@ -12511,12 +12511,14 @@ all_ins(PyObject *m)
+@@ -12559,12 +12559,14 @@ all_ins(PyObject *m)
  #ifdef O_LARGEFILE
      if (PyModule_AddIntMacro(m, O_LARGEFILE)) return -1;
  #endif

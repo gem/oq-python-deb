@@ -56,8 +56,6 @@ ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
   WITHOUT_CHECK := yes
   WITHOUT_STONE := yes
 endif
-  WITHOUT_CHECK := yes
-  WITHOUT_BENCH := yes
 
 COMMA = ,
 ifneq (,$(filter parallel=%,$(subst $(COMMA), ,$(DEB_BUILD_OPTIONS))))
@@ -66,6 +64,9 @@ endif
 
 distribution := $(shell lsb_release -is)
 distrelease  := $(shell lsb_release -cs)
+derivative := $(shell if dpkg-vendor --derives-from Ubuntu; then echo Ubuntu; \
+		elif dpkg-vendor --derives-from Debian; then echo Debian; \
+		else echo Unknown; fi)
 
 VER=3.5
 SVER=3.5.0~b1
@@ -113,11 +114,9 @@ endif
 ifeq ($(distribution),Ubuntu)
   PY_MINPRIO = required
   PY_MINPRIO = optional
-  with_fpectl = yes
   #with_udeb = yes
 else
   PY_MINPRIO = $(PY_PRIO)
-  with_fpectl = yes
 endif
 ifeq (,$(filter $(distrelease),lenny etch squeeze wheezy lucid maverick natty oneiric))
   bd_qual = :any
@@ -154,6 +153,10 @@ ifeq ($(DEB_HOST_ARCH),alpha)
 endif
 ifeq ($(DEB_HOST_ARCH),m68k)
     EXTRA_OPT_FLAGS += -O2
+endif
+ifneq (,$(filter $(DEB_HOST_ARCH), ppc64 ppc64el))
+    OPT_CFLAGS += -fexceptions
+    DEBUG_CFLAGS += -fexceptions
 endif
 
 ifeq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
@@ -337,11 +340,6 @@ ifneq (,$(filter $(DEB_HOST_ARCH), avr32 or1k))
   common_configure_args += --without-ffi
 else
   common_configure_args += --with-system-ffi
-endif
-
-ifeq ($(with_fpectl),yes)
-  common_configure_args += \
-		--with-fpectl
 endif
 
 ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
@@ -668,7 +666,7 @@ minimal-test:
 
 stamps/stamp-doc-html:
 	dh_testdir
-	$(MAKE) -C Doc html
+	BLURB_ENV='PYTHONPATH=$(CURDIR)/debian/blurb' $(MAKE) -C Doc html
 	@mkdir -p stamps
 	touch stamps/stamp-doc-html
 
@@ -687,6 +685,7 @@ control-file:
 	    -e "s/@bd_qual@/$(bd_qual)/g" \
 	    -e "s/@bd_gcc@/$(bd_gcc)/g" \
 	    -e "s/@bd_dpkgdev@/$(bd_dpkgdev)/g" \
+	    -e "s/PYFPE_BREAKS/$(if $(filter yes,$(with_fpectl)),,$$(tr '\n' ' ' < debian/pyfpe-breaks.$(derivative)))/g" \
 		debian/control.in \
 		$(if $(with_udeb),debian/control.udeb) \
 	      | $(ma_filter) \
@@ -722,6 +721,11 @@ clean: control-file
 	rm -rf $(d)-dbg
 	rm -f configure
 	rm -rf $(TEST_DIR) debian/testdir
+
+	rm -f Tools/hg/hgtouch.py
+	rm -f Lib/test/185test.db
+	rm -f Lib/venv/scripts/posix/activate
+	rm -f Lib/venv/scripts/nt/Activate.ps1
 
 	for f in debian/*.in; do \
 	  f2=`echo $$f | sed "s,OPVER,$(OPVER),g;s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
@@ -1029,7 +1033,8 @@ endif
 
 	: # The test framework into $(p_lbase)
 	$(dh_compat2) dh_movefiles -p$(p_lbase) --sourcedir=$(d) \
-		opt/openquake/$(scriptdir)/test/{regrtest.py,support,__init__.py,pystone.py}
+		opt/openquake/$(scriptdir)/test/support \
+		opt/openquake/$(scriptdir)/test/{regrtest,test_support,__init__,pystone}.py
 
 	: # The complete testsuite into $(p_lbase)
 	$(dh_compat2) dh_movefiles -p$(p_ltst) --sourcedir=$(d) \

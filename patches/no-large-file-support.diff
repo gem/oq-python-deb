@@ -4,7 +4,7 @@ Index: b/configure.ac
 ===================================================================
 --- a/configure.ac
 +++ b/configure.ac
-@@ -2048,6 +2048,11 @@ if test "$sol_lfs_bug" = "yes"; then
+@@ -2059,6 +2059,11 @@ if test "$sol_lfs_bug" = "yes"; then
    use_lfs=no
  fi
  
