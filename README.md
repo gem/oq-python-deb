@@ -23,6 +23,8 @@ To recompile the code:
   * update `debian/changelog` file accordingly with version and Ubuntu serie
   * apply all new patches with:  
 `quilt push -a`
+  * set GEM_DEBIAN_INSTALL_LAYOUT to `deb`  
+  `export GEM_DEBIAN_INSTALL_LAYOUT=deb`
   * run  
   `dpkg-buildpackage -rfakeroot -d -T clean`  
   to generate `control` file starting from `control.in`; if something goes wrong you can also use `fakeroot ./debian/rules clean` as fallback
