@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# page for python 3.6: https://packages.ubuntu.com/source/bionic/python3.6
+
 PKG_DIR=oq-python3.5-3.5.4
 
 BASE_URL="https://launchpad.net/debian/+archive/primary/+files"
