@@ -1,7 +1,12 @@
 #!/bin/bash
 
 PKG_DIR=oq-python3.5-3.5.4
-echo "TODO: download the 3 file used by dpkg-source"
+
+BASE_URL="https://launchpad.net/debian/+archive/primary/+files"
+
+for f in python3.5_3.5.4-4.dsc python3.5_3.5.4.orig.tar.gz python3.5_3.5.4-4.debian.tar.xz; do
+    curl -o "$f" -L "${BASE_URL}/${f}"
+done
 
 if [ -d origin ]; then
     rm -rf origin
