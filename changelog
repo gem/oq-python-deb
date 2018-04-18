@@ -1,40 +1,323 @@
-oq-python3.5 (3.5.3-1ubuntu0~gem03~xenial01) xenial; urgency=medium
+oq-python3.5 (3.5.4-4~gem03~xenial01) xenial; urgency=medium
 
+  [Matteo Nastasi]
+  * port from 3.5.3 to 3.5.4
   * Disabled optimizations
   * Add /opt/openquake as prefix and some other changes to the filesystem scheme
 
- -- Matteo Nastasi (GEM Foundation) <nastasi@openquake.org>  Mon, 05 Feb 2018 17:55:01 +0100
+ -- Matteo Nastasi (GEM Foundation) <nastasi@openquake.org>  Mon, 16 Apr 2018 13:03:06 +0200
 
-oq-python3.5 (3.5.3-1ubuntu0~17.04.2) zesty-security; urgency=medium
+python3.5 (3.5.4-4) unstable; urgency=medium
 
-  * SECURITY UPDATE: integer overflow in the PyBytes_DecodeEscape
-    function
-    - debian/patches/CVE-2017-1000158.patch: fix this integer overflow
-      in Objects/bytesobject.c.
-    - CVE-2017-1000158
+  * Add package breaks for extensions referencing symbols for the removed
+    _PyFPE module. Closes: #873921.
 
- -- Leonidas S. Barbosa <leo.barbosa@canonical.com>  Thu, 23 Nov 2017 08:34:05 -0300
+ -- Matthias Klose <doko@debian.org>  Tue, 05 Sep 2017 20:32:10 +0200
 
-oq-python3.5 (3.5.3-1ubuntu0~17.04.1) zesty; urgency=medium
+python3.5 (3.5.4-3) unstable; urgency=medium
 
+  * Stop building the fpectl extension.
+  * Break python3-numpy (<< 1:1.12.1-3.1), referencing the now missing fpectl
+    modules. Addresses: #873791.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 31 Aug 2017 14:22:39 +0200
+
+python3.5 (3.5.4-2) unstable; urgency=medium
+
+  * Update breaks/replaces. Closes: #871579.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 12 Aug 2017 10:08:14 -0400
+
+python3.5 (3.5.4-1) unstable; urgency=medium
+
+  * Python 3.5.4 release.
+  * Re-enable running the testsuite.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 08 Aug 2017 12:47:40 -0400
+
+python3.5 (3.5.4~rc1-1) unstable; urgency=medium
+
+  * Python 3.5.4 release candidate 1.
+    - bpo-30500: Fix urllib.parse.splithost() to correctly parse fragments. For
+      example, ``splithost('//127.0.0.1#@evil.com/')`` now correctly returns the
+      ``127.0.0.1`` host, instead of treating ``@evil.com`` as the host in an
+      authentification (``login@host``).
+    - bpo-30876: Relative import from unloaded package now reimports the package
+      instead of failing with SystemError.  Relative import from non-package now
+      fails with ImportError rather than SystemError.
+    - bpo-30765: Avoid blocking in pthread_mutex_lock() when
+      PyThread_acquire_lock() is asked not to block.
+    - bpo-29403: Fix ``unittest.mock``'s autospec to not fail on method-bound
+      builtin functions.
+    - bpo-30961: Fix decrementing a borrowed reference in tracemalloc.
+    - bpo-30886: Fix multiprocessing.Queue.join_thread(): it now waits until the
+      thread completes, even if the thread was started by the same process which
+      created the queue.
+    - bpo-29854: Fix segfault in readline when using readline's history-size
+      option.
+    - bpo-30807: signal.setitimer() may disable the timer when passed a tiny
+      value.
+      Tiny values (such as 1e-6) are valid non-zero values for setitimer(),
+      which is specified as taking microsecond-resolution intervals. However, on
+      some platform, our conversion routine could convert 1e-6 into a zero
+      interval, therefore disabling the timer instead of (re-)scheduling it.
+    - bpo-30441: Fix bug when modifying os.environ while iterating over it
+    - bpo-30532: Fix email header value parser dropping folding white space in
+      certain cases.
+    - bpo-30879: os.listdir() and os.scandir() now emit bytes names when called
+      with bytes- like argument.
+    - bpo-30746: Prohibited the '=' character in environment variable names in
+      ``os.putenv()`` and ``os.spawn*()``.
+    - bpo-29755: Fixed the lgettext() family of functions in the gettext module.
+      They now always return bytes.
+    - bpo-30645: Fix path calculation in imp.load_package(), fixing it for cases
+      when a package is only shipped with bytecodes.
+    - bpo-23890: unittest.TestCase.assertRaises() now manually breaks a
+      reference cycle to not keep objects alive longer than expected.
+    - bpo-30149: inspect.signature() now supports callables with variable-
+      argument parameters wrapped with partialmethod.
+    - bpo-29931: Fixed comparison check for ipaddress.ip_interface objects.
+    - bpo-24484: Avoid race condition in multiprocessing cleanup.
+    - bpo-28994: The traceback no longer displayed for SystemExit raised in a
+      callback registered by atexit.
+    - bpo-30508: Don't log exceptions if Task/Future "cancel()" method was
+      called.
+    - bpo-28556: Updates to typing module: Add generic AsyncContextManager, add
+      support for ContextManager on all versions.
+    - bpo-29870: Fix ssl sockets leaks when connection is aborted in asyncio/ssl
+      implementation.
+    - bpo-29743: Closing transport during handshake process leaks open socket.
+    - bpo-27585: Fix waiter cancellation in asyncio.Lock.
+    - bpo-30418: On Windows, subprocess.Popen.communicate() now also ignore
+      EINVAL on stdin.write() if the child process is still running but closed
+      the pipe.
+    - bpo-28969: Fixed race condition in C implementation of
+      functools.lru_cache. KeyError could be raised when cached function with
+      full cache was simultaneously called from differen threads with the same
+      uncached arguments.
+    - bpo-29142: In urllib.request, suffixes in no_proxy environment variable
+      with leading dots could match related hostnames again (e.g. .b.c matches
+      a.b.c).
+    - bpo-30176: Add missing attribute related constants in curses
+      documentation.
+    - bpo-30822: Fix regrtest command line parser to allow passing -u
+      extralargefile to run test_zipfile64.
+    - bpo-30383: regrtest: Enhance regrtest and backport features from the
+      master branch.
+      Add options: --coverage, --testdir, --list-tests (list test files, don't
+      run them), --list-cases (list test identifiers, don't run them,
+      :issue:`30523`), --matchfile (load a list of test filters from a text
+      file, :issue:`30540`), --slowest (alias to --slow).
+
+      Enhance output: add timestamp, test result, currently running tests,
+      "Tests result: xxx" summary with total duration, etc.
+
+      Fix reference leak hunting in regrtest, --huntrleaks: regrtest now warms
+      up caches, create explicitly all internal singletons which are created on
+      demand to prevent false positives when checking for reference leaks.
+      (:issue:`30675`).
+    - bpo-30357: test_thread: setUp() now uses support.threading_setup() and
+      support.threading_cleanup() to wait until threads complete to avoid random
+      side effects on following tests.
+    - bpo-28087: Skip test_asyncore and test_eintr poll failures on macOS. Skip
+      some tests of select.poll when running on macOS due to unresolved issues
+      with the underlying system poll function on some macOS versions.
+    - bpo-30197: Enhanced functions swap_attr() and swap_item() in the
+      test.support module. They now work when delete replaced attribute or item
+      inside the with statement.  The old value of the attribute or item (or
+      None if it doesn't exist) now will be assigned to the target of the "as"
+      clause, if there is one.
+    - bpo-29571: to match the behaviour of the ``re.LOCALE`` flag,
+      test_re.test_locale_flag now uses ``locale.getpreferredencoding(False)``
+      to determine the candidate encoding for the test regex (allowing it to
+      correctly skip the test when the default locale encoding is a multi-byte
+      encoding)
+  * Build using -fexceptions on ppc64 and ppc64el.
+    Closes: #862925. LP: #1691848.
+  * Update symbols files.
+  * Move test_support.py from libpython3.5-testsuite to libpython3.5-stdlib.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 25 Jul 2017 10:53:34 +0200
+
+python3.5 (3.5.3-3) unstable; urgency=medium
+
+  * Update symbols files.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 07 Jun 2017 16:23:48 -0700
+
+python3.5 (3.5.3-2) unstable; urgency=medium
+
+  * Update to 20170607 from the 3.5 branch.
+    - bpo-27945: Fixed various segfaults with dict when input collections are
+      mutated during searching, inserting or comparing.
+    - bpo-25794: Fixed type.__setattr__() and type.__delattr__() for
+      non-interned attribute names.
+    - bpo-29935: Fixed error messages in the index() method of tuple,
+      list and deque when pass indices of wrong type.
+    - bpo-28876: ``bool(range)`` works even if ``len(range)``
+      raises :exc:`OverflowError`.
+    - bpo-29600: Fix wrapping coroutine return values in StopIteration.
+    - Issue #29537: Restore runtime compatibility with bytecode files generated
+      by CPython 3.5.0 to 3.5.2, and adjust the eval loop to avoid the problems
+      that could be caused by the malformed variant of the
+      BUILD_MAP_UNPACK_WITH_CALL opcode that they may contain.
+    - Issue #28598: Support __rmod__ for subclasses of str being called before
+      str.__mod__.
+    - bpo-29602: Fix incorrect handling of signed zeros in complex constructor
+      for complex subclasses and for inputs having a __complex__ method.
+    - bpo-29347: Fixed possibly dereferencing undefined pointers
+      when creating weakref objects.
+    - bpo-29438: Fixed use-after-free problem in key sharing dict.
+    - Issue #29319: Prevent RunMainFromImporter overwriting sys.path[0].
+    - Issue #29337: Fixed possible BytesWarning when compare the code objects.
+      Warnings could be emitted at compile time.
+    - bpo-30378: Fix the problem that logging.handlers.SysLogHandler cannot
+      handle IPv6 addresses.
+    - bpo-29960: Preserve generator state when _random.Random.setstate()
+      raises an exception.
+    - bpo-30414: multiprocessing.Queue._feed background running
+      thread do not break from main loop on exception.
+    - bpo-30003: Fix handling escape characters in HZ codec.
+    - bpo-30301: Fix AttributeError when using SimpleQueue.empty() under
+      *spawn* and *forkserver* start methods.
+    - bpo-30329: imaplib and poplib now catch the Windows socket WSAEINVAL
+      error (code 10022) on shutdown(SHUT_RDWR): An invalid operation was
+      attempted.  This error occurs sometimes on SSL connections.
+    - bpo-30375: Warnings emitted when compile a regular expression now always
+      point to the line in the user code.  Previously they could point into
+      inners of the re module if emitted from inside of groups or conditionals.
+    - bpo-30048: Fixed ``Task.cancel()`` can be ignored when the task is
+      running coroutine and the coroutine returned without any more ``await``.
+    - bpo-29990: Fix range checking in GB18030 decoder.
+    - Revert bpo-26293 for zipfile breakage. See also bpo-29094.
+    - bpo-30243: Removed the __init__ methods of _json's scanner and encoder.
+      Misusing them could cause memory leaks or crashes.  Now scanner and
+      encoder objects are completely initialized in the __new__ methods.
+    - bpo-30185: Avoid KeyboardInterrupt tracebacks in forkserver helper
+      process when Ctrl-C is received.
+    - bpo-28556: Various updates to typing module: add typing.NoReturn type,
+      use WrapperDescriptorType, minor bug-fixes.
+    - bpo-30205: Fix getsockname() for unbound AF_UNIX sockets on Linux.
+    - bpo-30070: Fixed leaks and crashes in errors handling in the parser
+      module.
+    - bpo-30061: Fixed crashes in IOBase methods __next__() and readlines()
+      when readline() or __next__() respectively return non-sizeable object.
+      Fixed possible other errors caused by not checking results of
+      PyObject_Size(), PySequence_Size(), or PyMapping_Size().
+    - bpo-30068: _io._IOBase.readlines will check if it's closed first when
+      hint is present.
+    - bpo-29694: Fixed race condition in pathlib mkdir with flags parents=True.
+    - bpo-29692: Fixed arbitrary unchaining of RuntimeError exceptions in
+      contextlib.contextmanager.
+    - bpo-29998: Pickling and copying ImportError now preserves name and path
+      attributes.
+    - bpo-29942: Fix a crash in itertools.chain.from_iterable when encountering
+      long runs of empty iterables.
+    - bpo-27863: Fixed multiple crashes in ElementTree caused by
+      race conditions and wrong types.
+    - bpo-28699: Fixed a bug in pools in multiprocessing.pool that raising an
+      exception at the very first of an iterable may swallow the exception or
+      make the program hang.
+    - bpo-25803: Avoid incorrect errors raised by Path.mkdir(exist_ok=True)
+      when the OS gives priority to errors such as EACCES over EEXIST.
+    - bpo-29861: Release references to tasks, their arguments and their results
+      as soon as they are finished in multiprocessing.Pool.
+    - bpo-29884: faulthandler: Restore the old sigaltstack during teardown.
+    - bpo-25455: Fixed crashes in repr of recursive buffered file-like objects.
+    - bpo-29800: Fix crashes in partial.__repr__ if the keys of partial.keywords
+      are not strings.
+    - bpo-29742: get_extra_info() raises exception if get called on closed
+      ssl transport.
+    - bpo-8256: Fixed possible failing or crashing input() if attributes
+      "encoding" or "errors" of sys.stdin or sys.stdout are not set or are
+      not strings.
+    - bpo-28298: Fix a bug that prevented array 'Q', 'L' and 'I' from accepting
+      big intables (objects that have __int__) as elements.
+    - bpo-29615: SimpleXMLRPCDispatcher no longer chains KeyError (or any other
+      exception) to exception(s) raised in the dispatched methods.
+    - bpo-29704: asyncio.subprocess.SubprocessStreamProtocol no longer closes
+      before all pipes are closed.
+    - bpo-29703: Fix asyncio to support instantiation of new event loops
+      in child processes.
+    - bpo-29376: Fix assertion error in threading._DummyThread.is_alive().
+    - bpo-29110: Fix file object leak in aifc.open() when file is given as a
+      filesystem path and is not in valid AIFF format.
+    - Issue #28961: Fix unittest.mock._Call helper: don't ignore the name
+      parameter anymore.
+    - bpo-29532: Altering a kwarg dictionary passed to functools.partial()
+      no longer affects a partial object after creation.
+    - Issue #28556: Various updates to typing module: typing.Counter,
+      typing.ChainMap, improved ABC caching, etc.
+    - Issue #29100: Fix datetime.fromtimestamp() regression introduced in
+      Python 3.6.0: check minimum and maximum years.
+    - Issue #29519: Fix weakref spewing exceptions during interpreter shutdown
+      when used with a rare combination of multiprocessing and custom codecs.
+    - Issue #29416: Prevent infinite loop in pathlib.Path.mkdir
+    - Issue #29444: Fixed out-of-bounds buffer access in the group() method of
+      the match object.
+    - Issue #29335: Fix subprocess.Popen.wait() when the child process has
+      exited to a stopped instead of terminated state (ex: when under ptrace).
+    - Issue #29290: Fix a regression in argparse that help messages would wrap
+      at non-breaking spaces.
+    - Issue #28735: Fixed the comparison of mock.MagickMock with mock.ANY.
+    - Issue #29011: Fix an important omission by adding Deque to the typing
+      module.
+    - Issue #29219: Fixed infinite recursion in the repr of uninitialized
+      ctypes.CDLL instances.
+    - Issue #28969: Fixed race condition in C implementation of
+      functools.lru_cache.  KeyError could be raised when cached function
+      with full cache was simultaneously called from differen threads with
+      the same uncached arguments.
+    - Issue #29142: In urllib.request, suffixes in no_proxy environment
+      variable with leading dots could match related hostnames again (e.g.
+      .b.c matches a.b.c).
+    - Issue #27867: Function PySlice_GetIndicesEx() is replaced with a macro if
+      Py_LIMITED_API is set to the value between 0x03050400 and 0x03060000 (not
+      including) or 0x03060100 or higher.
+    - Issue #29083: Fixed the declaration of some public API functions.
+      PyArg_VaParse() and PyArg_VaParseTupleAndKeywords() were not available in
+      limited API.  PyArg_ValidateKeywordArguments(), PyArg_UnpackTuple() and
+      Py_BuildValue() were not available in limited API of version < 3.3 when
+      PY_SSIZE_T_CLEAN is defined.
+    - bpo-26985: Add missing info of code object in inspect documentation.
+    - bpo-28929: Link the documentation to its source file on GitHub.
+    - bpo-25008: Document smtpd.py as effectively deprecated and add a pointer
+      to aiosmtpd, a third-party asyncio-based replacement.
+    - Issue #26355: Add canonical header link on each page to corresponding
+      major version of the documentation.
+    - Issue #29349: Fix Python 2 syntax in code for building the documentation.
+    - bpo-29243: Prevent unnecessary rebuilding of Python during ``make test``,
+      ``make install`` and some other make targets when configured with
+      ``--enable-optimizations``.
+    - bpo-23404: Don't regenerate generated files based on file modification
+      time anymore: the action is now explicit. Replace ``make touch`` with
+      ``make regen-all``.
+    - bpo-29643: Fix ``--enable-optimization`` didn't work.
+    - bpo-30357: test_thread: setUp() now uses support.threading_setup() and
+      support.threading_cleanup() to wait until threads complete to avoid
+      random side effects on following tests.
+    - bpo-30197: Enhanced functions swap_attr() and swap_item() in the
+      test.support module.  They now work when delete replaced attribute or
+      item inside the with statement.  The old value of the attribute or item
+      (or None if it doesn't exist) now will be assigned to the target of the
+      "as" clause, if there is one.
+    - Issue #29571: to match the behaviour of the ``re.LOCALE`` flag,
+      test_re.test_locale_flag now uses ``locale.getpreferredencoding(False)``
+      to determine the candidate encoding for the test regex (allowing it to
+      correctly skip the test when the default locale encoding is a multi-byte
+      encoding)
   * Explicitly use the system python for byte compilation in postinst scripts.
-    (LP: #1682934)
+    Closes: #852163. LP: #1682934.
 
- -- Brian Murray <brian@ubuntu.com>  Thu, 14 Sep 2017 15:58:41 -0700
+ -- Matthias Klose <doko@debian.org>  Wed, 07 Jun 2017 12:26:02 -0700
 
-oq-python3.5 (3.5.3-1ubuntu0~17.04.0) zesty; urgency=medium
-
-  * SRU: LP: #1711724 Fix dict segfault. Issue #27945.
-
- -- Clint Byrum <clint@ubuntu.com>  Thu, 07 Sep 2017 09:23:57 -0700
-
-oq-python3.5 (3.5.3-1) unstable; urgency=medium
+python3.5 (3.5.3-1) unstable; urgency=medium
 
   * Python 3.5.3 release.
 
  -- Matthias Klose <doko@debian.org>  Thu, 19 Jan 2017 15:11:04 +0100
 
-oq-python3.5 (3.5.3~rc1-1) unstable; urgency=medium
+python3.5 (3.5.3~rc1-1) unstable; urgency=medium
 
   * Python 3.5.3 release candidate 1.
    - Issue #29073: bytearray formatting no longer truncates on first null byte.
@@ -64,13 +347,13 @@ oq-python3.5 (3.5.3~rc1-1) unstable; urgency=medium
      thread.
    - Issue #20191: Fixed a crash in resource.prlimit() when pass a sequence that
      doesn't own its elements as limits.
-   - Issue #28990: Fix SSL hanging if connection is closed before handshake 
+   - Issue #28990: Fix SSL hanging if connection is closed before handshake
      completed.
   * Update symbols files.
 
  -- Matthias Klose <doko@debian.org>  Tue, 03 Jan 2017 05:40:57 +0100
 
-oq-python3.5 (3.5.2-9) unstable; urgency=medium
+python3.5 (3.5.2-9) unstable; urgency=medium
 
   * Update to 20161213 from the 3.5 branch.
     - Issue #28512: Fixed setting the offset attribute of SyntaxError by
@@ -90,7 +373,7 @@ oq-python3.5 (3.5.2-9) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Tue, 13 Dec 2016 15:16:35 +0100
 
-oq-python3.5 (3.5.2-8) unstable; urgency=medium
+python3.5 (3.5.2-8) unstable; urgency=medium
 
   * Update to 20161121 from the 3.5 branch.
     - Issue #19398: Extra slash no longer added to sys.path components
@@ -105,7 +388,7 @@ oq-python3.5 (3.5.2-8) unstable; urgency=medium
     - Issue #28387: Fixed possible crash in _io.TextIOWrapper deallocator when
       the garbage collector is invoked in other thread.
     - Issue #28600: Optimize loop.call_soon().
-    - Issue #28613: Fix get_event_loop() return the current loop if 
+    - Issue #28613: Fix get_event_loop() return the current loop if
       called from coroutines/callbacks.
     - Issue #28639: Fix inspect.isawaitable to always return bool
     - Issue #28652: Make loop methods reject socket kinds they do not support.
@@ -116,10 +399,10 @@ oq-python3.5 (3.5.2-8) unstable; urgency=medium
     - Issue #23839: Various caches now are cleared before running every
       test file.
     - Issue #26359: Rename --with-optimiations to --enable-optimizations.
-    
+
  -- Matthias Klose <doko@debian.org>  Tue, 22 Nov 2016 02:00:20 +0100
 
-oq-python3.5 (3.5.2-7) unstable; urgency=medium
+python3.5 (3.5.2-7) unstable; urgency=medium
 
   * Update to 20161103 from the 3.5 branch.
     - Issue #28426: Fixed potential crash in PyUnicode_AsDecodedObject() in
@@ -211,7 +494,7 @@ oq-python3.5 (3.5.2-7) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Thu, 03 Nov 2016 12:10:16 +0100
 
-oq-python3.5 (3.5.2-6) unstable; urgency=medium
+python3.5 (3.5.2-6) unstable; urgency=medium
 
   * Update to 20160922 from the 3.5 branch.
     - Issue #27955: Fallback on reading /dev/urandom device when the getrandom()
@@ -268,7 +551,7 @@ oq-python3.5 (3.5.2-6) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Thu, 22 Sep 2016 14:18:14 +0200
 
-oq-python3.5 (3.5.2-5) unstable; urgency=medium
+python3.5 (3.5.2-5) unstable; urgency=medium
 
   * Update to 20160910 from the 3.5 branch.
     - Issue #25758: Prevents zipimport from unnecessarily encoding a filename.
@@ -330,7 +613,7 @@ oq-python3.5 (3.5.2-5) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Sat, 10 Sep 2016 12:24:58 +0200
 
-oq-python3.5 (3.5.2-4) unstable; urgency=medium
+python3.5 (3.5.2-4) unstable; urgency=medium
 
   * Update to 20160830 from the 3.5 branch.
     - Issue #27587: Fix another issue found by PVS-Studio: Null pointer check
@@ -390,7 +673,7 @@ oq-python3.5 (3.5.2-4) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Tue, 30 Aug 2016 21:08:42 +0200
 
-oq-python3.5 (3.5.2-3) unstable; urgency=medium
+python3.5 (3.5.2-3) unstable; urgency=medium
 
   * Update to 20160805 from the 3.5 branch.
     - Issue #27419: Standard __import__() no longer look up "__import__" in
@@ -474,7 +757,7 @@ oq-python3.5 (3.5.2-3) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Fri, 05 Aug 2016 10:07:14 +0200
 
-oq-python3.5 (3.5.2-2) unstable; urgency=medium
+python3.5 (3.5.2-2) unstable; urgency=medium
 
   * asyncio: Fix callbacks race in SelectorLoop.sock_connect, proposed patch
     taken from https://github.com/python/asyncio/pull/366.
@@ -482,7 +765,7 @@ oq-python3.5 (3.5.2-2) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Tue, 05 Jul 2016 13:33:36 +0200
 
-oq-python3.5 (3.5.2-1) unstable; urgency=medium
+python3.5 (3.5.2-1) unstable; urgency=medium
 
   * Python 3.5.2 release.
     - Issue #26867: Ubuntu's openssl OP_NO_SSLv3 is forced on by default;
@@ -491,13 +774,13 @@ oq-python3.5 (3.5.2-1) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Mon, 27 Jun 2016 08:22:49 +0200
 
-oq-python3.5 (3.5.2~rc1-3) unstable; urgency=medium
+python3.5 (3.5.2~rc1-3) unstable; urgency=medium
 
   * Fix building with the wheel files in the source package.
 
  -- Matthias Klose <doko@debian.org>  Mon, 13 Jun 2016 11:33:26 +0200
 
-oq-python3.5 (3.5.2~rc1-1) unstable; urgency=medium
+python3.5 (3.5.2~rc1-1) unstable; urgency=medium
 
   * Python 3.5.2 release candidate 1.
     - Issue #15657: Delete incorrect statement from PyMethodDef documentation.
@@ -536,19 +819,19 @@ oq-python3.5 (3.5.2~rc1-1) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Mon, 13 Jun 2016 07:58:29 +0200
 
-oq-python3.5 (3.5.1-16) unstable; urgency=high
+python3.5 (3.5.1-16) unstable; urgency=high
 
   * Restore the distutils-init patch, only applied on upstream trunk.
 
  -- Matthias Klose <doko@debian.org>  Fri, 10 Jun 2016 11:03:40 +0200
 
-oq-python3.5 (3.5.1-15) unstable; urgency=high
+python3.5 (3.5.1-15) unstable; urgency=high
 
   * Fix bad update of the distutils-install-layout patch.
 
  -- Matthias Klose <doko@debian.org>  Fri, 10 Jun 2016 00:38:59 +0200
 
-oq-python3.5 (3.5.1-14) unstable; urgency=medium
+python3.5 (3.5.1-14) unstable; urgency=medium
 
   * Update to 20160609 from the 3.5 branch.
     - A new version of typing.py provides several new classes and
@@ -591,7 +874,7 @@ oq-python3.5 (3.5.1-14) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Thu, 09 Jun 2016 17:41:54 +0200
 
-oq-python3.5 (3.5.1-13) unstable; urgency=medium
+python3.5 (3.5.1-13) unstable; urgency=medium
 
   * Update to 20160603 from the 3.5 branch.
     - Issue #26168: Fixed possible refleaks in failing Py_BuildValue() with
@@ -650,7 +933,7 @@ oq-python3.5 (3.5.1-13) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Fri, 03 Jun 2016 01:07:42 +0200
 
-oq-python3.5 (3.5.1-12) unstable; urgency=medium
+python3.5 (3.5.1-12) unstable; urgency=medium
 
   * Update to 20160509 from the 3.5 branch.
     - Issue #26811: gc.get_objects() no longer contains a broken tuple with
@@ -706,7 +989,7 @@ oq-python3.5 (3.5.1-12) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Mon, 09 May 2016 13:00:17 +0200
 
-oq-python3.5 (3.5.1-11) unstable; urgency=medium
+python3.5 (3.5.1-11) unstable; urgency=medium
 
   * Update to 20160330 from the 3.5 branch.
     - Issue #26659: Make the builtin slice type support cycle collection.
@@ -734,20 +1017,20 @@ oq-python3.5 (3.5.1-11) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Sun, 17 Apr 2016 18:14:06 +0200
 
-oq-python3.5 (3.5.1-10) unstable; urgency=medium
+python3.5 (3.5.1-10) unstable; urgency=medium
 
   * Update to 20160330 from the 3.5 branch.
 
  -- Matthias Klose <doko@debian.org>  Thu, 31 Mar 2016 00:46:26 +0200
 
-oq-python3.5 (3.5.1-9) unstable; urgency=medium
+python3.5 (3.5.1-9) unstable; urgency=medium
 
   * Update to 20160323 from the 3.5 branch.
   * Always build _math.o with -fPIC.
 
  -- Matthias Klose <doko@debian.org>  Wed, 23 Mar 2016 11:47:21 +0100
 
-oq-python3.5 (3.5.1-8) unstable; urgency=medium
+python3.5 (3.5.1-8) unstable; urgency=medium
 
   * Update to 20160318 from the 3.5 branch.
   * Fix python3-venv with updated python-pip packages (Barry Warsaw).
@@ -757,7 +1040,7 @@ oq-python3.5 (3.5.1-8) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Fri, 18 Mar 2016 16:12:19 +0100
 
-oq-python3.5 (3.5.1-7) unstable; urgency=medium
+python3.5 (3.5.1-7) unstable; urgency=medium
 
   * Update to 20160224 from the 3.5 branch.
   * python3.5-venv: Drop the dependency on python-setuptools-whl,
@@ -766,39 +1049,39 @@ oq-python3.5 (3.5.1-7) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Wed, 24 Feb 2016 12:28:57 +0100
 
-oq-python3.5 (3.5.1-6) unstable; urgency=medium
+python3.5 (3.5.1-6) unstable; urgency=medium
 
   * Update to 20160221 from the 3.5 branch.
 
  -- Matthias Klose <doko@debian.org>  Mon, 22 Feb 2016 00:11:32 +0100
 
-oq-python3.5 (3.5.1-5) unstable; urgency=medium
+python3.5 (3.5.1-5) unstable; urgency=medium
 
   * Update to 20160113 from the 3.5 branch.
 
  -- Matthias Klose <doko@debian.org>  Wed, 13 Jan 2016 16:09:18 +0100
 
-oq-python3.5 (3.5.1-4) unstable; urgency=medium
+python3.5 (3.5.1-4) unstable; urgency=medium
 
   * Update to 20160111 from the 3.5 branch.
 
  -- Matthias Klose <doko@debian.org>  Mon, 11 Jan 2016 21:50:55 +0100
 
-oq-python3.5 (3.5.1-3) unstable; urgency=medium
+python3.5 (3.5.1-3) unstable; urgency=medium
 
   * Update to 20160105 from the 3.5 branch.
   * Fix maintainer scripts with findutils 4.6. Closes: #809079.
 
  -- Matthias Klose <doko@debian.org>  Tue, 05 Jan 2016 12:13:30 +0100
 
-oq-python3.5 (3.5.1-2) unstable; urgency=medium
+python3.5 (3.5.1-2) unstable; urgency=medium
 
   * Disable LTO on Debian/s390x.
   * Don't run test_signal on alpha, currently breaks the testsuite.
 
  -- Matthias Klose <doko@debian.org>  Thu, 10 Dec 2015 15:34:41 +0100
 
-oq-python3.5 (3.5.1-1) unstable; urgency=medium
+python3.5 (3.5.1-1) unstable; urgency=medium
 
   * Python 3.5.1 release.
   * Fix building architecture independent packages only. Closes: #806870.
@@ -808,13 +1091,13 @@ oq-python3.5 (3.5.1-1) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Mon, 07 Dec 2015 11:34:52 +0100
 
-oq-python3.5 (3.5.1~rc1-2) unstable; urgency=medium
+python3.5 (3.5.1~rc1-2) unstable; urgency=medium
 
   * Build-depend on time.
 
  -- Matthias Klose <doko@debian.org>  Tue, 24 Nov 2015 08:26:06 +0100
 
-oq-python3.5 (3.5.1~rc1-1) unstable; urgency=medium
+python3.5 (3.5.1~rc1-1) unstable; urgency=medium
 
   * Python 3.5.1 release candidate 1.
   * Don't ship menu files anymore, just desktop files.
@@ -822,7 +1105,7 @@ oq-python3.5 (3.5.1~rc1-1) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Mon, 23 Nov 2015 22:10:38 +0100
 
-oq-python3.5 (3.5.0-4) unstable; urgency=medium
+python3.5 (3.5.0-4) unstable; urgency=medium
 
   * Update to 20151028 from the 3.5 branch.
     - Issue #25274: sys.setrecursionlimit() now raises a RecursionError if the
@@ -850,7 +1133,7 @@ oq-python3.5 (3.5.0-4) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Wed, 28 Oct 2015 16:31:37 +0100
 
-oq-python3.5 (3.5.0-3) unstable; urgency=medium
+python3.5 (3.5.0-3) unstable; urgency=medium
 
   * Update to 20151011 from the 3.5 branch.
     - Idle updates.
@@ -917,7 +1200,7 @@ oq-python3.5 (3.5.0-3) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Sun, 11 Oct 2015 11:05:38 +0200
 
-oq-python3.5 (3.5.0-2) unstable; urgency=medium
+python3.5 (3.5.0-2) unstable; urgency=medium
 
   * Update to 20150924 from the 3.5 branch.
   * Expect the test_code_module test to fail in the autopkg tests.
@@ -927,7 +1210,7 @@ oq-python3.5 (3.5.0-2) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Thu, 24 Sep 2015 01:01:34 +0200
 
-oq-python3.5 (3.5.0-1) unstable; urgency=medium
+python3.5 (3.5.0-1) unstable; urgency=medium
 
   * Python 3.5.0 release.
   * Drop the no-zip-on-sys.path patch; not worth saving, and the test suite
@@ -937,45 +1220,45 @@ oq-python3.5 (3.5.0-1) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Sun, 13 Sep 2015 16:38:26 +0200
 
-oq-python3.5 (3.5.0~rc3-1) unstable; urgency=medium
+python3.5 (3.5.0~rc3-1) unstable; urgency=medium
 
   * Python 3.5.0 release candidate 3.
 
  -- Matthias Klose <doko@debian.org>  Tue, 08 Sep 2015 09:56:15 +0200
 
-oq-python3.5 (3.5.0~rc2-1) unstable; urgency=medium
+python3.5 (3.5.0~rc2-1) unstable; urgency=medium
 
   * Python 3.5.0 release candidate 2.
 
  -- Matthias Klose <doko@debian.org>  Tue, 25 Aug 2015 22:29:07 +0200
 
-oq-python3.5 (3.5.0~rc1-1) unstable; urgency=medium
+python3.5 (3.5.0~rc1-1) unstable; urgency=medium
 
   * Python 3.5.0 release candidate 1.
   * Update symbols file.
 
  -- Matthias Klose <doko@debian.org>  Wed, 12 Aug 2015 16:57:46 +0200
 
-oq-python3.5 (3.5.0~b4-1) unstable; urgency=medium
+python3.5 (3.5.0~b4-1) unstable; urgency=medium
 
   * Python 3.5.0 beta 4.
 
  -- Matthias Klose <doko@debian.org>  Mon, 27 Jul 2015 12:27:48 +0200
 
-oq-python3.5 (3.5.0~b3-2) unstable; urgency=medium
+python3.5 (3.5.0~b3-2) unstable; urgency=medium
 
   * Fix expansion of makefile macros for _sysconfigdata. Issue #24705.
     LP: #1477759.
 
  -- Matthias Klose <doko@debian.org>  Fri, 24 Jul 2015 15:25:23 +0200
 
-oq-python3.5 (3.5.0~b3-1) unstable; urgency=medium
+python3.5 (3.5.0~b3-1) unstable; urgency=medium
 
   * Python 3.5.0 beta 3.
 
  -- Matthias Klose <doko@debian.org>  Mon, 06 Jul 2015 13:55:07 +0200
 
-oq-python3.5 (3.5.0~b2-1) unstable; urgency=medium
+python3.5 (3.5.0~b2-1) unstable; urgency=medium
 
   * Python 3.5.0 beta 2.
   * Make the build reproducible (Jérémy Bobbio). Closes: #786959.
@@ -986,13 +1269,13 @@ oq-python3.5 (3.5.0~b2-1) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Mon, 01 Jun 2015 12:18:33 +0200
 
-oq-python3.5 (3.5.0~b1-1ubuntu1) wily; urgency=medium
+python3.5 (3.5.0~b1-1ubuntu1) wily; urgency=medium
 
   * Disable pgo optimization on i386.
 
  -- Matthias Klose <doko@ubuntu.com>  Tue, 26 May 2015 23:30:38 +0200
 
-oq-python3.5 (3.5.0~b1-1) unstable; urgency=medium
+python3.5 (3.5.0~b1-1) unstable; urgency=medium
 
   * Python 3.5.0 beta 1.
   * Refresh patches.
@@ -1000,7 +1283,7 @@ oq-python3.5 (3.5.0~b1-1) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Tue, 26 May 2015 02:08:13 +0200
 
-oq-python3.5 (3.5.0~a4-5) unstable; urgency=medium
+python3.5 (3.5.0~a4-5) unstable; urgency=medium
 
   * Update to 20150519 from the trunk.
     - Fix issue #24226, parsing of many sequential one-line 'def' statements.
@@ -1008,7 +1291,7 @@ oq-python3.5 (3.5.0~a4-5) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Tue, 19 May 2015 09:55:39 +0200
 
-oq-python3.5 (3.5.0~a4-4) unstable; urgency=medium
+python3.5 (3.5.0~a4-4) unstable; urgency=medium
 
   * Update to 20150518 from the trunk.
     - Fix build on big endian targets.
@@ -1017,20 +1300,20 @@ oq-python3.5 (3.5.0~a4-4) unstable; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Mon, 18 May 2015 13:48:38 +0200
 
-oq-python3.5 (3.5.0~a4-3) unstable; urgency=medium
+python3.5 (3.5.0~a4-3) unstable; urgency=medium
 
   * Update to 20150517 from the trunk.
 
  -- Matthias Klose <doko@debian.org>  Sun, 17 May 2015 17:22:56 +0200
 
-oq-python3.5 (3.5.0~a4-2) experimental; urgency=medium
+python3.5 (3.5.0~a4-2) experimental; urgency=medium
 
   * Update to 20150421 from the trunk.
   * Fix renaming of extensions. Closes: #783090.
 
  -- Matthias Klose <doko@debian.org>  Wed, 22 Apr 2015 14:41:45 +0200
 
-oq-python3.5 (3.5.0~a4-1) experimental; urgency=medium
+python3.5 (3.5.0~a4-1) experimental; urgency=medium
 
   * Python 3.5.0 alpha 4.
   * Update to 20150420 from the trunk.
@@ -1038,7 +1321,7 @@ oq-python3.5 (3.5.0~a4-1) experimental; urgency=medium
 
  -- Matthias Klose <doko@debian.org>  Mon, 20 Apr 2015 20:59:53 +0200
 
-oq-python3.5 (3.5.0~a3-1) experimental; urgency=medium
+python3.5 (3.5.0~a3-1) experimental; urgency=medium
 
   * Python 3.5.0 alpha 3.
   * Update to 20150415 from the trunk.

@@ -2,7 +2,7 @@ Index: b/Makefile.pre.in
 ===================================================================
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -139,7 +139,7 @@ CONFINCLUDEPY=	$(CONFINCLUDEDIR)/python$
+@@ -141,7 +141,7 @@ CONFINCLUDEPY=	$(CONFINCLUDEDIR)/python$
  SHLIB_SUFFIX=	@SHLIB_SUFFIX@
  EXT_SUFFIX=	@EXT_SUFFIX@
  LDSHARED=	@LDSHARED@ $(PY_LDFLAGS)
@@ -11,7 +11,7 @@ Index: b/Makefile.pre.in
  LDCXXSHARED=	@LDCXXSHARED@
  DESTSHARED=	$(BINLIBDEST)/lib-dynload
  
-@@ -579,7 +579,7 @@ clinic: $(BUILDPYTHON)
+@@ -548,7 +548,7 @@ clinic: $(BUILDPYTHON)
  
  # Build the interpreter
  $(BUILDPYTHON):	Programs/python.o $(LIBRARY) $(LDLIBRARY) $(PY3LIBRARY)

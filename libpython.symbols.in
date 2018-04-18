@@ -325,9 +325,6 @@
  PyException_SetCause@Base @SVER@
  PyException_SetContext@Base @SVER@
  PyException_SetTraceback@Base @SVER@
- PyFPE_counter@Base @SVER@
- PyFPE_dummy@Base @SVER@
- PyFPE_jbuf@Base @SVER@
  PyFileIO_Type@Base @SVER@
  PyFile_FromFd@Base @SVER@
  PyFile_GetLine@Base @SVER@
@@ -747,7 +744,9 @@
  PySet_Pop@Base @SVER@
  PySet_Size@Base @SVER@
  PySet_Type@Base @SVER@
+ PySlice_Unpack@Base @SVER@
  PySignal_SetWakeupFd@Base @SVER@
+ PySlice_AdjustIndices@Base @SVER@
  PySlice_Fini@Base @SVER@
  PySlice_GetIndices@Base @SVER@
  PySlice_GetIndicesEx@Base @SVER@
@@ -1119,6 +1118,7 @@
  _PyDict_NewPresized@Base @SVER@
  _PyDict_Next@Base @SVER@
  _PyDict_Pop@Base @SVER@
+ _PyDict_Pop_KnownHash@Base @SVER@
  _PyDict_SizeOf@Base @SVER@
  _PyDict_SetItemId@Base @SVER@
  _PyDict_SetItem_KnownHash@Base @SVER@
@@ -1134,6 +1134,7 @@
  _PyEval_SetSwitchInterval@Base @SVER@
  _PyEval_SignalAsyncExc@Base @SVER@
  _PyEval_SliceIndex@Base @SVER@
+ _PyEval_SliceIndexNotNone@Base @SVER@
  _PyExc_Fini@Base @SVER@
  _PyExc_Init@Base @SVER@
  _PyFaulthandler_Fini@Base @SVER@
@@ -1368,6 +1369,8 @@
  _PyUnicode_AsKind@Base @SVER@
  _PyUnicode_AsLatin1String@Base @SVER@
  _PyUnicode_AsUTF8String@Base @SVER@
+ _PyUnicode_AsUnicode@Base @SVER@
+ _PyUnicode_AsWideCharString@Base @SVER@
  _PyUnicode_BidirectionalNames@Base @SVER@
  _PyUnicode_CategoryNames@Base @SVER@
  _PyUnicode_ClearStaticStrings@Base @SVER@
@@ -1436,6 +1439,8 @@
  _Py_Attribute@Base @SVER@
  _Py_AugAssign@Base @SVER@
  _Py_Await@Base @SVER@
+ _Py_BACKCOMPAT_HALF_MAGIC@Base @SVER@
+ _Py_BACKCOMPAT_MAGIC_NUMBER@Base @SVER@
  _Py_BinOp@Base @SVER@
  _Py_BoolOp@Base @SVER@
  _Py_Break@Base @SVER@
@@ -1582,6 +1587,8 @@
  (arch=amd64 i386 lpia)_Py_get_387controlword@Base @SVER@
  _Py_get_blocking@Base @SVER@
  _Py_get_inheritable@Base @SVER@
+ _Py_gitidentifier@Base @SVER@
+ _Py_gitversion@Base @SVER@
  _Py_hashtable_clear@Base @SVER@
  _Py_hashtable_compare_direct@Base @SVER@
  _Py_hashtable_copy@Base @SVER@
@@ -1597,8 +1604,6 @@
  _Py_hashtable_pop@Base @SVER@
  _Py_hashtable_set@Base @SVER@
  _Py_hashtable_size@Base @SVER@
- _Py_hgidentifier@Base @SVER@
- _Py_hgversion@Base @SVER@
  _Py_isalnum__doc__@Base @SVER@
  _Py_isalpha__doc__@Base @SVER@
  _Py_isdigit__doc__@Base @SVER@

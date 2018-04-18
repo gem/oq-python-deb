@@ -4,7 +4,7 @@ Index: b/configure.ac
 ===================================================================
 --- a/configure.ac
 +++ b/configure.ac
-@@ -4371,8 +4371,13 @@ int main(void) {
+@@ -4382,8 +4382,13 @@ int main(void) {
  AC_MSG_RESULT($ac_cv_posix_semaphores_enabled)
  if test $ac_cv_posix_semaphores_enabled = no
  then
@@ -20,7 +20,7 @@ Index: b/configure.ac
  fi
  
  # Multiprocessing check for broken sem_getvalue
-@@ -4407,8 +4412,13 @@ int main(void){
+@@ -4418,8 +4423,13 @@ int main(void){
  AC_MSG_RESULT($ac_cv_broken_sem_getvalue)
  if test $ac_cv_broken_sem_getvalue = yes
  then

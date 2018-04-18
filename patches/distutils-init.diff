@@ -4,7 +4,7 @@ Index: b/Lib/distutils/sysconfig.py
 ===================================================================
 --- a/Lib/distutils/sysconfig.py
 +++ b/Lib/distutils/sysconfig.py
-@@ -438,38 +438,11 @@ _config_vars = None
+@@ -435,38 +435,11 @@ _config_vars = None
  
  def _init_posix():
      """Initialize the module as appropriate for POSIX systems."""

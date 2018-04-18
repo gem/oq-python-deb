@@ -1,0 +1,13 @@
+Index: b/Doc/Makefile
+===================================================================
+--- a/Doc/Makefile
++++ b/Doc/Makefile
+@@ -6,7 +6,7 @@
+ # You can set these variables from the command line.
+ PYTHON       = python3
+ SPHINXBUILD  = sphinx-build
+-BLURB = $(PYTHON) -m blurb
++BLURB = $(BLURB_ENV) $(PYTHON) -m blurb
+ PAPER        =
+ SOURCES      =
+ DISTVERSION  = $(shell $(PYTHON) tools/extensions/patchlevel.py)

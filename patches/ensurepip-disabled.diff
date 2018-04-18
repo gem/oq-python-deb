@@ -55,7 +55,7 @@ Index: b/Lib/venv/__init__.py
 ===================================================================
 --- a/Lib/venv/__init__.py
 +++ b/Lib/venv/__init__.py
-@@ -252,7 +252,28 @@ class EnvBuilder:
+@@ -261,7 +261,28 @@ class EnvBuilder:
          # intended for the global Python environment
          cmd = [context.env_exe, '-Im', 'ensurepip', '--upgrade',
                                                      '--default-pip']
