@@ -281,26 +281,53 @@ build_run () {
     inner_ret=$?
     sudo $LXC_TERM -n "$lxc_name"
 
-
-    return $inner_ret
-
-
-    # TODO
-    
-    scp "${lxc_ip}:/tmp/webui*" "out_${BUILD_UBUVER}/"
-    scp "${lxc_ip}:ssh.log" "out_${BUILD_UBUVER}/devtest.history"
-
-    sudo $LXC_TERM -n "$lxc_name"
-
-    # NOTE: pylint returns errors too frequently to consider them a critical event
-    if pylint --rcfile pylintrc -f parseable openquake > pylint.txt ; then
-        echo "pylint exits without errors"
-    else
-        echo "WARNING: pylint exits with $? value"
+    if [ $inner_ret -ne 0 ]; then
+        return $inner_ret
     fi
+
     set -e
-    if [ -f /tmp/packager.eph.$$.log ]; then
-        rm /tmp/packager.eph.$$.log
+    #
+    # in build Ubuntu package each branch package is saved in a separated
+    # directory with a well known name syntax to be able to use
+    # correct dependencies during the "test Ubuntu package" procedure
+    #
+    if [ "$BUILD_REPOSITORY" -eq 1 -a -d "${GEM_DEB_REPO}" ]; then
+        if [ "$branch" != "" ]; then
+            repo_id="$(repo_id_get)"
+            if [ "git://$repo_id" != "$GEM_GIT_REPO" -o "$branch" != "master" ]; then
+                CUSTOM_SERIE="devel/$(echo "$repo_id" | sed "s@/@__@g;s/\./-/g")__${branch}"
+                if [ "$CUSTOM_SERIE" != "" ]; then
+                    GEM_DEB_SERIE="$CUSTOM_SERIE"
+                fi
+            fi
+        fi
+        mkdir -p "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}"
+        repo_tmpdir="$(mktemp -d "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}.XXXXXX")"
+
+        # if the monotone directory exists and is the "gem" repo and is the "master" branch then ...
+        if [ -d "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary" ]; then
+            if [ "git://$repo_id" == "$GEM_GIT_REPO" -a "$branch" == "master" ]; then
+                cp ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.deb ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}-master_*.deb \
+                   ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}-worker_*.deb ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.changes \
+                    ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.dsc ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.tar.gz \
+                    "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary"
+                PKG_COMMIT="$(git rev-parse HEAD | cut -c 1-7)"
+                grep '_COMMIT' _jenkins_deps_info \
+                  | sed 's/\(^.*=[0-9a-f]\{7\}\).*/\1/g' \
+                  > "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/${GEM_DEB_PACKAGE}_${PKG_COMMIT}_deps.txt"
+            fi
+        fi
+
+        cp ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/*.deb ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/*.changes \
+           ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/*.dsc ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/*.tar.?z \
+           ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/Packages* ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/Sources* \
+           ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/Release* "${repo_tmpdir}"
+
+        if [ "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}" ]; then
+            rm -rf "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}"
+        fi
+        mv "${repo_tmpdir}" "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}"
+        echo "The package is saved here: ${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}"
     fi
 
     return $inner_ret
@@ -311,6 +338,13 @@ build_run () {
 #
 #  MAIN
 #
+
+BUILD_DEVEL=0
+BUILD_FLAGS=""
+BUILD_SOURCES_COPY=0
+BUILD_REPOSITORY=0
+UNSIGN_ARGS=""
+
 trap sig_hand SIGINT SIGTERM
 #  args management
 while [ $# -gt 0 ]; do
@@ -346,6 +380,10 @@ while [ $# -gt 0 ]; do
             BUILD_SOURCES_COPY=1
             ;;
 
+        -R|--repository)
+            BUILD_REPOSITORY=1
+            ;;
+
         -U|--unsigned)
             UNSIGN_ARGS="-us -uc"
             ;;
@@ -361,6 +399,9 @@ while [ $# -gt 0 ]; do
             exit $?
             break
             ;;
+
+        *)
+            usage 1
     esac
     shift
 done
