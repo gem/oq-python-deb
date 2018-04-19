@@ -317,6 +317,8 @@ build_run () {
     fi
 
     set -e
+    commit="$(git log --pretty='format:%h' -1)"
+
     #
     # in build Ubuntu package each branch package is saved in a separated
     # directory with a well known name syntax to be able to use
@@ -352,7 +354,7 @@ build_run () {
         cp ${GEM_BUILD_ROOT}/*.deb ${GEM_BUILD_ROOT}/*.changes \
            ${GEM_BUILD_ROOT}/*.dsc ${GEM_BUILD_ROOT}/*.tar.?z \
            ${GEM_BUILD_ROOT}/Packages* ${GEM_BUILD_ROOT}/Sources* \
-           ${GEM_BUILD_ROOT}/Release* "${repo_tmpdir}"
+           ${GEM_BUILD_ROOT}/Release* "${repo_tmpdir}" || true
 
         if [ "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}" ]; then
             rm -rf "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}"
