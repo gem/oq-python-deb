@@ -199,7 +199,7 @@ USAGE:
            (default precise)
        if -S is present try to copy sources to <GEM_DEB_MONOTONE>/<BUILD_UBUVER>/source directory
        if -D is present a package with self-computed version is produced."
-    
+
 ENVIRONMENT:
 
     GEM_DEB_REPO        (def. "\$HOME/gem_ubuntu_repo")
@@ -226,7 +226,7 @@ EOF
 #
 _build_innervm_run () {
     local lxc_ip="$1" branch="$2"
-    local i old_ifs pkgs_list dep 
+    local i old_ifs pkgs_list dep
 
     trap 'local LASTERR="$?" ; trap ERR ; (exit $LASTERR) ; return' ERR
 
@@ -251,7 +251,7 @@ _build_innervm_run () {
     if [ -z "$GEM_DEVTEST_SKIP_TESTS" ]; then
         echo "TODO: tests management"
     fi
-        
+
     ssh "$lxc_ip" "
         set -e
         export GEM_SET_DEBUG=\"$GEM_SET_DEBUG\"
@@ -263,9 +263,9 @@ _build_innervm_run () {
         ./packager-guest.sh"
 
     if [ "$BUILD_SOURCES_COPY" == "1" ]; then
-        scp "$lxc_ip:${GEM_GIT_PACKAGE}/oq-*.{tar.?z,changes,dsc}" "out_${BUILD_UBUVER}"
+        scp "$lxc_ip:${GEM_GIT_PACKAGE}/oq-*.{tar.?z,changes,dsc}" "${GEM_BUILD_ROOT}"
     else
-        scp "$lxc_ip:${GEM_GIT_PACKAGE}/*.deb" "out_${BUILD_UBUVER}"
+        scp "$lxc_ip:${GEM_GIT_PACKAGE}/*.deb" "${GEM_BUILD_ROOT}"
     fi
 
     trap ERR
@@ -284,6 +284,10 @@ build_run () {
 
     if [ ! -d "out_${BUILD_UBUVER}" ]; then
         mkdir "out_${BUILD_UBUVER}"
+    fi
+
+    if [ ! -d "${GEM_BUILD_ROOT}" ]; then
+        mkdir "${GEM_BUILD_ROOT}"
     fi
 
     if [ ! -d _jenkins_deps ]; then
@@ -334,9 +338,9 @@ build_run () {
         # if the monotone directory exists and is the "gem" repo and is the "master" branch then ...
         if [ -d "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary" ]; then
             if [ "git://$repo_id" == "$GEM_GIT_REPO" -a "$branch" == "master" ]; then
-                cp ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.deb ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}-master_*.deb \
-                   ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}-worker_*.deb ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.changes \
-                    ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.dsc ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.tar.gz \
+                cp ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.deb \
+                   ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.changes \
+                    ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.dsc ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.tar.?z \
                     "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary"
                 PKG_COMMIT="$(git rev-parse HEAD | cut -c 1-7)"
                 grep '_COMMIT' _jenkins_deps_info \
@@ -345,10 +349,10 @@ build_run () {
             fi
         fi
 
-        cp ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/*.deb ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/*.changes \
-           ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/*.dsc ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/*.tar.?z \
-           ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/Packages* ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/Sources* \
-           ${GEM_BUILD_ROOT}/out_${BUILD_UBUVER}/Release* "${repo_tmpdir}"
+        cp ${GEM_BUILD_ROOT}/*.deb ${GEM_BUILD_ROOT}/*.changes \
+           ${GEM_BUILD_ROOT}/*.dsc ${GEM_BUILD_ROOT}/*.tar.?z \
+           ${GEM_BUILD_ROOT}/Packages* ${GEM_BUILD_ROOT}/Sources* \
+           ${GEM_BUILD_ROOT}/Release* "${repo_tmpdir}"
 
         if [ "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}" ]; then
             rm -rf "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}"
@@ -414,7 +418,7 @@ while [ $# -gt 0 ]; do
         -U|--unsigned)
             UNSIGN_ARGS="-us -uc"
             ;;
-        
+
         -h|--help)
             usage 0
             break
