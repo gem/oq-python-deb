@@ -39,9 +39,18 @@ tar -xvf python3.5_3.5.4.orig.tar.gz -C "$PKG_DIR" --strip-components=1
 cp python3.5_3.5.4.orig.tar.gz oq-python3.5_3.5.4.orig.tar.gz
 
 cd "$PKG_DIR"
+
+# FIXME: remove exit
+# env
+# exit 0
+
+UBUNTU_SERIE="$(lsb_release -s -c)"
+sed -i "1 s/xenial/${UBUNTU_SERIE}/g" debian/changelog
+
 export GEM_DEBIAN_INSTALL_LAYOUT=deb
 dpkg-buildpackage -rfakeroot -d -T clean
-sudo mk-build-deps --install --tool 'apt-get -y'
+sudo mk-build-deps --install --remove --tool 'apt-get -y'
+
 if [ "$DEB_BUILD_OPTIONS" == "" ]; then
     if [ "$GEM_PARALLEL" == "" ]; then
         export GEM_PARALLEL=2
@@ -49,12 +58,8 @@ if [ "$DEB_BUILD_OPTIONS" == "" ]; then
     export DEB_BUILD_OPTIONS="noopt notest nocheck nobench parallel=${GEM_PARALLEL}" ;
 fi
 
-UBUNTU_SERIE="$(lsb_release -s -c)"
-
-sed -i "1 s/xenial/${UBUNTU_SERIE}/g" debian/changelog
-
 if [ "$BUILD_SOURCES_COPY" == "1" ]; then
-    dpkg-buildpackage -S -sa
+    dpkg-buildpackage -S -sa $UNSIGN_ARGS
 else
     dpkg-buildpackage -rfakeroot $UNSIGN_ARGS
 fi

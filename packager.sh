@@ -227,17 +227,18 @@ _build_innervm_run () {
         
     ssh "$lxc_ip" "
         set -e
-        export GEM_SET_DEBUG=$GEM_SET_DEBUG
+        export GEM_SET_DEBUG=\"$GEM_SET_DEBUG\"
         export DEB_BUILD_OPTIONS=\"noopt notest nocheck nobench parallel=16\"
         export BUILD_SOURCES_COPY=\"$BUILD_SOURCES_COPY\"
         export UNSIGN_ARGS=\"$UNSIGN_ARGS\"
 
-        cd "${GEM_GIT_PACKAGE}"
+        cd \"${GEM_GIT_PACKAGE}\"
         ./packager-guest.sh"
 
-    scp "$lxc_ip:${GEM_GIT_PACKAGE}/*.deb" "out_${BUILD_UBUVER}"
     if [ "$BUILD_SOURCES_COPY" == "1" ]; then
         scp "$lxc_ip:${GEM_GIT_PACKAGE}/oq-*.{tar.?z,changes,dsc}" "out_${BUILD_UBUVER}"
+    else
+        scp "$lxc_ip:${GEM_GIT_PACKAGE}/*.deb" "out_${BUILD_UBUVER}"
     fi
 
     trap ERR
