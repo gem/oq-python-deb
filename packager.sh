@@ -320,6 +320,34 @@ build_run () {
     commit="$(git log --pretty='format:%h' -1)"
 
     #
+    #  prepare repo and install $GEM_DEB_PACKAGE package
+    cd ${GEM_BUILD_ROOT}
+    dpkg-scanpackages . /dev/null >Packages
+    cat Packages | gzip -9c > Packages.gz
+    dpkg-scansources . > Sources
+    cat Sources | gzip > Sources.gz
+    cat > Release <<EOF
+Origin: openquake-${BUILD_UBUVER}
+Label: OpenQuake Local Ubuntu Repository
+Codename: $BUILD_UBUVER
+Date: $(date -R)
+Architectures: amd64
+Components: main
+Description: OpenQuake Local Ubuntu Repository
+SHA256:
+EOF
+    ( printf ' '"$(sha256sum Packages | cut --delimiter=' ' --fields=1)"' %16d Packages\n' \
+             "$(wc --bytes Packages | cut --delimiter=' ' --fields=1)"
+      printf ' '"$(sha256sum Packages.gz | cut --delimiter=' ' --fields=1)"' %16d Packages.gz\n' \
+             "$(wc --bytes Packages.gz | cut --delimiter=' ' --fields=1)"
+      printf ' '"$(sha256sum Sources | cut --delimiter=' ' --fields=1)"' %16d Sources\n' \
+             "$(wc --bytes Sources | cut --delimiter=' ' --fields=1)"
+      printf ' '"$(sha256sum Sources.gz | cut --delimiter=' ' --fields=1)"' %16d Sources.gz\n' \
+             "$(wc --bytes Sources.gz | cut --delimiter=' ' --fields=1)" ) >> Release
+    gpg --armor --detach-sign --output Release.gpg Release
+    cd -
+
+    #
     # in build Ubuntu package each branch package is saved in a separated
     # directory with a well known name syntax to be able to use
     # correct dependencies during the "test Ubuntu package" procedure
