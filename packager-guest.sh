@@ -15,8 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with OpenQuake.  If not, see <http://www.gnu.org/licenses/>.
 
-# page for python 3.6: https://packages.ubuntu.com/source/bionic/python3.6
-
 if [ -n "$GEM_SET_DEBUG" -a "$GEM_SET_DEBUG" != "false" ]; then
     export PS4='+${BASH_SOURCE}:${LINENO}:${FUNCNAME[0]}: '
     set -x
@@ -24,7 +22,10 @@ fi
 
 PKG_DIR=oq-python3.5-3.5.4
 
-BASE_URL="https://launchpad.net/debian/+archive/primary/+files"
+# NOTE: this is the page for python 3.6: https://packages.ubuntu.com/source/bionic/python3.6
+#
+# original url: BASE_URL="https://launchpad.net/debian/+archive/primary/+files"
+BASE_URL="https://ftp.openquake.org/ubuntu-src"
 
 sudo apt-get -y --force-yes install curl build-essential dpatch fakeroot devscripts equivs lintian quilt lsb-release
 
