@@ -41,10 +41,6 @@ cp python3.5_3.5.4.orig.tar.gz oq-python3.5_3.5.4.orig.tar.gz
 
 cd "$PKG_DIR"
 
-# FIXME: remove exit
-# env
-# exit 0
-
 UBUNTU_SERIE="$(lsb_release -s -c)"
 sed -i "1 s/xenial/${UBUNTU_SERIE}/g" debian/changelog
 
