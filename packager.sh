@@ -244,8 +244,21 @@ _build_innervm_run () {
         source _jenkins_deps_info
     fi
 
+    if [ -f gem_date_file ]; then
+        dt="$(cat gem_date_file)"
+    else
+        dt="$(date +%s)"
+        echo "$dt" > gem_date_file
+    fi
+
     # install sources of this package
-    git archive --prefix "${GEM_GIT_PACKAGE}/" HEAD | ssh "$lxc_ip" "tar xv"
+    cw="$(pwd)"
+    cwb="$(basename "$cw")"
+    cd ..
+    scp -r "$cwb" "$lxc_ip:$cwb"
+    cd -
+
+    #    git archive --prefix "${GEM_GIT_PACKAGE}/" HEAD | ssh "$lxc_ip" "tar xv"
 
     # configure the machine to run tests
     if [ -z "$GEM_DEVTEST_SKIP_TESTS" ]; then
@@ -254,16 +267,21 @@ _build_innervm_run () {
 
     ssh "$lxc_ip" "
         set -e
+        export BUILD_UBUVER=\"$BUILD_UBUVER\"
+        export dt=\"$dt\"
+        export DEBEMAIL=\"$DEBEMAIL\"
+        export DEBFULLNAME=\"$DEBFULLNAME\"
         export GEM_SET_DEBUG=\"$GEM_SET_DEBUG\"
         export DEB_BUILD_OPTIONS=\"noopt notest nocheck nobench parallel=16\"
         export BUILD_SOURCES_COPY=\"$BUILD_SOURCES_COPY\"
         export UNSIGN_ARGS=\"$UNSIGN_ARGS\"
+        export BUILD_DEVEL=\"$BUILD_DEVEL\"
 
         cd \"${GEM_GIT_PACKAGE}\"
         ./packager-guest.sh"
 
     scp "$lxc_ip:${GEM_GIT_PACKAGE}/oq-*.{tar.?z,changes,dsc}" "${GEM_BUILD_ROOT}" || true
-    scp "$lxc_ip:${GEM_GIT_PACKAGE}/*.deb" "${GEM_BUILD_ROOT}"
+    scp "$lxc_ip:${GEM_GIT_PACKAGE}/*.deb" "${GEM_BUILD_ROOT}" || true
 
     trap ERR
 
