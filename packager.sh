@@ -262,11 +262,8 @@ _build_innervm_run () {
         cd \"${GEM_GIT_PACKAGE}\"
         ./packager-guest.sh"
 
-    if [ "$BUILD_SOURCES_COPY" == "1" ]; then
-        scp "$lxc_ip:${GEM_GIT_PACKAGE}/oq-*.{tar.?z,changes,dsc}" "${GEM_BUILD_ROOT}"
-    else
-        scp "$lxc_ip:${GEM_GIT_PACKAGE}/*.deb" "${GEM_BUILD_ROOT}"
-    fi
+    scp "$lxc_ip:${GEM_GIT_PACKAGE}/oq-*.{tar.?z,changes,dsc}" "${GEM_BUILD_ROOT}" || true
+    scp "$lxc_ip:${GEM_GIT_PACKAGE}/*.deb" "${GEM_BUILD_ROOT}"
 
     trap ERR
 
