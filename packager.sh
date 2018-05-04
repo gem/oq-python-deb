@@ -255,7 +255,7 @@ _build_innervm_run () {
     cw="$(pwd)"
     cwb="$(basename "$cw")"
     cd ..
-    scp -r "$cwb" "$lxc_ip:$cwb"
+    scp -r "$cwb" "$lxc_ip:${GEM_GIT_PACKAGE}"
     cd -
 
     #    git archive --prefix "${GEM_GIT_PACKAGE}/" HEAD | ssh "$lxc_ip" "tar xv"
