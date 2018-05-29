@@ -197,10 +197,10 @@ usage () {
 
 USAGE:
 
-    $0 [<-s|--serie> <precise|trusty|xenial>] [-D|--development] [-S|--sources_copy] build <branch>
+    $0 [<-s|--serie> <precise|trusty|xenial|bionic>] [-D|--development] [-S|--sources_copy] build <branch>
 
     --serie             (def. trusty)
-       if -s is present try to produce sources for a specific ubuntu version (precise, trusty or xenial),
+       if -s is present try to produce sources for a specific ubuntu version (precise, trusty, xenial or bionic),
            (default precise)
        if -S is present try to copy sources to <GEM_DEB_MONOTONE>/<BUILD_UBUVER>/source directory
        if -D is present a package with self-computed version is produced."
@@ -442,7 +442,7 @@ while [ $# -gt 0 ]; do
 
         -s|--serie)
             BUILD_UBUVER="$2"
-            if [ "$BUILD_UBUVER" != "precise" -a "$BUILD_UBUVER" != "trusty"  -a "$BUILD_UBUVER" != "xenial" ]; then
+            if [ "$BUILD_UBUVER" != "precise" -a "$BUILD_UBUVER" != "trusty"  -a "$BUILD_UBUVER" != "xenial" -a "$BUILD_UBUVER" != "bionic" ]; then
                 echo
                 echo "ERROR: ubuntu version '$BUILD_UBUVER' not supported"
                 echo

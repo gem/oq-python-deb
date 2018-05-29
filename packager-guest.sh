@@ -46,6 +46,7 @@ UBUNTU_SERIE="$(lsb_release -s -c)"
 sed -i "1 s/xenial/${UBUNTU_SERIE}/g" debian/changelog
 
 export GEM_DEBIAN_INSTALL_LAYOUT=deb
+fakeroot ./debian/rules clean
 dpkg-buildpackage -rfakeroot -d -T clean
 sudo mk-build-deps --install --remove --tool 'apt-get -y'
 
