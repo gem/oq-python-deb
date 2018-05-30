@@ -28,8 +28,13 @@ GEM_DEB_SERIE="master"
 if [ -z "$GEM_DEB_REPO" ]; then
     GEM_DEB_REPO="$HOME/gem_ubuntu_repo"
 fi
+
 if [ -z "$GEM_DEB_MONOTONE" ]; then
     GEM_DEB_MONOTONE="$HOME/monotone"
+fi
+
+if [ -z "$GEM_MASTER_BRANCH" ]; then
+    export GEM_MASTER_BRANCH="master"
 fi
 
 GEM_BUILD_ROOT="build-deb"
@@ -345,7 +350,7 @@ build_run () {
 Origin: openquake-${BUILD_UBUVER}
 Label: OpenQuake Local Ubuntu Repository
 Codename: $BUILD_UBUVER
-Date: $(date -R)
+Date: $(date -R -u)
 Architectures: amd64
 Components: main
 Description: OpenQuake Local Ubuntu Repository
@@ -359,7 +364,7 @@ EOF
              "$(wc --bytes Sources | cut --delimiter=' ' --fields=1)"
       printf ' '"$(sha256sum Sources.gz | cut --delimiter=' ' --fields=1)"' %16d Sources.gz\n' \
              "$(wc --bytes Sources.gz | cut --delimiter=' ' --fields=1)" ) >> Release
-    gpg --armor --detach-sign --output Release.gpg Release
+    gpg --armor --detach-sign --output Release.gpg --local-user "$DEBFULLNAME" Release
     cd -
 
     #
@@ -370,7 +375,7 @@ EOF
     if [ "$BUILD_REPOSITORY" -eq 1 -a -d "${GEM_DEB_REPO}" ]; then
         if [ "$branch" != "" ]; then
             repo_id="$(repo_id_get)"
-            if [ "git://$repo_id" != "$GEM_GIT_REPO" -o "$branch" != "master" ]; then
+            if [ "git://$repo_id" != "$GEM_GIT_REPO" -o "$branch" != "$GEM_MASTER_BRANCH" ]; then
                 CUSTOM_SERIE="devel/$(echo "$repo_id" | sed "s@/@__@g;s/\./-/g")__${branch}"
                 if [ "$CUSTOM_SERIE" != "" ]; then
                     GEM_DEB_SERIE="$CUSTOM_SERIE"
@@ -382,7 +387,7 @@ EOF
 
         # if the monotone directory exists and is the "gem" repo and is the "master" branch then ...
         if [ -d "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary" ]; then
-            if [ "git://$repo_id" == "$GEM_GIT_REPO" -a "$branch" == "master" ]; then
+            if [ "git://$repo_id" == "$GEM_GIT_REPO" -a "$branch" == "$GEM_MASTER_BRANCH" ]; then
                 cp ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.deb \
                    ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.changes \
                     ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.dsc ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.tar.?z \
