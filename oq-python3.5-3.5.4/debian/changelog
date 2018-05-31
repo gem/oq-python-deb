@@ -1,6 +1,7 @@
 oq-python3.5 (3.5.4-4~gem03~xenial01) xenial; urgency=medium
 
   [Matteo Nastasi]
+  * update packager script to support passphrase and bionic sources
   * port from 3.5.3 to 3.5.4
   * Disabled optimizations
   * Add /opt/openquake as prefix and some other changes to the filesystem scheme
