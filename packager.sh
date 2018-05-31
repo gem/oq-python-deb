@@ -270,7 +270,7 @@ _build_innervm_run () {
         echo "TODO: tests management"
     fi
 
-    ssh "$lxc_ip" "
+    ssh -t "$lxc_ip" "
         set -e
         export BUILD_UBUVER=\"$BUILD_UBUVER\"
         export dt=\"$dt\"
@@ -285,7 +285,7 @@ _build_innervm_run () {
         cd \"${GEM_GIT_PACKAGE}\"
         ./packager-guest.sh"
 
-    scp "$lxc_ip:${GEM_GIT_PACKAGE}/oq-*.{tar.?z,changes,dsc}" "${GEM_BUILD_ROOT}" || true
+    scp "$lxc_ip:${GEM_GIT_PACKAGE}/oq-*.{tar.?z,changes,dsc,buildinfo}" "${GEM_BUILD_ROOT}" || true
     scp "$lxc_ip:${GEM_GIT_PACKAGE}/*.deb" "${GEM_BUILD_ROOT}" || true
 
     trap ERR
