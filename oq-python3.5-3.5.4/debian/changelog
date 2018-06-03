@@ -1,3 +1,9 @@
+oq-python3.5 (3.5.4-5~gem03~xenial01) xenial; urgency=medium
+  [Matteo Nastasi]
+  * missing .buildinfo file copy to host added
+
+ -- Matteo Nastasi (GEM Foundation) <nastasi@openquake.org>  Sun, 03 Jun 2018 06:29:14 +0000
+
 oq-python3.5 (3.5.4-4~gem03~xenial01) xenial; urgency=medium
 
   [Matteo Nastasi]

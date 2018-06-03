@@ -392,6 +392,8 @@ EOF
                    ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.changes \
                     ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.dsc ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.tar.?z \
                     "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary"
+                cp ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.buildinfo \
+                    "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary" || true
                 PKG_COMMIT="$(git rev-parse HEAD | cut -c 1-7)"
                 grep '_COMMIT' _jenkins_deps_info \
                   | sed 's/\(^.*=[0-9a-f]\{7\}\).*/\1/g' \
@@ -400,7 +402,7 @@ EOF
         fi
 
         cp ${GEM_BUILD_ROOT}/*.deb ${GEM_BUILD_ROOT}/*.changes \
-           ${GEM_BUILD_ROOT}/*.dsc ${GEM_BUILD_ROOT}/*.tar.?z \
+           ${GEM_BUILD_ROOT}/*.dsc ${GEM_BUILD_ROOT}/*.tar.?z ${GEM_BUILD_ROOT}/*.buildinfo \
            ${GEM_BUILD_ROOT}/Packages* ${GEM_BUILD_ROOT}/Sources* \
            ${GEM_BUILD_ROOT}/Release* "${repo_tmpdir}" || true
 
@@ -491,4 +493,6 @@ if [ -d "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/source" -a $BUILD_SOURCES_COPY -eq 
     cp ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.changes \
         ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.dsc ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.tar.?z \
         "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/source"
+    cp ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.buildinfo \
+        "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/source" || true
 fi
