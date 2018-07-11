@@ -43,7 +43,7 @@ cp python3.5_3.5.4.orig.tar.gz oq-python3.5_3.5.4.orig.tar.gz
 cd "$PKG_DIR"
 
 UBUNTU_SERIE="$(lsb_release -s -c)"
-sed -i "1 s/xenial/${UBUNTU_SERIE}/g" debian/changelog
+sed -i "/^${GEM_DEB_PACKAGE}.*/s/${BUILD_UBUVER_REFERENCE}/${UBUNTU_SERIE}/g" debian/changelog
 
 export GEM_DEBIAN_INSTALL_LAYOUT=deb
 fakeroot ./debian/rules clean
@@ -80,7 +80,7 @@ pkg_maj="$(echo "$pkg_vers" | sed -n 's/^\([0-9]\+\).*/\1/gp')"
 pkg_min="$(echo "$pkg_vers" | sed -n 's/^[0-9]\+\.\([0-9]\+\).*/\1/gp')"
 pkg_bfx="$(echo "$pkg_vers" | sed -n 's/^[0-9]\+\.[0-9]\+\.\([0-9]\+\).*/\1/gp')"
 pkg_deb="$(echo "$pkg_vers" | sed -n 's/^[0-9]\+\.[0-9]\+\.[0-9]\+\(-[^+]\+\).*/\1/gp')"
-pkg_debsfx="$(echo "$pkg_vers" | sed -n "s/^[0-9]\+\.[0-9]\+\.[0-9]\+\(-[^+]\+\).*/\1/g;s/^-[0-9]*//g;s/~${BUILD_UBUVER_REFERENCE}[0-9]*//gp")"
+pkg_debsfx="$(echo "$pkg_vers" | sed -n "s/^[0-9]\+\.[0-9]\+\.[0-9]\+\(-[^+]\+\).*/\1/g;s/^-[0-9]*//g;s/~${UBUNTU_SERIE}[0-9]*//gp")"
 pkg_suf="$(echo "$pkg_vers" | sed -n 's/^[0-9]\+\.[0-9]\+\.[0-9]\+-[^+]\+\(+.*\)/\1/gp')"
 
 if [ $BUILD_DEVEL -eq 1 ]; then
@@ -118,7 +118,7 @@ if [ $BUILD_DEVEL -eq 1 ]; then
 #    sed -i "s/^__version__[  ]*=.*/__version__ = '${pkg_maj}.${pkg_min}.${pkg_bfx}${pkg_deb}~dev${dt}-${hash}'/g" openquake/baselib/__init__.py
 else
     cp debian/changelog debian/changelog.orig
-    cat debian/changelog.orig | sed "1 s/${BUILD_UBUVER_REFERENCE}/${BUILD_UBUVER}/g" > debian/changelog
+    cat debian/changelog.orig | sed "1 s/${UBUNTU_SERIE}/${BUILD_UBUVER}/g" > debian/changelog
     rm debian/changelog.orig
 fi
 
