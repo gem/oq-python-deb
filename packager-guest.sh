@@ -80,6 +80,7 @@ pkg_maj="$(echo "$pkg_vers" | sed -n 's/^\([0-9]\+\).*/\1/gp')"
 pkg_min="$(echo "$pkg_vers" | sed -n 's/^[0-9]\+\.\([0-9]\+\).*/\1/gp')"
 pkg_bfx="$(echo "$pkg_vers" | sed -n 's/^[0-9]\+\.[0-9]\+\.\([0-9]\+\).*/\1/gp')"
 pkg_deb="$(echo "$pkg_vers" | sed -n 's/^[0-9]\+\.[0-9]\+\.[0-9]\+\(-[^+]\+\).*/\1/gp')"
+pkg_debsfx="$(echo "$pkg_vers" | sed -n "s/^[0-9]\+\.[0-9]\+\.[0-9]\+\(-[^+]\+\).*/\1/g;s/^-[0-9]*//g;s/~${BUILD_UBUVER_REFERENCE}[0-9]*//gp")"
 pkg_suf="$(echo "$pkg_vers" | sed -n 's/^[0-9]\+\.[0-9]\+\.[0-9]\+-[^+]\+\(+.*\)/\1/gp')"
 
 if [ $BUILD_DEVEL -eq 1 ]; then
@@ -102,7 +103,7 @@ if [ $BUILD_DEVEL -eq 1 ]; then
     fi
 
     (
-      echo "$pkg_name (${pkg_maj}.${pkg_min}.${pkg_bfx}${pkg_deb}~${BUILD_UBUVER}01~dev${dt}+${hash}) ${BUILD_UBUVER}; urgency=low"
+      echo "$pkg_name (${pkg_maj}.${pkg_min}.${pkg_bfx}${pkg_deb}${pkg_debsfx}~${BUILD_UBUVER}01~dev${dt}+${hash}) ${BUILD_UBUVER}; urgency=low"
       echo
       echo "  [Automatic Script]"
       echo "  * Development version from $hash commit"

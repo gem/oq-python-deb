@@ -272,6 +272,7 @@ _build_innervm_run () {
 
     ssh -t "$lxc_ip" "
         set -e
+        export GEM_DEB_PACKAGE=\"$GEM_DEB_PACKAGE\"
         export BUILD_UBUVER=\"$BUILD_UBUVER\"
         export dt=\"$dt\"
         export DEBEMAIL=\"$DEBEMAIL\"

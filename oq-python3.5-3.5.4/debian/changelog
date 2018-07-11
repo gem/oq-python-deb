@@ -1,4 +1,13 @@
+oq-python3.5 (3.5.4-6~gem04~xenial01) xenial; urgency=medium
+
+  [Matteo Nastasi]
+  * removed obsolete 'Breaks' directive from control.in file
+  * fix versioning management for development package versions
+
+ -- Matteo Nastasi (GEM Foundation) <nastasi@openquake.org>  Wed, 11 Jul 2018 06:44:55 +0000
+
 oq-python3.5 (3.5.4-5~gem03~xenial01) xenial; urgency=medium
+
   [Matteo Nastasi]
   * missing .buildinfo file copy to host added
 
