@@ -16,8 +16,8 @@ Build-Depends: debhelper (>= 9), @bd_dpkgdev@
   libgpm2 [!hurd-i386 !kfreebsd-i386 !kfreebsd-amd64],
   mime-support, netbase, bzip2, time, python3@bd_qual@,
   net-tools, xvfb, xauth
-Build-Depends-Indep: python3-sphinx
-Standards-Version: 3.9.8
+Build-Depends-Indep: python3-sphinx, texinfo
+Standards-Version: 4.1.3
 Vcs-Browser: https://code.launchpad.net/~doko/python/pkg@VER@-debian
 Vcs-Bzr: http://bazaar.launchpad.net/~doko/python/pkg@VER@-debian
 XS-Testsuite: autopkgtest
@@ -51,7 +51,6 @@ Multi-Arch: same
 Priority: @PRIO@
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-minimal (= ${binary:Version}), mime-support, ${shlibs:Depends}, ${misc:Depends}
-Replaces: lib@PVER@-testsuite (<< 3.5.4~rc1-1)
 Description: Interactive high-level object-oriented language (standard library, version @VER@)
  Python is a high-level, interactive, object-oriented language. Its @VER@ version
  includes an extensive class library with lots of goodies for
@@ -185,7 +184,6 @@ Package: @PVER@-dbg
 Section: debug
 Architecture: any
 Multi-Arch: allowed
-Priority: extra
 Depends: @PVER@ (= ${binary:Version}), lib@PVER@-dbg (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Recommends: gdb
 Suggests: python3-gdbm-dbg, python3-tk-dbg
@@ -203,7 +201,6 @@ Package: lib@PVER@-dbg
 Section: debug
 Architecture: any
 Multi-Arch: same
-Priority: extra
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-stdlib (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Debug Build of the Python Interpreter (version @VER@)

@@ -3,17 +3,17 @@ Python Linux packages for OpenQuake, currently supporting Ubuntu
 
 ## ubuntu
 
-Based on  https://launchpad.net/debian/+source/python3.5/3.5.4-4
-Provides Python 3.5 in `/opt/openquake`
+Based on https://packages.ubuntu.com/source/bionic/python3.6
+Provides Python 3.6 in `/opt/openquake`
 
 
 To recompile the code:
 
-  * download `python3.5_3.5.4-4.debian.tar.xz` `python3.5_3.5.4-4.dsc` `python3.5_3.5.4.orig.tar.gz` from ubuntu archive
-  * dpkg-source -x python3.5_3.5.3-1ubuntu0_17.04.2.dsc
-  * rename directory `python3.5-3.5.4` to `oq-python3.5-3.5.4`
-  * rename file `python3.5_3.5.4.orig.tar.gz` to `oq-python3.5_3.5.4.orig.tar.gz`
-  * `cd oq-python3.5-3.5.4`
+  * download `python3.6_3.6.5-3.debian.tar.xz` `python3.6_3.6.5-3.dsc` `python3.6_3.6.5.orig.tar.gz` from ubuntu archive
+  * dpkg-source -x python3.6_3.6.5-3.dsc
+  * rename directory `python3.6-3.6.5` to `oq-python3.6-3.6.5`
+  * rename file `python3.6_3.6.5.orig.tar.gz` to `oq-python3.6_3.6.5.orig.tar.gz`
+  * `cd oq-python3.6-3.6.5`
   * remove all patches with  
   `quilt pop -a`  
   command

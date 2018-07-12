@@ -20,7 +20,7 @@ if [ -n "$GEM_SET_DEBUG" -a "$GEM_SET_DEBUG" != "false" ]; then
     set -x
 fi
 
-PKG_DIR=oq-python3.5-3.5.4
+PKG_DIR=oq-python3.6-3.6.5
 
 # NOTE: this is the page for python 3.6: https://packages.ubuntu.com/source/bionic/python3.6
 #
@@ -30,15 +30,15 @@ BUILD_UBUVER_REFERENCE="xenial"
 
 sudo apt-get -y --force-yes install git curl build-essential dpatch fakeroot devscripts equivs lintian quilt lsb-release
 
-for f in python3.5_3.5.4-4.dsc python3.5_3.5.4.orig.tar.gz python3.5_3.5.4-4.debian.tar.xz; do
+for f in python3.6_3.6.5-3.debian.tar.xz python3.6_3.6.5-3.dsc python3.6_3.6.5.orig.tar.xz; do
     if [ -f "$f" ]; then
         continue
     fi
     curl -o "$f" -L "${BASE_URL}/${f}"
 done
 
-tar -xvf python3.5_3.5.4.orig.tar.gz -C "$PKG_DIR" --strip-components=1
-cp python3.5_3.5.4.orig.tar.gz oq-python3.5_3.5.4.orig.tar.gz
+tar -xvf python3.6_3.6.5.orig.tar.xz -C "$PKG_DIR" --strip-components=1
+cp python3.6_3.6.5.orig.tar.xz oq-python3.6_3.6.5.orig.tar.xz
 
 cd "$PKG_DIR"
 
@@ -67,7 +67,7 @@ if [ "$h" = "$h_first" ]; then
     h_is_first=1
 fi
 
-# reading version from: Include/patchlevel.h:#define PY_VERSION      	"3.5.4"
+# reading version from: Include/patchlevel.h:#define PY_VERSION      	"3.6.5"
 ini_vers="$(grep '^#define PY_VERSION\b' Include/patchlevel.h | sed 's/^[^"]*"//g;s/".*//g')"
 ini_maj="$(echo "$ini_vers" | sed -n 's/^\([0-9]\+\).*/\1/gp')"
 ini_min="$(echo "$ini_vers" | sed -n 's/^[0-9]\+\.\([0-9]\+\).*/\1/gp')"
