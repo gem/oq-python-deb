@@ -12,10 +12,7 @@ setup-modules.diff
 platform-lsbrelease.diff
 bdist-wininst-notfound.diff
 profiled-build.diff
-makesetup-bashism.diff
-hurd-disable-nonworking-constants.diff
 langpack-gettext.diff
-no-large-file-support.diff
 disable-sem-check.diff
 lib-argparse.diff
 ctypes-arm.diff
@@ -26,18 +23,16 @@ lib2to3-no-pickled-grammar.diff
 ext-no-libpython-link.diff
 test-no-random-order.diff
 multiarch-extname.diff
-distutils-init.diff
 tempfile-minimal.diff
 disable-some-tests.diff
-# issue21264.diff
-# ensurepip-wheels.diff
-# ensurepip-disabled.diff
-mpdecimal-version.diff
+ensurepip-wheels.diff
+ensurepip-disabled.diff
 mangle-fstack-protector.diff
 reproducible-buildinfo.diff
 pydoc-use-pager.diff
-#asyncio366.diff
 pyhash.diff
-lib2to3-no-pgen-caching.diff
-local-blurb.diff
+mips-r6.diff
+local-doc-references.diff
+doc-build-texinfo.diff
+riscv64.diff
 use_deb_schema_for_pip_install.diff
