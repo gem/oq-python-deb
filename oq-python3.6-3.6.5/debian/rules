@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+# to check rules and changelog + all files not present in old or new repo
+
 unexport LANG LC_ALL LC_CTYPE LC_COLLATE LC_TIME LC_NUMERIC LC_MESSAGES
 unexport CFLAGS CXXFLAGS LDFLAGS CPPFLAGS
 
