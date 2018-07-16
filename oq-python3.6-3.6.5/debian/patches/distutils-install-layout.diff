@@ -20,10 +20,10 @@ Index: b/Lib/distutils/command/install_egg_info.py
  
      def finalize_options(self):
          self.set_undefined_options('install_lib',('install_dir','install_dir'))
--        basename = "%s-%s-py%s.egg-info" % (
+-        basename = "%s-%s-py%d.%d.egg-info" % (
 -            to_filename(safe_name(self.distribution.get_name())),
 -            to_filename(safe_version(self.distribution.get_version())),
--            sys.version[:3]
+-            *sys.version_info[:2]
 -        )
 +        self.set_undefined_options('install',('install_layout','install_layout'))
 +        self.set_undefined_options('install',('prefix_option','prefix_option'))
@@ -42,11 +42,11 @@ Index: b/Lib/distutils/command/install_egg_info.py
 +                to_filename(safe_version(self.distribution.get_version()))
 +                )
 +        else:
-+            basename = "%s-%s-py%s.egg-info" % (
++            basename = "%s-%s-py%d.%d.egg-info" % (
 +                to_filename(safe_name(self.distribution.get_name())),
 +                to_filename(safe_version(self.distribution.get_version())),
-+                sys.version[:3]
-+                )
++                *sys.version_info[:2]
++            )
          self.target = os.path.join(self.install_dir, basename)
          self.outputs = [self.target]
  
@@ -103,7 +103,7 @@ Index: b/Lib/distutils/command/install.py
          self.compile = None
          self.optimize = None
  
-@@ -411,6 +432,7 @@ class install(Command):
+@@ -413,6 +434,7 @@ class install(Command):
              self.install_base = self.install_platbase = self.home
              self.select_scheme("unix_home")
          else:
@@ -111,7 +111,7 @@ Index: b/Lib/distutils/command/install.py
              if self.prefix is None:
                  if self.exec_prefix is not None:
                      raise DistutilsOptionError(
-@@ -425,7 +447,26 @@ class install(Command):
+@@ -427,7 +449,26 @@ class install(Command):
  
              self.install_base = self.prefix
              self.install_platbase = self.exec_prefix
@@ -188,7 +188,7 @@ Index: b/Lib/site.py
  If a file named "pyvenv.cfg" exists one directory above sys.executable,
  sys.prefix and sys.exec_prefix are set to that directory and
  it is also checked for site-packages (sys.base_prefix and
-@@ -303,9 +309,20 @@ def getsitepackages(prefixes=None):
+@@ -304,9 +310,20 @@ def getsitepackages(prefixes=None):
          seen.add(prefix)
  
          if os.sep == '/':
@@ -204,7 +204,7 @@ Index: b/Lib/site.py
 +                                             "dist-packages"))
 +            # this one is deprecated for Debian
              sitepackages.append(os.path.join(prefix, "lib",
--                                        "python" + sys.version[:3],
+-                                        "python%d.%d" % sys.version_info[:2],
 -                                        "site-packages"))
 +                                             "python" + sys.version[:3],
 +                                             "dist-packages"))
@@ -215,16 +215,16 @@ Index: b/Lib/test/test_site.py
 ===================================================================
 --- a/Lib/test/test_site.py
 +++ b/Lib/test/test_site.py
-@@ -261,9 +261,10 @@ class HelperFunctionsTests(unittest.Test
+@@ -260,10 +260,10 @@ class HelperFunctionsTests(unittest.Test
              self.assertEqual(dirs[1], wanted)
          elif os.sep == '/':
-             # OS X non-framwework builds, Linux, FreeBSD, etc
+             # OS X non-framework builds, Linux, FreeBSD, etc
 -            self.assertEqual(len(dirs), 1)
--            wanted = os.path.join('xoxo', 'lib', 'python' + sys.version[:3],
--                                  'site-packages')
+-            wanted = os.path.join('xoxo', 'lib',
 +            self.assertEqual(len(dirs), 3)
 +            wanted = os.path.join('xoxo', 'local', 'lib',
-+                                  'python' + sys.version[:3],
+                                   'python%d.%d' % sys.version_info[:2],
+-                                  'site-packages')
 +                                  'dist-packages')
              self.assertEqual(dirs[0], wanted)
          else:
@@ -246,7 +246,7 @@ Index: b/Lib/distutils/tests/test_install.py
 ===================================================================
 --- a/Lib/distutils/tests/test_install.py
 +++ b/Lib/distutils/tests/test_install.py
-@@ -192,7 +192,7 @@ class InstallTestCase(support.TempdirMan
+@@ -193,7 +193,7 @@ class InstallTestCase(support.TempdirMan
          found = [os.path.basename(line) for line in content.splitlines()]
          expected = ['hello.py', 'hello.%s.pyc' % sys.implementation.cache_tag,
                      'sayhi',
@@ -255,7 +255,7 @@ Index: b/Lib/distutils/tests/test_install.py
          self.assertEqual(found, expected)
  
      def test_record_extensions(self):
-@@ -222,7 +222,7 @@ class InstallTestCase(support.TempdirMan
+@@ -226,7 +226,7 @@ class InstallTestCase(support.TempdirMan
  
          found = [os.path.basename(line) for line in content.splitlines()]
          expected = [_make_ext_name('xx'),
@@ -268,7 +268,7 @@ Index: b/Lib/pydoc.py
 ===================================================================
 --- a/Lib/pydoc.py
 +++ b/Lib/pydoc.py
-@@ -410,6 +410,7 @@ class Doc:
+@@ -417,6 +417,7 @@ class Doc:
                                   'marshal', 'posix', 'signal', 'sys',
                                   '_thread', 'zipimport') or
               (file.startswith(basedir) and
