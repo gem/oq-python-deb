@@ -4,7 +4,7 @@ Index: b/Makefile.pre.in
 ===================================================================
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -479,6 +479,16 @@ build_all_generate_profile:
+@@ -478,6 +478,16 @@ build_all_generate_profile:
  run_profile_task:
  	: # FIXME: can't run for a cross build
  	$(LLVM_PROF_FILE) $(RUNSHARED) ./$(BUILDPYTHON) $(PROFILE_TASK) || true

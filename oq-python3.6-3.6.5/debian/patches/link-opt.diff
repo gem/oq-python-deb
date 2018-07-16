@@ -4,7 +4,7 @@ Index: b/configure.ac
 ===================================================================
 --- a/configure.ac
 +++ b/configure.ac
-@@ -2449,8 +2449,8 @@ then
+@@ -2519,8 +2519,8 @@ then
  		fi
  		;;
  	Linux*|GNU*|QNX*)
@@ -15,10 +15,10 @@ Index: b/configure.ac
  	BSD/OS*/4*)
  		LDSHARED="gcc -shared"
  		LDCXXSHARED="g++ -shared";;
-@@ -2548,7 +2548,7 @@ then
- 	    LINKFORSHARED="-Wl,-E -Wl,+s";;
+@@ -2620,7 +2620,7 @@ then
  #	    LINKFORSHARED="-Wl,-E -Wl,+s -Wl,+b\$(BINLIBDEST)/lib-dynload";;
  	BSD/OS/4*) LINKFORSHARED="-Xlinker -export-dynamic";;
+ 	Linux-android*) LINKFORSHARED="-pie -Xlinker -export-dynamic";;
 -	Linux*|GNU*) LINKFORSHARED="-Xlinker -export-dynamic";;
 +	Linux*|GNU*) LINKFORSHARED="-Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions";;
  	# -u libsys_s pulls in all symbols in libsys

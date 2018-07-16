@@ -4,7 +4,7 @@ Index: b/Lib/platform.py
 ===================================================================
 --- a/Lib/platform.py
 +++ b/Lib/platform.py
-@@ -268,7 +268,7 @@ _release_version = re.compile(r'([^0-9]+
+@@ -267,7 +267,7 @@ _release_version = re.compile(r'([^0-9]+
  _supported_dists = (
      'SuSE', 'debian', 'fedora', 'redhat', 'centos',
      'mandrake', 'mandriva', 'rocks', 'slackware', 'yellowdog', 'gentoo',
@@ -13,7 +13,7 @@ Index: b/Lib/platform.py
  
  def _parse_release_file(firstline):
  
-@@ -297,6 +297,10 @@ def _parse_release_file(firstline):
+@@ -296,6 +296,10 @@ def _parse_release_file(firstline):
              id = l[1]
      return '', version, id
  
@@ -24,7 +24,7 @@ Index: b/Lib/platform.py
  def linux_distribution(distname='', version='', id='',
  
                         supported_dists=_supported_dists,
-@@ -329,6 +333,25 @@ def _linux_distribution(distname, versio
+@@ -328,6 +332,25 @@ def _linux_distribution(distname, versio
          args given as parameters.
  
      """
@@ -54,32 +54,12 @@ Index: b/Lib/test/test_platform.py
 ===================================================================
 --- a/Lib/test/test_platform.py
 +++ b/Lib/test/test_platform.py
-@@ -327,28 +327,6 @@ class PlatformTest(unittest.TestCase):
-                     returncode = ret >> 8
-                 self.assertEqual(returncode, len(data))
+@@ -349,6 +349,8 @@ class PlatformTest(unittest.TestCase):
+             self.assertEqual(version, '19')
+             self.assertEqual(distid, 'Schr\xf6dinger\u2019s Cat')
  
--    def test_linux_distribution_encoding(self):
--        # Issue #17429
--        with tempfile.TemporaryDirectory() as tempdir:
--            filename = os.path.join(tempdir, 'fedora-release')
--            with open(filename, 'w', encoding='utf-8') as f:
--                f.write('Fedora release 19 (Schr\xf6dinger\u2019s Cat)\n')
--
--            with mock.patch('platform._UNIXCONFDIR', tempdir):
--                with warnings.catch_warnings():
--                    warnings.filterwarnings(
--                        'ignore',
--                        'dist\(\) and linux_distribution\(\) '
--                        'functions are deprecated .*',
--                        PendingDeprecationWarning,
--                    )
--                    distname, version, distid = platform.linux_distribution()
--
--                self.assertEqual(distname, 'Fedora')
--            self.assertEqual(version, '19')
--            self.assertEqual(distid, 'Schr\xf6dinger\u2019s Cat')
--
--
++    # we know we are Debian/Ubuntu
++    test_linux_distribution_encoding.skip = True
+ 
  class DeprecationTest(unittest.TestCase):
  
-     def test_dist_deprecation(self):

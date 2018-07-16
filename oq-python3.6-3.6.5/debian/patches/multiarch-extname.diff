@@ -81,7 +81,7 @@ Index: b/Lib/distutils/command/install.py
          
          self.compile = None
          self.optimize = None
-@@ -449,6 +450,8 @@ class install(Command):
+@@ -451,6 +452,8 @@ class install(Command):
              self.install_platbase = self.exec_prefix
              if self.install_layout:
                  if self.install_layout.lower() in ['deb']:

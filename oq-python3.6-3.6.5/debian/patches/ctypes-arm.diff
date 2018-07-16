@@ -2,7 +2,7 @@ Index: b/Lib/ctypes/util.py
 ===================================================================
 --- a/Lib/ctypes/util.py
 +++ b/Lib/ctypes/util.py
-@@ -257,16 +257,27 @@ elif os.name == "posix":
+@@ -247,16 +247,27 @@ elif os.name == "posix":
  
          def _findSoname_ldconfig(name):
              import struct

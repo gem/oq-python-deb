@@ -160,8 +160,8 @@ Index: b/Lib/tempfile.py
 +        _rmtree(name)
          _warnings.warn(warn_message, ResourceWarning)
  
- 
-@@ -809,4 +948,4 @@ class TemporaryDirectory(object):
+     def __repr__(self):
+@@ -808,4 +947,4 @@ class TemporaryDirectory(object):
  
      def cleanup(self):
          if self._finalizer.detach():

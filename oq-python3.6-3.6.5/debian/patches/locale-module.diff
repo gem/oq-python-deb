@@ -6,7 +6,7 @@ Index: b/Lib/locale.py
 ===================================================================
 --- a/Lib/locale.py
 +++ b/Lib/locale.py
-@@ -1335,8 +1335,8 @@ locale_alias = {
+@@ -1339,8 +1339,8 @@ locale_alias = {
      'ug_cn':                                'ug_CN.UTF-8',
      'uk':                                   'uk_UA.KOI8-U',
      'uk_ua':                                'uk_UA.KOI8-U',

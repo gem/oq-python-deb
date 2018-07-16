@@ -2,7 +2,7 @@ Index: b/Makefile.pre.in
 ===================================================================
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -141,7 +141,7 @@ CONFINCLUDEPY=	$(CONFINCLUDEDIR)/python$
+@@ -146,7 +146,7 @@ CONFINCLUDEPY=	$(CONFINCLUDEDIR)/python$
  SHLIB_SUFFIX=	@SHLIB_SUFFIX@
  EXT_SUFFIX=	@EXT_SUFFIX@
  LDSHARED=	@LDSHARED@ $(PY_LDFLAGS)
@@ -11,7 +11,7 @@ Index: b/Makefile.pre.in
  LDCXXSHARED=	@LDCXXSHARED@
  DESTSHARED=	$(BINLIBDEST)/lib-dynload
  
-@@ -548,7 +548,7 @@ clinic: $(BUILDPYTHON)
+@@ -554,7 +554,7 @@ clinic: check-clean-src $(srcdir)/Module
  
  # Build the interpreter
  $(BUILDPYTHON):	Programs/python.o $(LIBRARY) $(LDLIBRARY) $(PY3LIBRARY)
@@ -19,4 +19,4 @@ Index: b/Makefile.pre.in
 +	$(LINKCC) $(PY_LDFLAGS) $(PY_CFLAGS) $(LINKFORSHARED) -o $@ Programs/python.o $(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
  
  platform: $(BUILDPYTHON) pybuilddir.txt
- 	$(RUNSHARED) $(PYTHON_FOR_BUILD) -c 'import sys ; from sysconfig import get_platform ; print(get_platform()+"-"+sys.version[0:3])' >platform
+ 	$(RUNSHARED) $(PYTHON_FOR_BUILD) -c 'import sys ; from sysconfig import get_platform ; print("%s-%d.%d" % (get_platform(), *sys.version_info[:2]))' >platform
