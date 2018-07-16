@@ -1,9 +1,15 @@
 #!/usr/bin/make -f
 
-# to check rules and changelog + all files not present in old or new repo
-
 unexport LANG LC_ALL LC_CTYPE LC_COLLATE LC_TIME LC_NUMERIC LC_MESSAGES
 unexport CFLAGS CXXFLAGS LDFLAGS CPPFLAGS
+
+export DEB_BUILD_MAINT_OPTIONS=hardening=-pie
+export DEB_BUILD_MAINT_OPTIONS=hardening=-pie
+DEB_BUILD_MAINT_OPTIONS := hardening=-pie
+export DEB_BUILD_MAINT_OPTIONS
+
+#DEB_MAINT_BUILD_OPTIONS := hardening=-pie
+#export DEB_MAINT_BUILD_OPTIONS
 
 export SHELL = /bin/bash
 
@@ -19,6 +25,17 @@ DEB_HOST_ARCH_ENDIAN	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_ARCH_ENDIAN)
 DEB_HOST_ARCH_OS	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_ARCH_OS)
 DEB_HOST_GNU_TYPE	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_GNU_TYPE)
 DEB_HOST_MULTIARCH	?= $(call vafilt,$(DPKG_VARS),DEB_HOST_MULTIARCH)
+
+ifeq ($(DEB_HOST_ARCH_OS),linux)
+  PLAT = linux
+else ifeq ($(DEB_HOST_ARCH_OS),kfreebsd)
+  PLAT = gnukfreebsd10
+else ifeq ($(DEB_HOST_ARCH_OS),hurd)
+  PLAT = gnu0
+else
+  $(warning unhandled operating system name: $(DEB_HOST_ARCH_OS))
+  PLAT = unknown
+endif
 
 CHANGELOG_VARS := $(shell dpkg-parsechangelog | \
 	sed -n 's/ /_/g;/^[^_]/s/^\([^:]*\):_\(.*\)/\1=\2/p')
@@ -65,14 +82,16 @@ ifneq (,$(filter parallel=%,$(subst $(COMMA), ,$(DEB_BUILD_OPTIONS))))
 endif
 
 distribution := $(shell lsb_release -is)
+distribution := Debian
 distrelease  := $(shell lsb_release -cs)
+distrelease  := sid
 derivative := $(shell if dpkg-vendor --derives-from Ubuntu; then echo Ubuntu; \
 		elif dpkg-vendor --derives-from Debian; then echo Debian; \
 		else echo Unknown; fi)
 
-VER=3.5
-SVER=3.5.0~b1
-NVER=3.6
+VER=3.6
+SVER=3.6.4~rc1
+NVER=3.7
 OPVER=python$(VER)
 PVER=oq-python$(VER)
 EXT_VER=$(subst .,,$(VER))
@@ -128,8 +147,8 @@ ifeq (,$(filter $(distrelease),lenny etch squeeze wheezy lucid maverick natty on
 else
   ma_filter = grep -v '^Multi-Arch:'
 endif
-ifneq (,$(filter $(distrelease),sid stretch experimental))
-  bd_gcc = gcc (>= 4:6.3),
+ifneq (,$(filter $(distrelease),sid experimental))
+  bd_gcc =
 endif
 ifeq (,$(filter $(distrelease),lenny etch squeeze wheezy lucid maverick natty oneiric precise quantal raring saucy trusty))
   bd_dpkgdev = dpkg-dev (>= 1.17.5),
@@ -142,8 +161,8 @@ AR=$(DEB_HOST_GNU_TYPE)-ar
 RANLIB=$(DEB_HOST_GNU_TYPE)-ranlib
 
 DPKG_CPPFLAGS:= $(shell dpkg-buildflags --get CPPFLAGS)
-DPKG_CFLAGS  := $(shell dpkg-buildflags --get CFLAGS)
-DPKG_LDFLAGS := $(shell dpkg-buildflags --get LDFLAGS)
+DPKG_CFLAGS  = $(shell DEB_BUILD_MAINT_OPTIONS=hardening=-pie dpkg-buildflags --get CFLAGS)
+DPKG_LDFLAGS := $(shell DEB_BUILD_MAINT_OPTIONS=hardening=-pie dpkg-buildflags --get LDFLAGS)
 OPT_CFLAGS   := $(filter-out -O%,$(DPKG_CFLAGS)) # default is -O3
 DEBUG_CFLAGS := $(patsubst -O%,-Og,$(DPKG_CFLAGS))
 
@@ -193,6 +212,9 @@ else
         with_lto =
     endif
 endif
+
+    with_pgo =
+    with_lto =
 
 ifeq ($(with_lto),yes)
     LTO_CFLAGS = -g -flto -fuse-linker-plugin
@@ -265,9 +287,7 @@ stamps/stamp-build: stamps/stamp-build-static stamps/stamp-mincheck \
 	touch $@
 
 PROFILE_EXCLUDES = test_compiler test_distutils test_subprocess \
-	test_multiprocessing test_multiprocessing_fork \
-	test_multiprocessing_forkserver test_multiprocessing_main_handling \
-	test_multiprocessing_spawn test_socket test_socketserver \
+	test_multiprocessing test_socket test_socketserver \
 	test_thread test_threaded_import test_threadedtempfile \
 	test_threading test_threading_local test_threadsignals \
 	test_concurrent_futures test_ctypes \
@@ -325,8 +345,7 @@ stamps/stamp-build-shared-debug: stamps/stamp-configure-shared-debug
 	dh_testdir
 	: # build the shared debug library
 	$(MAKE) $(NJOBS) -C $(buildd_shdebug) \
-		EXTRA_CFLAGS="$(DEBUG_CFLAGS)" \
-		libpython$(VER)dm.so pybuilddir.txt
+		EXTRA_CFLAGS="$(DEBUG_CFLAGS)"
 	touch stamps/stamp-build-shared-debug
 
 common_configure_args = \
@@ -375,6 +394,10 @@ stamps/stamp-configure-shared: stamps/stamp-patch
 	touch $@
 
 stamps/stamp-configure-static: stamps/stamp-patch
+	env | grep DEB_
+	@echo XXXXX CFLAGS: $(DPKG_CFLAGS)
+	@echo XXXXX LDFLAGS: $(DPKG_LDFLAGS)
+
 	rm -rf $(buildd_static)
 	mkdir -p $(buildd_static)
 	cd $(buildd_static) && \
@@ -668,12 +691,35 @@ minimal-test:
 
 stamps/stamp-doc-html:
 	dh_testdir
-	BLURB_ENV='PYTHONPATH=$(CURDIR)/debian/blurb' $(MAKE) -C Doc html
+	$(MAKE) -C Doc html
 	@mkdir -p stamps
 	touch stamps/stamp-doc-html
 
+stamps/stamp-doc-info:
+	dh_testdir
+	rm -rf Doc/build/texinfo
+	$(MAKE) -C Doc texinfo
+# - Change name of info file (@setfilename) to include the version.
+# - Change the directory entry to include the version and point to the
+#   correct filename.
+# - Change image links (@image) to point to a subdirectory.
+# - Remove trailing whitespace.
+	sed -e 's/^@setfilename .*/@setfilename $(PVER).info/' \
+	    -e '/^@direntry/,/^@/s/^\*[^:]*: ([^)]*)/* Python $(VER): ($(PVER))/' \
+	    -e 's,@image{,@image{$(PVER)/,g' \
+	    -e 's/ *$$//' \
+	  < Doc/build/texinfo/python.texi \
+	  > Doc/build/texinfo/$(PVER).texi
+	rm -f Doc/build/texinfo/python.texi
+# - Create a symbolic link so that makeinfo will be able to find the
+#   image files.
+	ln -s . Doc/build/texinfo/$(PVER)
+	$(MAKE) -C Doc/build/texinfo
+	@mkdir -p stamps
+	touch stamps/stamp-doc-info
+
 build-doc: stamps/stamp-patch stamps/stamp-build-doc
-stamps/stamp-build-doc: stamps/stamp-doc-html
+stamps/stamp-build-doc: stamps/stamp-doc-html stamps/stamp-doc-info
 	@mkdir -p stamps
 	touch stamps/stamp-build-doc
 
@@ -718,16 +764,13 @@ clean: control-file
 	find -name '*.py[co]' | xargs -r rm -f
 	rm -f Lib/lib2to3/*.pickle
 	rm -f Lib/dist-packages
-	rm -rf Lib/plat-$(DEB_HOST_MULTIARCH)
 	rm -rf locales
 	rm -rf $(d)-dbg
 	rm -f configure
 	rm -rf $(TEST_DIR) debian/testdir
 
-	rm -f Tools/hg/hgtouch.py
 	rm -f Lib/test/185test.db
-	rm -f Lib/venv/scripts/posix/activate
-	rm -f Lib/venv/scripts/nt/Activate.ps1
+	rm -f Tools/hg/hgtouch.py
 
 	for f in debian/*.in; do \
 	  f2=`echo $$f | sed "s,OPVER,$(OPVER),g;s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
@@ -776,12 +819,13 @@ stamps/stamp-install: stamps/stamp-build control-file stamps/stamp-control
 	install -d $(d)/opt/openquake
 ifeq ($(with_interp),static)
 	$(MAKE) -C $(buildd_static) install DESTDIR=$(CURDIR)/$(d)
+	ls -l $(d)/$(scriptdir)/_sysconfigdata*
 	sed -e '/^OPT/s,-O3,-O2,' \
 	    -e 's/$(LTO_CFLAGS)//g' \
 	    -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
 	    -e '/BLDLIBRARY/s/-L\. //' \
-		$(buildd_shared)/$(shell cat $(buildd_shared)/pybuilddir.txt)/_sysconfigdata.py \
-		> $(d)/opt/openquake/$(scriptdir)/_sysconfigdata.py
+		$(buildd_shared)/$(shell cat $(buildd_shared)/pybuilddir.txt)/_sysconfigdata_m_$(PLAT)_$(DEB_HOST_MULTIARCH).py \
+		> $(d)/opt/openquake/$(scriptdir)/_sysconfigdata_m_$(PLAT)_$(DEB_HOST_MULTIARCH).py
 else
 	$(MAKE) -C $(buildd_shared) install DESTDIR=$(CURDIR)/$(d)
 endif
@@ -790,16 +834,9 @@ endif
 	mv $(d)/opt/openquake/include/$(OPVER)m/pyconfig.h \
 		$(d)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OPVER)m/.
 	rm -f $(d)/opt/openquake/$(scriptdir)/lib-dynload/*.py
+	ls -l $(d)/opt/openquake/$(scriptdir)/_sysconfigdata*
 	sed -i 's/ -O3 / -O2 /g;s/$(LTO_CFLAGS)//g;s/-fprofile-use *-fprofile-correction//g' \
-		$(d)/opt/openquake/$(scriptdir)/_sysconfigdata.py
-	mkdir -p $(d)/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)
-	mv $(d)/opt/openquake/$(scriptdir)/_sysconfigdata.py \
-	  $(d)/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_m.py
-	cp -p debian/_sysconfigdata.py $(d)/opt/openquake/$(scriptdir)/
-
-	: # work around issue 24226
-	sed -i 's/^\(def[^:]*:\) *\(.*\)/\1\n    \2/' \
-	  $(d)/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/IN.py
+		$(d)/opt/openquake/$(scriptdir)/_sysconfigdata_m_$(PLAT)_$(DEB_HOST_MULTIARCH).py
 
 	-find $(d)/opt/openquake/lib/python$(VER) -name '*_failed*.so'
 	find $(d)/opt/openquake/lib/python$(VER) -name '*_failed*.so' | xargs -r rm -f
@@ -854,8 +891,6 @@ endif
 	ln -sf ../lib/python$(VER)/pdb.py $(d)/opt/openquake/bin/pdb$(VER)
 	cp -p debian/pdb.1 $(d)/opt/openquake/share/man/man1/pdb$(VER).1
 	gzip $(d)/opt/openquake/share/man/man1/pdb$(VER).1
-	cp -p debian/2to3-3.1 $(d)/opt/openquake/share/man/man1/2to3-$(VER).1
-	gzip $(d)/opt/openquake/share/man/man1/2to3-$(VER).1
 	cp -p debian/pysetup3.1 $(d)/opt/openquake/share/man/man1/pysetup$(VER).1
 	gzip $(d)/opt/openquake/share/man/man1/pysetup$(VER).1
 	cp -p debian/pyvenv3.1 $(d)/opt/openquake/share/man/man1/pyvenv-$(VER).1
@@ -918,8 +953,7 @@ endif
 		$(foreach i,$(MIN_PACKAGES),opt/openquake/$(scriptdir)/$(i)) \
 		$(foreach i,$(MIN_ENCODINGS),opt/openquake/$(scriptdir)/$(i)) \
 		opt/openquake/$(scriptdir)/site.py \
-		opt/openquake/$(scriptdir)/_sysconfigdata.py \
-		opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_m.py \
+		opt/openquake/$(scriptdir)/_sysconfigdata_m_$(PLAT)_$(DEB_HOST_MULTIARCH).py \
 		`cd $(d); for i in $(MIN_EXTS); do \
 			test -e opt/openquake/$(scriptdir)/lib-dynload/$$i.*.so \
 			  && echo opt/openquake/$(scriptdir)/lib-dynload/$$i.*.so; \
@@ -1025,7 +1059,7 @@ endif
 	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)-config.1.gz $(d_dev)/opt/openquake/share/man/man1/$(OPVER)-config.1.gz
 
 ifeq ($(with_tk),yes)
-	: # Move the Tkinter files into $(p_tk).
+	: # Move the Tkinter extension files into $(p_tk).
 	dh_installdirs -p$(p_tk) \
 		opt/openquake/$(scriptdir) \
 		opt/openquake/lib/python$(VER)/lib-dynload
@@ -1035,7 +1069,7 @@ endif
 
 	: # The test framework into $(p_lbase)
 	$(dh_compat2) dh_movefiles -p$(p_lbase) --sourcedir=$(d) \
-		opt/openquake/$(scriptdir)/test/support \
+		opt/openquake/$(scriptdir)/test/{libregrtest,support} \
 		opt/openquake/$(scriptdir)/test/{regrtest,test_support,__init__,pystone}.py
 
 	: # The complete testsuite into $(p_lbase)
@@ -1055,6 +1089,21 @@ endif
 
 	: # fixed upstream ...
 	chmod -x $(d_ltst)/opt/openquake/$(scriptdir)/test/{test_dbm_gnu,test_dbm_ndbm}.py
+
+	: # Tkinter library files shipped in python3-tk
+	rm -rf $(d)/opt/openquake/lib/python$(VER)/tkinter
+
+	: # distutils shipped in python3-distutils
+	rm -rf $(d)/opt/openquake/lib/python$(VER)/distutils/*
+	: # ... except for distutils.version
+	cp Lib/distutils/{__init__,version}.py \
+		$(d)/opt/openquake/lib/python$(VER)/distutils/.
+
+	: # lib2to3 shipped in python3-lib2to3
+	rm -rf \
+		$(d)/opt/openquake/bin/2to3-$(VER) \
+		$(d)/opt/openquake/share/man/man1/2to3-$(VER).1 \
+		$(d)/opt/openquake/lib/python$(VER)/lib2to3
 
 	: # Move the demos and tools into $(p_exam)'s doc directory
 	dh_installdirs -p$(p_exam) \
@@ -1076,7 +1125,8 @@ endif
 		opt/openquake/bin \
 		opt/openquake/share/man/man1
 	$(dh_compat2) dh_movefiles -p$(p_idle) --sourcedir=$(d) \
-		opt/openquake/bin/idle-python$(VER)
+		opt/openquake/bin/idle-python$(VER) \
+		opt/openquake/lib/$(PVER)/idlelib
 	cp -p debian/idle-$(PVER).1 $(d_idle)/opt/openquake/share/man/man1/
 	gzip $(d_idle)/opt/openquake/share/man/man1/idle-$(PVER).1
 
@@ -1097,9 +1147,11 @@ endif
 	: # Move the docs into $(p_base)'s /usr/share/doc/$(PVER) directory,
 	: # all other packages only have a copyright file.
 	dh_installdocs -p$(p_base) \
-		README Misc/NEWS Misc/ACKS
+		README.rst Misc/NEWS Misc/ACKS
 	ln -sf NEWS.gz $(d_base)/usr/share/doc/$(p_base)/changelog.gz
-	dh_installdocs --all -N$(p_base) -N$(p_dev) -N$(p_dbg) -N$(p_lib) debian/README.Debian
+	dh_installdocs --all \
+		-N$(p_base) -N$(p_dev) -N$(p_dbg) -N$(p_lib) \
+		debian/README.Debian
 
 	: # IDLE has its own changelogs, docs...
 	dh_installchangelogs -p$(p_idle) Lib/idlelib/ChangeLog
@@ -1178,13 +1230,9 @@ endif
 		> $(d)-dbg/opt/openquake/$(scriptdir)/config-$(VER)dm-$(DEB_HOST_MULTIARCH)/Makefile
 	sed -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
 	    -e '/BLDLIBRARY/s/-L\. //' \
-		$(buildd_shdebug)/$(shell cat $(buildd_shdebug)/pybuilddir.txt)/_sysconfigdata.py \
-		> $(d)-dbg/opt/openquake/$(scriptdir)/_sysconfigdata.py
-	rm -f $(d)-dbg/$(scriptdir)/lib-dynload/_sysconfigdata.py
+		$(buildd_shdebug)/$(shell cat $(buildd_shdebug)/pybuilddir.txt)/_sysconfigdata_dm_$(PLAT)_$(DEB_HOST_MULTIARCH).py \
+		> $(d)-dbg/opt/openquake/$(scriptdir)/_sysconfigdata_dm_$(PLAT)_$(DEB_HOST_MULTIARCH).py
 	sed -i 's/ -O3 / -O2 /g;s/$(LTO_CFLAGS)//g;s/-fprofile-use *-fprofile-correction//g' \
-		$(d)-dbg/opt/openquake/$(scriptdir)/_sysconfigdata.py
-	mv $(d)-dbg/opt/openquake/$(scriptdir)/_sysconfigdata.py \
-	  $(d)-dbg/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_dm.py
 
 	mv $(d)-dbg/opt/openquake/lib/libpython*.a $(d)-dbg/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/
 
@@ -1199,15 +1247,14 @@ endif
 		opt/openquake/bin \
 		opt/openquake/share/man/man1 \
 		opt/openquake/$(scriptdir)/lib-dynload \
-		opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH) \
 		opt/openquake/include/$(OPVER)dm \
 		opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OPVER)dm \
 		opt/openquake/lib/$(DEB_HOST_MULTIARCH)/pkgconfig
 
 	cp -p $(d)-dbg/opt/openquake/$(scriptdir)/lib-dynload/*.so \
 		$(d_ldbg)/opt/openquake/$(scriptdir)/lib-dynload/
-	cp -p $(d)-dbg/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/_sysconfigdata_dm.py \
-		$(d_ldbg)/opt/openquake/$(scriptdir)/plat-$(DEB_HOST_MULTIARCH)/
+	cp -p $(d)-dbg/opt/openquake/$(scriptdir)/_sysconfigdata_dm_$(PLAT)_$(DEB_HOST_MULTIARCH).py \
+		$(d_ldbg)/opt/openquake/$(scriptdir)/
 	cp -p $(buildd_shdebug)/libpython$(VER)dm.so.1.0 \
 		$(d_ldbg)/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/
 	dh_link -p$(p_ldbg) \
@@ -1215,11 +1262,10 @@ endif
 		/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so.1 \
 	    /opt/openquake/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so.1 \
 		/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)dm.so
-	sed -e '/^Libs:/s,-lpython$(VER),-lpython$(VER)dm,' \
-	  -e '/^Cflags:/s,$$, -I$${includedir}/$(DEB_HOST_MULTIARCH)/python$(VER)dm,' \
-	  -e '/^libdir=/d;s/-L\$${libdir} *//' \
-	  $(d)-dbg/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER).pc \
-	  > $(d_ldbg)/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER)-dbg.pc
+	cp $(d)-dbg/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER)dm.pc \
+	  $(d_ldbg)/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/.
+	ln -s python-$(VER)dm.pc \
+	  $(d_ldbg)/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER)-dbg.pc
 
 	dh_installdirs -p$(p_dbg) \
 		opt/openquake/bin \
@@ -1341,6 +1387,11 @@ binary-indep: build-indep install stamps/stamp-control
 		/usr/share/doc/$(p_base)/html /usr/share/doc/$(p_doc)/html \
 		/usr/share/javascript/jquery/jquery.js /usr/share/doc/$(p_base)/html/_static/jquery.js \
 		/usr/share/javascript/underscore/underscore.js /usr/share/doc/$(p_base)/html/_static/underscore.js
+	dh_installinfo -p$(p_doc)
+	for f in $(d_doc)/usr/share/doc/$(p_base)/html/_images/*.png; do \
+	  b=$$(basename $$f); \
+	  dh_link -p$(p_doc) /usr/share/doc/$(p_base)/html/_images/$$b /usr/share/info/$(PVER)/$$b; \
+	done
 
 	: # devhelp docs
 	cd $(buildd_static) && ./python ../debian/pyhtml2devhelp.py \
