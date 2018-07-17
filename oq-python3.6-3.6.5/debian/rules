@@ -1094,10 +1094,10 @@ endif
 	rm -rf $(d)/opt/openquake/lib/python$(VER)/tkinter
 
 	: # distutils shipped in python3-distutils
-	rm -rf $(d)/opt/openquake/lib/python$(VER)/distutils/*
+	: # rm -rf $(d)/opt/openquake/lib/python$(VER)/distutils/*
 	: # ... except for distutils.version
-	cp Lib/distutils/{__init__,version}.py \
-		$(d)/opt/openquake/lib/python$(VER)/distutils/.
+	: # cp Lib/distutils/{__init__,version}.py \
+	: #	$(d)/opt/openquake/lib/python$(VER)/distutils/.
 
 	: # lib2to3 shipped in python3-lib2to3
 	rm -rf \
