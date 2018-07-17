@@ -819,7 +819,7 @@ stamps/stamp-install: stamps/stamp-build control-file stamps/stamp-control
 	install -d $(d)/opt/openquake
 ifeq ($(with_interp),static)
 	$(MAKE) -C $(buildd_static) install DESTDIR=$(CURDIR)/$(d)
-	ls -l $(d)/$(scriptdir)/_sysconfigdata*
+	ls -l $(d)/opt/openquake/$(scriptdir)/_sysconfigdata*
 	sed -e '/^OPT/s,-O3,-O2,' \
 	    -e 's/$(LTO_CFLAGS)//g' \
 	    -e 's,^RUNSHARED *=.*,RUNSHARED=,' \
@@ -1126,7 +1126,7 @@ endif
 		opt/openquake/share/man/man1
 	$(dh_compat2) dh_movefiles -p$(p_idle) --sourcedir=$(d) \
 		opt/openquake/bin/idle-python$(VER) \
-		opt/openquake/lib/$(PVER)/idlelib
+		opt/openquake/lib/$(OPVER)/idlelib
 	cp -p debian/idle-$(PVER).1 $(d_idle)/opt/openquake/share/man/man1/
 	gzip $(d_idle)/opt/openquake/share/man/man1/idle-$(PVER).1
 
@@ -1233,6 +1233,7 @@ endif
 		$(buildd_shdebug)/$(shell cat $(buildd_shdebug)/pybuilddir.txt)/_sysconfigdata_dm_$(PLAT)_$(DEB_HOST_MULTIARCH).py \
 		> $(d)-dbg/opt/openquake/$(scriptdir)/_sysconfigdata_dm_$(PLAT)_$(DEB_HOST_MULTIARCH).py
 	sed -i 's/ -O3 / -O2 /g;s/$(LTO_CFLAGS)//g;s/-fprofile-use *-fprofile-correction//g' \
+		$(d)-dbg/opt/openquake/$(scriptdir)/_sysconfigdata_dm_$(PLAT)_$(DEB_HOST_MULTIARCH).py
 
 	mv $(d)-dbg/opt/openquake/lib/libpython*.a $(d)-dbg/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/
 
