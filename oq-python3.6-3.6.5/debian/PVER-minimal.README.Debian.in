@@ -11,6 +11,7 @@ are:
   __future__		module
   _ast			extension
   _bisect		extension
+  _blake2		extension
   _bootlocale		module
   _bytesio		builtin
   _codecs		builtin
@@ -48,9 +49,9 @@ are:
   _stringio		builtin
   _strptime		module
   _symtable		builtin
-  _sysconfigdata	module
   _thread		builtin
   _threading_local	module
+  _tracemalloc		extension
   _types		builtin
   _weakref		builtin
   _weakrefset		module
@@ -139,6 +140,7 @@ are:
   token			module
   tokenize		module
   traceback		module
+  tracemalloc		module
   types			module
   unicodedata		extension
   warnings		module
