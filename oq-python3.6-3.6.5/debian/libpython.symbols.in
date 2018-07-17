@@ -18,7 +18,25 @@
  PyArg_VaParse@Base @SVER@
  PyArg_VaParseTupleAndKeywords@Base @SVER@
  PyArg_ValidateKeywordArguments@Base @SVER@
+ PyAsyncGen_ClearFreeLists@Base @SVER@
+ PyAsyncGen_Fini@Base @SVER@
+ PyAsyncGen_New@Base @SVER@
+ PyAsyncGen_Type@Base @SVER@
  PyBaseObject_Type@Base @SVER@
+ PyBlake2_BLAKE2bType@Base @SVER@
+ PyBlake2_BLAKE2sType@Base @SVER@
+ PyBlake2_blake2b@Base @SVER@
+ PyBlake2_blake2b_final@Base @SVER@
+ PyBlake2_blake2b_init@Base @SVER@
+ PyBlake2_blake2b_init_key@Base @SVER@
+ PyBlake2_blake2b_init_param@Base @SVER@
+ PyBlake2_blake2b_update@Base @SVER@
+ PyBlake2_blake2s@Base @SVER@
+ PyBlake2_blake2s_final@Base @SVER@
+ PyBlake2_blake2s_init@Base @SVER@
+ PyBlake2_blake2s_init_key@Base @SVER@
+ PyBlake2_blake2s_init_param@Base @SVER@
+ PyBlake2_blake2s_update@Base @SVER@
  PyBool_FromLong@Base @SVER@
  PyBool_Type@Base @SVER@
  PyBuffer_FillContiguousStrides@Base @SVER@
@@ -205,6 +223,7 @@
  PyErr_PrintEx@Base @SVER@
  PyErr_ProgramText@Base @SVER@
  PyErr_ProgramTextObject@Base @SVER@
+ PyErr_ResourceWarning@Base @SVER@
  PyErr_Restore@Base @SVER@
  PyErr_SetExcInfo@Base @SVER@
  PyErr_SetFromErrno@Base @SVER@
@@ -212,6 +231,7 @@
  PyErr_SetFromErrnoWithFilenameObject@Base @SVER@
  PyErr_SetFromErrnoWithFilenameObjects@Base @SVER@
  PyErr_SetImportError@Base @SVER@
+ PyErr_SetImportErrorSubclass@Base @SVER@
  PyErr_SetInterrupt@Base @SVER@
  PyErr_SetNone@Base @SVER@
  PyErr_SetObject@Base @SVER@
@@ -286,6 +306,7 @@
  PyExc_KeyboardInterrupt@Base @SVER@
  PyExc_LookupError@Base @SVER@
  PyExc_MemoryError@Base @SVER@
+ PyExc_ModuleNotFoundError@Base @SVER@
  PyExc_NameError@Base @SVER@
  PyExc_NotADirectoryError@Base @SVER@
  PyExc_NotImplementedError@Base @SVER@
@@ -295,7 +316,6 @@
  PyExc_PermissionError@Base @SVER@
  PyExc_ProcessLookupError@Base @SVER@
  PyExc_RecursionError@Base @SVER@
- PyExc_RecursionErrorInst@Base @SVER@
  PyExc_ReferenceError@Base @SVER@
  PyExc_ResourceWarning@Base @SVER@
  PyExc_RuntimeError@Base @SVER@
@@ -325,6 +345,7 @@
  PyException_SetCause@Base @SVER@
  PyException_SetContext@Base @SVER@
  PyException_SetTraceback@Base @SVER@
+ PyFPE_dummy@Base @SVER@
  PyFileIO_Type@Base @SVER@
  PyFile_FromFd@Base @SVER@
  PyFile_GetLine@Base @SVER@
@@ -580,6 +601,7 @@
  PyODict_SetItem@Base @SVER@
  PyODict_Type@Base @SVER@
  PyOS_AfterFork@Base @SVER@
+ PyOS_FSPath@Base @SVER@
  PyOS_FiniInterrupts@Base @SVER@
  PyOS_InitInterrupts@Base @SVER@
  PyOS_InputHook@Base @SVER@
@@ -744,7 +766,6 @@
  PySet_Pop@Base @SVER@
  PySet_Size@Base @SVER@
  PySet_Type@Base @SVER@
- PySlice_Unpack@Base @SVER@
  PySignal_SetWakeupFd@Base @SVER@
  PySlice_AdjustIndices@Base @SVER@
  PySlice_Fini@Base @SVER@
@@ -752,6 +773,7 @@
  PySlice_GetIndicesEx@Base @SVER@
  PySlice_New@Base @SVER@
  PySlice_Type@Base @SVER@
+ PySlice_Unpack@Base @SVER@
  PyState_AddModule@Base @SVER@
  PyState_FindModule@Base @SVER@
  PyState_RemoveModule@Base @SVER@
@@ -1005,8 +1027,10 @@
  Py_Exit@Base @SVER@
  Py_FatalError@Base @SVER@
  Py_FdIsInteractive@Base @SVER@
+ Py_FileSystemDefaultEncodeErrors@Base @SVER@
  Py_FileSystemDefaultEncoding@Base @SVER@
  Py_Finalize@Base @SVER@
+ Py_FinalizeEx@Base @SVER@
  Py_FrozenFlag@Base @SVER@
  Py_FrozenMain@Base @SVER@
  Py_GetArgcArgv@Base @SVER@
@@ -1071,22 +1095,46 @@
  _PyAccu_Finish@Base @SVER@
  _PyAccu_FinishAsList@Base @SVER@
  _PyAccu_Init@Base @SVER@
+ _PyArg_Fini@Base @SVER@
  _PyArg_NoKeywords@Base @SVER@
  _PyArg_NoPositional@Base @SVER@
+ _PyArg_ParseStack@Base @SVER@
+ _PyArg_ParseStack_SizeT@Base @SVER@
+ _PyArg_ParseTupleAndKeywordsFast@Base @SVER@
+ _PyArg_ParseTupleAndKeywordsFast_SizeT@Base @SVER@
  _PyArg_ParseTupleAndKeywords_SizeT@Base @SVER@
  _PyArg_ParseTuple_SizeT@Base @SVER@
  _PyArg_Parse_SizeT@Base @SVER@
+ _PyArg_VaParseTupleAndKeywordsFast@Base @SVER@
+ _PyArg_VaParseTupleAndKeywordsFast_SizeT@Base @SVER@
  _PyArg_VaParseTupleAndKeywords_SizeT@Base @SVER@
  _PyArg_VaParse_SizeT@Base @SVER@
+ _PyAsyncGenASend_Type@Base @SVER@
+ _PyAsyncGenAThrow_Type@Base @SVER@
+ _PyAsyncGenValueWrapperNew@Base @SVER@
+ _PyAsyncGenWrappedValue_Type@Base @SVER@
  _PyBuiltin_Init@Base @SVER@
  _PyByteArray_empty_string@Base @SVER@
  _PyBytesIOBuffer_Type@Base @SVER@
- _PyBytes_Format@Base @SVER@
+ _PyBytesWriter_Alloc@Base @SVER@
+ _PyBytesWriter_Dealloc@Base @SVER@
+ _PyBytesWriter_Finish@Base @SVER@
+ _PyBytesWriter_Init@Base @SVER@
+ _PyBytesWriter_Prepare@Base @SVER@
+ _PyBytesWriter_Resize@Base @SVER@
+ _PyBytesWriter_WriteBytes@Base @SVER@
+ _PyBytes_DecodeEscape@Base @SVER@
+ _PyBytes_FormatEx@Base @SVER@
+ _PyBytes_FromHex@Base @SVER@
  _PyBytes_Join@Base @SVER@
  _PyBytes_Resize@Base @SVER@
  _PyCFunction_DebugMallocStats@Base @SVER@
+ _PyCFunction_FastCallDict@Base @SVER@
+ _PyCFunction_FastCallKeywords@Base @SVER@
  _PyCode_CheckLineNumber@Base @SVER@
  _PyCode_ConstantKey@Base @SVER@
+ _PyCode_GetExtra@Base @SVER@
+ _PyCode_SetExtra@Base @SVER@
  _PyCodecInfo_GetIncrementalDecoder@Base @SVER@
  _PyCodecInfo_GetIncrementalEncoder@Base @SVER@
  _PyCodec_DecodeText@Base @SVER@
@@ -1114,6 +1162,7 @@
  _PyDict_KeysSize@Base @SVER@
  _PyDict_LoadGlobal@Base @SVER@
  _PyDict_MaybeUntrack@Base @SVER@
+ _PyDict_MergeEx@Base @SVER@
  _PyDict_NewKeysForClass@Base @SVER@
  _PyDict_NewPresized@Base @SVER@
  _PyDict_Next@Base @SVER@
@@ -1124,15 +1173,24 @@
  _PyDict_SetItem_KnownHash@Base @SVER@
  _PyErr_BadInternalCall@Base @SVER@
  _PyErr_ChainExceptions@Base @SVER@
+ _PyErr_FormatFromCause@Base @SVER@
+ _PyErr_FormatFromCause@Base @SVER@
  _PyErr_SetKeyError@Base @SVER@
  _PyErr_TrySetFromCause@Base @SVER@
  _PyEval_CallTracing@Base @SVER@
+ _PyEval_EvalFrameDefault@Base @SVER@
  _PyEval_FiniThreads@Base @SVER@
+ _PyEval_GetAsyncGenFinalizer@Base @SVER@
+ _PyEval_GetAsyncGenFirstiter@Base @SVER@
  _PyEval_GetCoroutineWrapper@Base @SVER@
  _PyEval_SetCoroutineWrapper@Base @SVER@
  _PyEval_GetSwitchInterval@Base @SVER@
+ _PyEval_RequestCodeExtraIndex@Base @SVER@
+ _PyEval_SetAsyncGenFinalizer@Base @SVER@
+ _PyEval_SetAsyncGenFirstiter@Base @SVER@
  _PyEval_SetSwitchInterval@Base @SVER@
  _PyEval_SignalAsyncExc@Base @SVER@
+ _PyEval_SignalReceived@Base @SVER@
  _PyEval_SliceIndex@Base @SVER@
  _PyEval_SliceIndexNotNone@Base @SVER@
  _PyExc_Fini@Base @SVER@
@@ -1143,20 +1201,27 @@
  _PyFloat_DebugMallocStats@Base @SVER@
  _PyFloat_FormatAdvancedWriter@Base @SVER@
  _PyFloat_Init@Base @SVER@
+ _PyFloat_Pack2@Base @SVER@
  _PyFloat_Pack4@Base @SVER@
  _PyFloat_Pack8@Base @SVER@
+ _PyFloat_Unpack2@Base @SVER@
  _PyFloat_Unpack4@Base @SVER@
  _PyFloat_Unpack8@Base @SVER@
  _PyFrame_DebugMallocStats@Base @SVER@
  _PyFrame_Init@Base @SVER@
+ _PyFunction_FastCallDict@Base @SVER@
+ _PyFunction_FastCallKeywords@Base @SVER@
+ _PyGC_CollectIfEnabled@Base @SVER@
  _PyGC_CollectNoFail@Base @SVER@
  _PyGC_Dump@Base @SVER@
  _PyGC_DumpShutdownStats@Base @SVER@
  _PyGC_Fini@Base @SVER@
  _PyGC_generation0@Base @SVER@
  _PyGILState_Fini@Base @SVER@
+ _PyGILState_GetInterpreterStateUnsafe@Base @SVER@
  _PyGILState_Init@Base @SVER@
  _PyGILState_Reinit@Base @SVER@
+ _PyGILState_check_enabled@Base @SVER@
  _PyGen_FetchStopIterationValue@Base @SVER@
  _PyGen_Finalize@Base @SVER@
  _PyGen_Send@Base @SVER@
@@ -1227,6 +1292,7 @@
  _PyLong_DivmodNear@Base @SVER@
  _PyLong_Format@Base @SVER@
  _PyLong_FormatAdvancedWriter@Base @SVER@
+ _PyLong_FormatBytesWriter@Base @SVER@
  _PyLong_FormatWriter@Base @SVER@
  _PyLong_Frexp@Base @SVER@
  _PyLong_FromByteArray@Base @SVER@
@@ -1241,7 +1307,10 @@
  _PyLong_NumBits@Base @SVER@
  _PyLong_Sign@Base @SVER@
  _PyManagedBuffer_Type@Base @SVER@
+ _PyMem_DumpTraceback@Base @SVER@
+ _PyMem_PymallocEnabled@Base @SVER@
  _PyMem_RawStrdup@Base @SVER@
+ _PyMem_SetupAllocators@Base @SVER@
  _PyMem_Strdup@Base @SVER@
  _PyMethodWrapper_Type@Base @SVER@
  _PyMethod_DebugMallocStats@Base @SVER@
@@ -1257,6 +1326,7 @@
  _PyOS_ReadlineTState@Base @SVER@
  _PyOS_ResetGetOpt@Base @SVER@
  _PyOS_URandom@Base @SVER@
+ _PyOS_URandomNonblock@Base @SVER@
  _PyOS_mystrnicmp_hack@Base @SVER@
  _PyOS_optarg@Base @SVER@
  _PyOS_opterr@Base @SVER@
@@ -1267,9 +1337,12 @@
  _PyObject_CallMethodIdObjArgs@Base @SVER@
  _PyObject_CallMethodId_SizeT@Base @SVER@
  _PyObject_CallMethod_SizeT@Base @SVER@
+ _PyObject_Call_Prepend@Base @SVER@
  _PyObject_DebugMallocStats@Base @SVER@
  _PyObject_DebugTypeStats@Base @SVER@
  _PyObject_Dump@Base @SVER@
+ _PyObject_FastCallDict@Base @SVER@
+ _PyObject_FastCallKeywords@Base @SVER@
  _PyObject_GC_Calloc@Base @SVER@
  _PyObject_GC_Malloc@Base @SVER@
  _PyObject_GC_New@Base @SVER@
@@ -1294,6 +1367,35 @@
  _PyParser_TokenNames@Base @SVER@
  _PyRandom_Fini@Base @SVER@
  _PyRandom_Init@Base @SVER@
+ (arch=alpha amd64 arm64 ia64 mips64 mips64el mips64r6 mips64r6el ppc64el kfreebsd-amd64 riscv64)_PySHA3_KeccakF1600_FastLoop_Absorb@Base @SVER@
+ (arch=!alpha !amd64 !arm64 !ia64 !mips64 !mips64el !mips64r6 !mips64r6el !ppc64el !kfreebsd-amd64 !riscv64)_PySHA3_KeccakP1600_AddByte@Base @SVER@
+ _PySHA3_KeccakP1600_AddBytes@Base @SVER@
+ _PySHA3_KeccakP1600_AddBytesInLane@Base @SVER@
+ _PySHA3_KeccakP1600_AddLanes@Base @SVER@
+ _PySHA3_KeccakP1600_ExtractAndAddBytes@Base @SVER@
+ _PySHA3_KeccakP1600_ExtractAndAddBytesInLane@Base @SVER@
+ _PySHA3_KeccakP1600_ExtractAndAddLanes@Base @SVER@
+ _PySHA3_KeccakP1600_ExtractBytes@Base @SVER@
+ _PySHA3_KeccakP1600_ExtractBytesInLane@Base @SVER@
+ _PySHA3_KeccakP1600_ExtractLanes@Base @SVER@
+ _PySHA3_KeccakP1600_Initialize@Base @SVER@
+ _PySHA3_KeccakP1600_OverwriteBytes@Base @SVER@
+ _PySHA3_KeccakP1600_OverwriteBytesInLane@Base @SVER@
+ _PySHA3_KeccakP1600_OverwriteLanes@Base @SVER@
+ _PySHA3_KeccakP1600_OverwriteWithZeroes@Base @SVER@
+ _PySHA3_KeccakP1600_Permute_12rounds@Base @SVER@
+ _PySHA3_KeccakP1600_Permute_24rounds@Base @SVER@
+ (arch=!alpha !amd64 !arm64 !ia64 !mips64 !mips64el !mips64r6 !mips64r6el !ppc64el !kfreebsd-amd64 !riscv64)_PySHA3_KeccakP1600_Permute_Nrounds@Base @SVER@
+ (arch=!alpha !amd64 !arm64 !ia64 !mips64 !mips64el !mips64r6 !mips64r6el !ppc64el !kfreebsd-amd64 !riscv64)_PySHA3_KeccakP1600_SetBytesInLaneToZero@Base @SVER@
+ _PySHA3_KeccakWidth1600_Sponge@Base @SVER@
+ _PySHA3_KeccakWidth1600_SpongeAbsorb@Base @SVER@
+ _PySHA3_KeccakWidth1600_SpongeAbsorbLastFewBits@Base @SVER@
+ _PySHA3_KeccakWidth1600_SpongeInitialize@Base @SVER@
+ _PySHA3_KeccakWidth1600_SpongeSqueeze@Base @SVER@
+ _PySHA3_Keccak_HashFinal@Base @SVER@
+ _PySHA3_Keccak_HashInitialize@Base @SVER@
+ _PySHA3_Keccak_HashSqueeze@Base @SVER@
+ _PySHA3_Keccak_HashUpdate@Base @SVER@
  _PySequence_BytesToCharpArray@Base @SVER@
  _PySequence_IterSearch@Base @SVER@
  _PySet_Dummy@Base @SVER@
@@ -1301,6 +1403,9 @@
  _PySet_Update@Base @SVER@
  _PySlice_FromIndices@Base @SVER@
  _PySlice_GetLongIndices@Base @SVER@
+ _PyStack_AsDict@Base @SVER@
+ _PyStack_AsTuple@Base @SVER@
+ _PyStack_UnpackDict@Base @SVER@
  _PyState_AddModule@Base @SVER@
  _PyState_ClearModules@Base @SVER@
  _PyStructSequence_Init@Base @SVER@
@@ -1337,8 +1442,13 @@
  _PyTime_ObjectToTime_t@Base @SVER@
  _PyTime_ObjectToTimespec@Base @SVER@
  _PyTime_ObjectToTimeval@Base @SVER@
+ _PyTime_gmtime@Base @SVER@
+ _PyTime_localtime@Base @SVER@
  _PyTraceMalloc_Fini@Base @SVER@
+ _PyTraceMalloc_GetTraceback@Base @SVER@
  _PyTraceMalloc_Init@Base @SVER@
+ _PyTraceMalloc_Track@Base @SVER@
+ _PyTraceMalloc_Untrack@Base @SVER@
  _PyTraceback_Add@Base @SVER@
  _PyTrash_delete_later@Base @SVER@
  _PyTrash_delete_nesting@Base @SVER@
@@ -1360,6 +1470,7 @@
  _PyUnicodeWriter_Finish@Base @SVER@
  _PyUnicodeWriter_Init@Base @SVER@
  _PyUnicodeWriter_PrepareInternal@Base @SVER@
+ _PyUnicodeWriter_PrepareKindInternal@Base @SVER@
  _PyUnicodeWriter_WriteASCIIString@Base @SVER@
  _PyUnicodeWriter_WriteChar@Base @SVER@
  _PyUnicodeWriter_WriteLatin1String@Base @SVER@
@@ -1374,10 +1485,11 @@
  _PyUnicode_BidirectionalNames@Base @SVER@
  _PyUnicode_CategoryNames@Base @SVER@
  _PyUnicode_ClearStaticStrings@Base @SVER@
- _PyUnicode_CompareWithId@Base @SVER@
  _PyUnicode_Copy@Base @SVER@
  _PyUnicode_Database_Records@Base @SVER@
+ _PyUnicode_DecodeUnicodeEscape@Base @SVER@
  _PyUnicode_DecodeUnicodeInternal@Base @SVER@
+ _PyUnicode_EQ@Base @SVER@
  _PyUnicode_EastAsianWidthNames@Base @SVER@
  _PyUnicode_EncodeCharmap@Base @SVER@
  _PyUnicode_EncodeUTF16@Base @SVER@
@@ -1410,6 +1522,7 @@
  _PyUnicode_IsWhitespace@Base @SVER@
  _PyUnicode_IsXidContinue@Base @SVER@
  _PyUnicode_IsXidStart@Base @SVER@
+ _PyUnicode_JoinArray@Base @SVER@
  _PyUnicode_Ready@Base @SVER@
  _PyUnicode_ToDecimalDigit@Base @SVER@
  _PyUnicode_ToDigit@Base @SVER@
@@ -1422,7 +1535,6 @@
  _PyUnicode_ToUpperFull@Base @SVER@
  _PyUnicode_ToUppercase@Base @SVER@
  _PyUnicode_TransformDecimalAndSpaceToASCII@Base @SVER@
- _PyUnicode_TranslateCharmap@Base @SVER@
  _PyUnicode_TypeRecords@Base @SVER@
  _PyUnicode_XStrip@Base @SVER@
  _PyWarnings_Init@Base @SVER@
@@ -1431,6 +1543,7 @@
  _PyWeakref_GetWeakrefCount@Base @SVER@
  _PyWeakref_ProxyType@Base @SVER@
  _PyWeakref_RefType@Base @SVER@
+ _Py_AnnAssign@Base @SVER@
  _Py_Assert@Base @SVER@
  _Py_Assign@Base @SVER@
  _Py_AsyncFor@Base @SVER@
@@ -1439,8 +1552,6 @@
  _Py_Attribute@Base @SVER@
  _Py_AugAssign@Base @SVER@
  _Py_Await@Base @SVER@
- _Py_BACKCOMPAT_HALF_MAGIC@Base @SVER@
- _Py_BACKCOMPAT_MAGIC_NUMBER@Base @SVER@
  _Py_BinOp@Base @SVER@
  _Py_BoolOp@Base @SVER@
  _Py_Break@Base @SVER@
@@ -1453,16 +1564,22 @@
  _Py_CheckRecursiveCall@Base @SVER@
  _Py_ClassDef@Base @SVER@
  _Py_Compare@Base @SVER@
+ _Py_Constant@Base @SVER@
  _Py_Continue@Base @SVER@
  _Py_Dealloc@Base @SVER@
+ _Py_DecodeLocaleEx@Base @SVER@
  _Py_Delete@Base @SVER@
  _Py_Dict@Base @SVER@
  _Py_DictComp@Base @SVER@
  _Py_DisplaySourceLine@Base @SVER@
+ _Py_DumpASCII@Base @SVER@
+ _Py_DumpDecimal@Base @SVER@
+ _Py_DumpHexadecimal@Base @SVER@
  _Py_DumpTraceback@Base @SVER@
  _Py_DumpTracebackThreads@Base @SVER@
  _Py_Ellipsis@Base @SVER@
  _Py_EllipsisObject@Base @SVER@
+ _Py_EncodeLocaleEx@Base @SVER@
  _Py_ExceptHandler@Base @SVER@
  _Py_Expr@Base @SVER@
  _Py_Expression@Base @SVER@
@@ -1470,10 +1587,12 @@
  _Py_FalseStruct@Base @SVER@
  _Py_Finalizing@Base @SVER@
  _Py_For@Base @SVER@
+ _Py_FormattedValue@Base @SVER@
  _Py_FreeCharPArray@Base @SVER@
  _Py_FunctionDef@Base @SVER@
  _Py_GeneratorExp@Base @SVER@
  _Py_GetAllocatedBlocks@Base @SVER@
+ _Py_GetLocaleconvNumeric@Base @SVER@
  _Py_Global@Base @SVER@
  _Py_Gid_Converter@Base @SVER@
  _Py_HashBytes@Base @SVER@
@@ -1487,6 +1606,7 @@
  _Py_Index@Base @SVER@
  _Py_InitializeEx_Private@Base @SVER@
  _Py_Interactive@Base @SVER@
+ _Py_JoinedStr@Base @SVER@
  _Py_Lambda@Base @SVER@
  _Py_List@Base @SVER@
  _Py_ListComp@Base @SVER@
@@ -1545,6 +1665,11 @@
  _Py_asinh@Base @SVER@
  _Py_atanh@Base @SVER@
  _Py_bytes_capitalize@Base @SVER@
+ _Py_bytes_contains@Base @SVER@
+ _Py_bytes_count@Base @SVER@
+ _Py_bytes_endswith@Base @SVER@
+ _Py_bytes_find@Base @SVER@
+ _Py_bytes_index@Base @SVER@
  _Py_bytes_isalnum@Base @SVER@
  _Py_bytes_isalpha@Base @SVER@
  _Py_bytes_isdigit@Base @SVER@
@@ -1554,6 +1679,9 @@
  _Py_bytes_isupper@Base @SVER@
  _Py_bytes_lower@Base @SVER@
  _Py_bytes_maketrans@Base @SVER@
+ _Py_bytes_rfind@Base @SVER@
+ _Py_bytes_rindex@Base @SVER@
+ _Py_bytes_startswith@Base @SVER@
  _Py_bytes_swapcase@Base @SVER@
  _Py_bytes_title@Base @SVER@
  _Py_bytes_upper@Base @SVER@
@@ -1565,7 +1693,9 @@
  _Py_c_quot@Base @SVER@
  _Py_c_sum@Base @SVER@
  _Py_capitalize__doc__@Base @SVER@
+ _Py_center__doc__@Base @SVER@
  _Py_comprehension@Base @SVER@
+ _Py_count__doc__@Base @SVER@
  _Py_ctype_table@Base @SVER@
  _Py_ctype_tolower@Base @SVER@
  _Py_ctype_toupper@Base @SVER@
@@ -1577,11 +1707,15 @@
  (arch=!m68k)_Py_dg_stdnan@Base @SVER@
  (arch=!m68k)_Py_dg_strtod@Base @SVER@
  _Py_dup@Base @SVER@
+ _Py_endswith__doc__@Base @SVER@
+ _Py_expandtabs__doc__@Base @SVER@
  _Py_expm1@Base @SVER@
+ _Py_find__doc__@Base @SVER@
  _Py_findlabel@Base @SVER@
  _Py_fopen@Base @SVER@
  _Py_fopen_obj@Base @SVER@
  (arch=i386 lpia m68k)_Py_force_double@Base @SVER@
+ _Py_freegrammar@Base @SVER@
  _Py_fstat@Base @SVER@
  _Py_fstat_noraise@Base @SVER@
  (arch=amd64 i386 lpia)_Py_get_387controlword@Base @SVER@
@@ -1592,18 +1726,17 @@
  _Py_hashtable_clear@Base @SVER@
  _Py_hashtable_compare_direct@Base @SVER@
  _Py_hashtable_copy@Base @SVER@
- _Py_hashtable_delete@Base @SVER@
  _Py_hashtable_destroy@Base @SVER@
  _Py_hashtable_foreach@Base @SVER@
  _Py_hashtable_get@Base @SVER@
  _Py_hashtable_get_entry@Base @SVER@
- _Py_hashtable_hash_int@Base @SVER@
  _Py_hashtable_hash_ptr@Base @SVER@
  _Py_hashtable_new@Base @SVER@
  _Py_hashtable_new_full@Base @SVER@
  _Py_hashtable_pop@Base @SVER@
  _Py_hashtable_set@Base @SVER@
  _Py_hashtable_size@Base @SVER@
+ _Py_index__doc__@Base @SVER@
  _Py_isalnum__doc__@Base @SVER@
  _Py_isalpha__doc__@Base @SVER@
  _Py_isdigit__doc__@Base @SVER@
@@ -1612,6 +1745,7 @@
  _Py_istitle__doc__@Base @SVER@
  _Py_isupper__doc__@Base @SVER@
  _Py_keyword@Base @SVER@
+ _Py_ljust__doc__@Base @SVER@
  _Py_log1p@Base @SVER@
  _Py_lower__doc__@Base @SVER@
  _Py_maketrans__doc__@Base @SVER@
@@ -1626,13 +1760,19 @@
  _Py_parse_inf_or_nan@Base @SVER@
  _Py_pgen@Base @SVER@
  _Py_read@Base @SVER@
+ _Py_rfind__doc__@Base @SVER@
+ _Py_rindex__doc__@Base @SVER@
+ _Py_rjust__doc__@Base @SVER@
  _Py_samebitset@Base @SVER@
- (arch=amd64 i386 lpia)_Py_set_387controlword@Base @SVER@
+ (arch=amd64 i386)_Py_set_387controlword@Base @SVER@
  _Py_set_blocking@Base @SVER@
  _Py_set_inheritable@Base @SVER@
+ _Py_set_inheritable_async_safe@Base @SVER@
+ _Py_startswith__doc__@Base @SVER@
  _Py_stat@Base @SVER@
  _Py_strhex@Base @SVER@
  _Py_strhex_bytes@Base @SVER@
+ _Py_string_to_number_with_underscores@Base @SVER@
  _Py_swapcase__doc__@Base @SVER@
  _Py_title__doc__@Base @SVER@
  _Py_translatelabels@Base @SVER@
@@ -1644,6 +1784,8 @@
  _Py_wrealpath@Base @SVER@
  _Py_write@Base @SVER@
  _Py_write_noraise@Base @SVER@
+ _Py_zfill__doc__@Base @SVER@
+ __PyCodeExtraState_Get@Base @SVER@
 
  (optional|regex)"^_ctypes_.*@Base$" @SVER@
  (optional|regex)"^ffi_type_.*@Base$" @SVER@
