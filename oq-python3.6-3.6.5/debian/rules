@@ -94,6 +94,7 @@ SVER=3.6.4~rc1
 NVER=3.7
 OPVER=python$(VER)
 PVER=oq-python$(VER)
+PPVER=oq-python3.5
 EXT_VER=$(subst .,,$(VER))
 PRIORITY=$(shell echo $(VER) | tr -d '.')0
 
@@ -726,6 +727,7 @@ stamps/stamp-build-doc: stamps/stamp-doc-html stamps/stamp-doc-info
 control-file:
 	sed -e "s/@OPVER@/$(OPVER)/g" \
 	    -e "s/@PVER@/$(PVER)/g" \
+	    -e "s/@PPVER@/$(PPVER)/g" \
 	    -e "s/@VER@/$(VER)/g" \
 	    -e "s/@PYSTDDEP@/$(PYSTDDEP)/g" \
 	    -e "s/@PRIO@/$(PY_PRIO)/g" \
@@ -787,7 +789,7 @@ stamps/stamp-control:
 	for f in debian/*.in; do \
 	  f2=`echo $$f | sed "s,OPVER,$(OPVER),g;s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
 	  if [ $$f2 != debian/control ]; then \
-	    sed -e "s/@OPVER@/$(OPVER)/g;s/@PVER@/$(PVER)/g;s/@VER@/$(VER)/g;s/@SVER@/$(SVER)/g" \
+	    sed -e "s/@OPVER@/$(OPVER)/g;s/@PVER@/$(PVER)/g;s/@PPVER@/$(PPVER)/g;s/@VER@/$(VER)/g;s/@SVER@/$(SVER)/g" \
 		    -e "s/@PRIORITY@/$(PRIORITY)/g" \
 		    -e "s,@SCRIPTDIR@,/$(scriptdir),g" \
 		    -e "s,@INFO@,$(info_docs),g" \
