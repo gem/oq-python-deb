@@ -331,7 +331,9 @@ build_run () {
     set +e
     _build_innervm_run "$lxc_ip" "$branch"
     inner_ret=$?
-    sleep 20000 || true
+    if [ "$GEM_WAIT_BEFORE_DESTROY" ]; then
+        sleep 20000 || true
+    fi
     sudo $LXC_TERM -n "$lxc_name"
 
     if [ $inner_ret -ne 0 ]; then
