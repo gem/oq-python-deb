@@ -23,7 +23,7 @@ Vcs-Bzr: http://bazaar.launchpad.net/~doko/python/pkg@VER@-debian
 XS-Testsuite: autopkgtest
 
 Package: @PVER@
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Priority: @PRIO@
 Depends: @PVER@-minimal (= ${binary:Version}), lib@PVER@-stdlib (= ${binary:Version}), mime-support, ${shlibs:Depends}, ${misc:Depends}
@@ -44,7 +44,7 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: @PVER@-venv
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Priority: @PRIO@
 Depends: @PVER@ (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends},
@@ -66,7 +66,7 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: lib@PVER@-stdlib
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Priority: @PRIO@
 Pre-Depends: ${misc:Pre-Depends}
@@ -90,7 +90,7 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: @PVER@-minimal
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Priority: @MINPRIO@
 Pre-Depends: ${shlibs:Pre-Depends}
@@ -115,7 +115,7 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: lib@PVER@-minimal
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Priority: @MINPRIO@
 Pre-Depends: ${misc:Pre-Depends}
@@ -137,7 +137,7 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: lib@PVER@
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Section: libs
 Priority: @PRIO@
@@ -180,7 +180,7 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: @PVER@-dev
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Depends: @PVER@ (= ${binary:Version}), lib@PVER@-dev (= ${binary:Version}), lib@PVER@ (= ${binary:Version}), libexpat1-dev, ${shlibs:Depends}, ${misc:Depends}
 Recommends: libc6-dev | libc-dev
@@ -203,7 +203,7 @@ Description: transitional package
 
 Package: lib@PVER@-dev
 Section: libdevel
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-stdlib (= ${binary:Version}), lib@PVER@ (= ${binary:Version}), libexpat1-dev, ${shlibs:Depends}, ${misc:Depends}
@@ -302,7 +302,7 @@ Description: transitional package
 
 Package: @PVER@-dbg
 Section: debug
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Depends: @PVER@ (= ${binary:Version}), lib@PVER@-dbg (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Recommends: gdb
@@ -329,7 +329,7 @@ Description: transitional package
 
 Package: lib@PVER@-dbg
 Section: debug
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-stdlib (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
