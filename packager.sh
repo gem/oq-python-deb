@@ -23,7 +23,7 @@ set -e
 GEM_GIT_REPO="git://github.com/gem"
 GEM_GIT_PACKAGE="oq-python-deb"
 
-GEM_DEB_PACKAGE="oq-python3.5"
+GEM_DEB_PACKAGE="oq-python3.6"
 GEM_DEB_SERIE="master"
 if [ -z "$GEM_DEB_REPO" ]; then
     GEM_DEB_REPO="$HOME/gem_ubuntu_repo"
@@ -331,6 +331,9 @@ build_run () {
     set +e
     _build_innervm_run "$lxc_ip" "$branch"
     inner_ret=$?
+    if [ "$GEM_WAIT_BEFORE_DESTROY" ]; then
+        sleep 20000 || true
+    fi
     sudo $LXC_TERM -n "$lxc_name"
 
     if [ $inner_ret -ne 0 ]; then
