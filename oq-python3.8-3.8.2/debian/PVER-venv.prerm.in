@@ -11,7 +11,7 @@ remove_bytecode()
 	| xargs --max-chars="$max" echo \
 	| while read files; do rm -f $files; done
 
-    find /usr/lib/@PVER@/ensurepip \
+    find /opt/openquake/lib/@OPVER@/ensurepip \
 	-name __pycache__ -type d -empty -print \
 	| xargs -r rm -rf
 }

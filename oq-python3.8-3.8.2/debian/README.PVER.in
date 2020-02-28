@@ -43,28 +43,28 @@ See the draft of the Debian Python policy in /usr/share/doc/python.
 
 distutils can be found in the @PVER@-dev package. Development files
 like the python library or Makefiles can be found in the @PVER@-dev
-package in /usr/lib/@PVER@/config. Therefore, if you need to install 
+package in /opt/openquake/lib/@OPVER@/config. Therefore, if you need to install 
 a pure python extension, you only need @PVER@. On the other hand, to 
 install a C extension, you need @PVER@-dev.
 
 a) Locally installed Python add-ons
 
-    /usr/local/lib/@PVER@/site-packages/
-    /usr/local/lib/site-python/ (version-independent modules)
+    /opt/openquake/lib/@OPVER@/site-packages/
+    /opt/openquak/lib/site-python/ (version-independent modules)
 
 b) Python add-ons packaged for Debian
 
-    /usr/lib/@PVER@/site-packages/
-    /usr/lib/site-python/ (version-independent modules)
+    /opt/openquake/lib/@OPVER@/site-packages/
+    /opt/openquake/lib/site-python/ (version-independent modules)
 
-Note that no package must install files directly into /usr/lib/@PVER@/
-or /usr/local/lib/@PVER@/. Only the site-packages directory is allowed
+Note that no package must install files directly into /opt/openquake/lib/@OPVER@/
+or /opt/openquake/lib/@OPVER@/. Only the site-packages directory is allowed
 for third-party extensions.
 
 Use of the new `package' scheme is strongly encouraged. The `ni' interface
 is obsolete in python 1.5.
 
-Header files for extensions go into /usr/include/@PVER@/.
+Header files for extensions go into /opt/openquake/include/@OPVER@/.
 
 
 Installing extensions for local use only:
@@ -73,9 +73,9 @@ Installing extensions for local use only:
 Consider using distutils ...
 
 Most extensions use Python's Makefile.pre.in. Note that Makefile.pre.in
-by default will install files into /usr/lib/, not into /usr/local/lib/,
+by default will install files into /opt/openquake/lib/, not into /opt/openquake/lib/,
 which is not allowed for local extensions. You'll have to change the
-Makefile accordingly. Most times, "make prefix=/usr/local install" will
+Makefile accordingly. Most times, "make prefix=/opt/openquake install" will
 work.
 
 
@@ -84,7 +84,7 @@ Packaging python extensions for Debian:
 
 Maintainers of Python extension packages should read
 
-	/usr/share/doc/python/python-policy.txt.gz
+	/opt/openquake/share/doc/python/python-policy.txt.gz
 
  
 

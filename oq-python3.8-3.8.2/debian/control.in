@@ -23,7 +23,7 @@ Vcs-Git: https://salsa.debian.org/cpython-team/python3.git
 XS-Testsuite: autopkgtest
 
 Package: @PVER@
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Priority: @PRIO@
 Depends: @PVER@-minimal (= ${binary:Version}),
@@ -31,22 +31,38 @@ Depends: @PVER@-minimal (= ${binary:Version}),
  mime-support,
  ${shlibs:Depends}, ${misc:Depends}
 Suggests: @PVER@-venv, @PVER@-doc, binutils
-Breaks: python3-all (<< 3.6.5~rc1-1),
-  python3-dev (<< 3.6.5~rc1-1),
-  python3-venv (<< 3.6.5-2), ${python38:Breaks}
+Replaces: @PPVER@, @PPPVER@
+Breaks: @PPVER@, @PPPVER@
 Description: Interactive high-level object-oriented language (version @VER@)
  Python is a high-level, interactive, object-oriented language. Its @VER@ version
  includes an extensive class library with lots of goodies for
  network programming, system administration, sounds and graphics.
 
+Package: @PPVER@
+Depends: @PVER@, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: @PPPVER@
+Depends: @PVER@, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
 Package: @PVER@-venv
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Priority: @PRIO@
 Depends: @PVER@ (= ${binary:Version}),
  python3-distutils,
  ${shlibs:Depends}, ${misc:Depends},
-Breaks: python3-pip (<< 1.5.6-4)
+Replaces: @PPVER@-venv, @PPPVER@-venv
+Breaks: @PPVER@-venv, @PPPVER@-venv
 Description: Interactive high-level object-oriented language (pyvenv binary, version @VER@)
  Python is a high-level, interactive, object-oriented language. Its @VER@ version
  includes an extensive class library with lots of goodies for
@@ -54,12 +70,30 @@ Description: Interactive high-level object-oriented language (pyvenv binary, ver
  .
  This package contains the pyvenv-@VER@ binary.
 
+Package: @PPVER@-venv
+Depends: @PVER@-venv, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: @PPPVER@-venv
+Depends: @PVER@-venv, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
 Package: lib@PVER@-stdlib
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Priority: @PRIO@
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-minimal (= ${binary:Version}), mime-support, ${shlibs:Depends}, ${misc:Depends}
+Replaces: lib@PPVER@-stdlib, lib@PPPVER@-stdlib
+Breaks: lib@PPVER@-stdlib, lib@PPPVER@-stdlib
 Description: Interactive high-level object-oriented language (standard library, version @VER@)
  Python is a high-level, interactive, object-oriented language. Its @VER@ version
  includes an extensive class library with lots of goodies for
@@ -68,8 +102,24 @@ Description: Interactive high-level object-oriented language (standard library, 
  This package contains Python @VER@'s standard library. It is normally not
  used on its own, but as a dependency of python@VER@.
 
+Package: lib@PPVER@-stdlib
+Depends: lib@PVER@-stdlib, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: lib@PPPVER@-stdlib
+Depends: lib@PVER@-stdlib, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
 Package: @PVER@-minimal
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Priority: @MINPRIO@
 Pre-Depends: ${shlibs:Pre-Depends}
@@ -77,31 +127,69 @@ Depends: lib@PVER@-minimal (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depe
 Recommends: @PVER@
 Suggests: binfmt-support
 Conflicts: binfmt-support (<< 1.1.2)
+Replaces: @PPVER@-minimal, @PPPVER@-minimal
+Breaks: @PPVER@-minimal, @PPPVER@-minimal
 Description: Minimal subset of the Python language (version @VER@)
  This package contains the interpreter and some essential modules.  It can
  be used in the boot process for some basic tasks.
  See /usr/share/doc/@PVER@-minimal/README.Debian for a list of the modules
  contained in this package.
 
+Package: @PPVER@-minimal
+Depends: @PVER@-minimal, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: @PPPVER@-minimal
+Depends: @PVER@-minimal, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
 Package: lib@PVER@-minimal
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Priority: @MINPRIO@
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: lib@PVER@-stdlib
 Conflicts: binfmt-support (<< 1.1.2)
+Replaces: lib@PPVER@-minimal, lib@PPPVER@-minimal
+Breaks: lib@PPVER@-minimal, lib@PPPVER@-minimal
 Description: Minimal subset of the Python language (version @VER@)
  This package contains some essential modules. It is normally not
  used on it's own, but as a dependency of @PVER@-minimal.
 
+Package: lib@PPVER@-minimal
+Depends: lib@PVER@-minimal, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: lib@PPPVER@-minimal
+Depends: lib@PVER@-minimal, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
 Package: lib@PVER@
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Section: libs
 Priority: @PRIO@
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-stdlib (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Replaces: lib@PPVER@, lib@PPPVER@
+Breaks: lib@PPVER@, lib@PPPVER@
 Description: Shared Python runtime library (version @VER@)
  Python is a high-level, interactive, object-oriented language. Its @VER@ version
  includes an extensive class library with lots of goodies for
@@ -109,6 +197,22 @@ Description: Shared Python runtime library (version @VER@)
  .
  This package contains the shared runtime library, normally not needed
  for programs using the statically linked interpreter.
+
+Package: lib@PPVER@
+Depends: lib@PVER@, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: lib@PPPVER@
+Depends: lib@PVER@, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
 
 Package: @PVER@-examples
 Architecture: all
@@ -118,10 +222,12 @@ Description: Examples for the Python language (v@VER@)
  the upstream Python distribution (v@VER@).
 
 Package: @PVER@-dev
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Depends: @PVER@ (= ${binary:Version}), lib@PVER@-dev (= ${binary:Version}), lib@PVER@ (= ${binary:Version}), libexpat1-dev, ${shlibs:Depends}, ${misc:Depends}
 Recommends: libc6-dev | libc-dev
+Replaces: @PPVER@-dev, @PPPVER@-dev
+Breaks: @PPVER@-dev, @PPPVER@-dev
 Description: Header files and a static library for Python (v@VER@)
  Header files, a static library and development tools for building
  Python (v@VER@) modules, extending the Python interpreter or embedding
@@ -129,13 +235,31 @@ Description: Header files and a static library for Python (v@VER@)
  .
  Maintainers of Python packages should read README.maintainers.
 
+Package: @PPVER@-dev
+Depends: @PVER@-dev, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: @PPPVER@-dev
+Depends: @PVER@-dev, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
 Package: lib@PVER@-dev
 Section: libdevel
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-stdlib (= ${binary:Version}), lib@PVER@ (= ${binary:Version}), libexpat1-dev, ${shlibs:Depends}, ${misc:Depends}
 Recommends: libc6-dev | libc-dev
+Replaces: lib@PPVER@-dev, lib@PPPVER@-dev
+Breaks: lib@PPVER@-dev, lib@PPPVER@-dev
 Description: Header files and a static library for Python (v@VER@)
  Header files, a static library and development tools for building
  Python (v@VER@) modules, extending the Python interpreter or embedding
@@ -146,11 +270,29 @@ Description: Header files and a static library for Python (v@VER@)
  This package contains development files. It is normally not
  used on it's own, but as a dependency of @PVER@-dev.
 
+Package: lib@PPVER@-dev
+Depends: lib@PVER@-dev, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: lib@PPPVER@-dev
+Depends: lib@PVER@-dev, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
 Package: lib@PVER@-testsuite
 Section: libdevel
 Architecture: all
 Depends: @PVER@ (>= ${binary:Version}), ${misc:Depends}, net-tools
 Suggests: python3-gdbm, python3-tk
+Replaces: lib@PPVER@-testsuite, lib@PPPVER@-testsuite
+Breaks: lib@PPVER@-testsuite, lib@PPPVER@-testsuite
 Description: Testsuite for the Python standard library (v@VER@)
  The complete testsuite for the Python standard library.  Note that
  a subset is found in the lib@PVER@-stdlib package, which should
@@ -158,15 +300,49 @@ Description: Testsuite for the Python standard library (v@VER@)
  on this package, but file a bug report to include additional 
  testsuite files in the lib@PVER@-stdlib package).
 
+Package: lib@PPVER@-testsuite
+Depends: lib@PVER@-testsuite, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: lib@PPPVER@-testsuite
+Depends: lib@PVER@-testsuite, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
 Package: idle-@PVER@
 Architecture: all
 Depends: @PVER@, python3-tk,
   ${misc:Depends},
   libjs-mathjax,
 Enhances: @PVER@
+Replaces: idle-@PPVER@, idle-@PPPVER@
+Breaks: idle-@PPVER@, idle-@PPPVER@
 Description: IDE for Python (v@VER@) using Tkinter
  IDLE is an Integrated Development Environment for Python (v@VER@).
  IDLE is written using Tkinter and therefore quite platform-independent.
+
+Package: idle-@PPVER@
+Depends: idle-@PVER@, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: idle-@PPPVER@
+Depends: idle-@PVER@, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
 
 Package: @PVER@-doc
 Section: doc
@@ -174,6 +350,8 @@ Architecture: all
 Multi-Arch: foreign
 Depends: libjs-jquery, libjs-underscore, ${misc:Depends}
 Suggests: @PVER@
+Replaces: @PPVER@-doc
+Breaks: @PPVER@-doc
 Description: Documentation for the high-level object-oriented language Python (v@VER@)
  These is the official set of documentation for the interactive high-level
  object-oriented language Python (v@VER@). All documents are provided
@@ -190,13 +368,31 @@ Description: Documentation for the high-level object-oriented language Python (v
    * Documenting Python
    * Distributing Python Modules
 
+Package: @PPVER@-doc
+Depends: @PVER@-doc, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: @PPPVER@-doc
+Depends: @PVER@-doc, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
 Package: @PVER@-dbg
 Section: debug
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Depends: @PVER@ (= ${binary:Version}), lib@PVER@-dbg (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Recommends: gdb
 Suggests: python3-gdbm-dbg, python3-tk-dbg
+Replaces: @PPVER@-dbg
+Breaks: @PPVER@-dbg
 Description: Debug Build of the Python Interpreter (version @VER@)
  The package holds two things:
  .
@@ -207,12 +403,30 @@ Description: Debug Build of the Python Interpreter (version @VER@)
  .
  See the README.debug for more information.
 
+Package: @PPVER@-dbg
+Depends: @PVER@-dbg, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: @PPPVER@-dbg
+Depends: @PVER@-dbg, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
 Package: lib@PVER@-dbg
 Section: debug
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-stdlib (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Replaces: lib@PPVER@-dbg, lib@PPPVER@-dbg
+Breaks: lib@PPVER@-dbg, lib@PPPVER@-dbg
 Description: Debug Build of the Python Interpreter (version @VER@)
  The package holds two things:
  .
@@ -220,3 +434,21 @@ Description: Debug Build of the Python Interpreter (version @VER@)
  - Debug information for standard python extensions.
  .
  See the README.debug for more information.
+
+Package: lib@PPVER@-dbg
+Depends: lib@PVER@-dbg, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+Package: lib@PPPVER@-dbg
+Depends: lib@PVER@-dbg, ${misc:Depends}
+Architecture: all
+Priority: optional
+Section: oldlibs
+Description: transitional package
+ This is a transitional package. It can safely be removed.
+
+

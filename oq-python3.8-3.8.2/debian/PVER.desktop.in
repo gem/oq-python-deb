@@ -1,7 +1,7 @@
 [Desktop Entry]
-Name=Python (v@VER@)
-Comment=Python Interpreter (v@VER@)
-Exec=/usr/bin/@PVER@
+Name=OpenQuake Python (v@VER@)
+Comment=Openquake Python Interpreter (v@VER@)
+Exec=/opt/openquake/bin/@PVER@
 Icon=/usr/share/pixmaps/@PVER@.xpm
 Terminal=true
 Type=Application

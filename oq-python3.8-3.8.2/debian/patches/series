@@ -31,3 +31,4 @@ argparse-no-shutil.diff
 0034-disable-docs-theme.patch
 0033-fix-old-sphinx.patch
 0033-sysconfigdata-name.patch
+use_deb_schema_for_pip_install.diff
