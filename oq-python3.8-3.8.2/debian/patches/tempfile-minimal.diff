@@ -1,7 +1,15 @@
-# DP: Avoid shutil import when it is not available.
+From: Ubuntu Core Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Date: Thu, 14 Feb 2019 18:59:14 -0800
+Subject: tempfile-minimal
 
-Index: b/Lib/tempfile.py
-===================================================================
+# DP: Avoid shutil import when it is not available.
+# DP: Avoid shutil import when it is not available.
+---
+ Lib/tempfile.py | 143 +++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 141 insertions(+), 2 deletions(-)
+
+diff --git a/Lib/tempfile.py b/Lib/tempfile.py
+index 6287554..01284a1 100644
 --- a/Lib/tempfile.py
 +++ b/Lib/tempfile.py
 @@ -40,7 +40,146 @@ import functools as _functools
@@ -151,19 +159,13 @@ Index: b/Lib/tempfile.py
 +
  import errno as _errno
  from random import Random as _Random
- import weakref as _weakref
-@@ -794,7 +933,7 @@ class TemporaryDirectory(object):
+ import sys as _sys
+@@ -811,7 +950,7 @@ class TemporaryDirectory(object):
+             else:
+                 raise
+ 
+-        _shutil.rmtree(name, onerror=onerror)
++        _rmtree(name, onerror=onerror)
  
      @classmethod
      def _cleanup(cls, name, warn_message):
--        _shutil.rmtree(name)
-+        _rmtree(name)
-         _warnings.warn(warn_message, ResourceWarning)
- 
-     def __repr__(self):
-@@ -808,4 +947,4 @@ class TemporaryDirectory(object):
- 
-     def cleanup(self):
-         if self._finalizer.detach():
--            _shutil.rmtree(self.name)
-+            _rmtree(self.name)

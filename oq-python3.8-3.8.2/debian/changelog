@@ -1,194 +1,467 @@
-oq-python3.6 (3.6.5-6~gem04~xenial01) xenial; urgency=medium
+python3.8 (3.8.2-1+bionic1) bionic; urgency=medium
 
-  * Import new version of python 3.6.5 from Ubuntu bionic
+  * Python 3.8.2 release.
 
- -- Matteo Nastasi (GEM Foundation) <nastasi@openquake.org>  Mon, 16 Jul 2018 14:20:12 +0000
+ -- Anthony Sottile <asottile@umich.edu>  Tue, 25 Feb 2020 18:56:10 -0800
 
-python3.6 (3.6.5-3) unstable; urgency=medium
+python3.8 (3.8.1-1+bionic4) bionic; urgency=medium
 
-  * Fix library name in the python debug pkgconfig file. Closes: #894498.
+  * Remove spurious warning from include postinst.
 
- -- Matthias Klose <doko@debian.org>  Sun, 01 Apr 2018 13:46:30 +0800
+ -- Anthony Sottile <asottile@umich.edu>  Tue, 31 Dec 2019 10:42:42 -0800
 
-python3.6 (3.6.5-2) unstable; urgency=medium
+python3.8 (3.8.1-1+bionic3) bionic; urgency=medium
 
-  * libpython3.6-stdlib: Add missing python3-distutils breaks. Closes: #894204.
+  * Fix sysconfigdata module, more.
 
- -- Matthias Klose <doko@debian.org>  Sat, 31 Mar 2018 06:34:57 +0100
+ -- Anthony Sottile <asottile@umich.edu>  Sun, 22 Dec 2019 00:15:39 -0800
 
-python3.6 (3.6.5-1) unstable; urgency=medium
+python3.8 (3.8.1-1+bionic2) bionic; urgency=medium
 
-  * Python 3.6.5 release.
+  * Fix _sysconfigdata__{multiarch} module.
 
- -- Matthias Klose <doko@debian.org>  Fri, 30 Mar 2018 10:08:52 +0800
+ -- Anthony Sottile <asottile@umich.edu>  Sat, 21 Dec 2019 22:12:14 -0800
 
-python3.6 (3.6.5~rc1-3) unstable; urgency=medium
+python3.8 (3.8.1-1+bionic1) bionic; urgency=medium
 
-  * libpython3.6-stdlib: Ship again distutils/{__init__,version}.py.
+  * Python 3.8.1 release.
 
- -- Matthias Klose <doko@debian.org>  Thu, 22 Mar 2018 10:45:39 +0000
+ -- Anthony Sottile <asottile@umich.edu>  Thu, 19 Dec 2019 15:54:24 -0800
 
-python3.6 (3.6.5~rc1-2) unstable; urgency=medium
+python3.8 (3.8.0-1+bionic3) bionic; urgency=medium
 
-  * python3.6: Drop dependency on python3-distutils.
-  * Fix issue #32305, libregrtest regression when backporting issue #32305.
-    Closes: #890621, #890844.
+  * Remove python3.8-{distutils,tk,gdbm,lib2to3} as they conflict with upstream.
 
- -- Matthias Klose <doko@debian.org>  Tue, 20 Mar 2018 14:29:58 +0800
+ -- Anthony Sottile <asottile@umich.edu>  Thu, 07 Nov 2019 09:31:03 -0800
 
-python3.6 (3.6.5~rc1-1) unstable; urgency=medium
+python3.8 (3.8.0-1+bionic2) bionic; urgency=medium
 
-  * Python 3.6.5 release candidate 1.
+  * enable pgo build
+
+ -- Anthony Sottile <asottile@umich.edu>  Mon, 14 Oct 2019 14:29:03 -0700
+
+python3.8 (3.8.0-1+bionic1) bionic; urgency=medium
+
+  * Python 3.8.0 release.
+
+ -- Anthony Sottile <asottile@umich.edu>  Mon, 14 Oct 2019 13:58:19 -0700
+
+python3.8 (3.8.0~rc1-1+bionic1) bionic; urgency=medium
+
+  * Python 3.8.0 release candidate 1.
+
+ -- Anthony Sottile <asottile@umich.edu>  Tue, 01 Oct 2019 14:48:24 -0700
+
+python3.8 (3.8.0~b4-1+bionic3) bionic; urgency=medium
+
+  * Fix broken -gdb.py for -dbg package.
+
+ -- Anthony Sottile <asottile@umich.edu>  Thu, 19 Sep 2019 13:58:12 -0700
+
+python3.8 (3.8.0~b4-1+bionic2) bionic; urgency=medium
+
+  * Make python3.8-venv depend on python3.8-distutils
+
+ -- Anthony Sottile <asottile@umich.edu>  Mon, 02 Sep 2019 13:50:55 -0700
+
+python3.8 (3.8.0~b4-1+bionic1) bionic; urgency=medium
+
+  * Python 3.8.0 beta 4 release.
+
+ -- Anthony Sottile <asottile@umich.edu>  Fri, 30 Aug 2019 08:59:20 -0700
+
+python3.8 (3.8.0~b3-1+bionic1) bionic; urgency=medium
+
+  * Python 3.8.0 beta 3 release.
+
+ -- Anthony Sottile <asottile@umich.edu>  Thu, 01 Aug 2019 13:56:25 -0700
+
+python3.8 (3.8.0~b2-1+bionic2) bionic; urgency=medium
+
+  * Don't ship unversioned python3-embed.pc
+
+ -- Anthony Sottile <asottile@umich.edu>  Wed, 17 Jul 2019 22:53:32 -0700
+
+python3.8 (3.8.0~b2-1+bionic1) bionic; urgency=medium
+
+  * Python 3.8.0 beta 2 release.
+
+ -- Anthony Sottile <asottile@umich.edu>  Thu, 04 Jul 2019 15:57:47 -0700
+
+python3.8 (3.8.0~b1-1+bionic2) bionic; urgency=medium
+
+  * Fix 32-bit build by adding symbol
+
+ -- Anthony Sottile <asottile@umich.edu>  Wed, 05 Jun 2019 20:44:52 -0700
+
+python3.8 (3.8.0~b1-1+bionic1) bionic; urgency=medium
+
+  * Python 3.8.0 beta 1 release.
+  * Add importlib.metadata deps to python3.8-minimal.
+
+ -- Anthony Sottile <asottile@umich.edu>  Tue, 04 Jun 2019 19:47:19 -0700
+
+python3.8 (3.8.0~a4-1+bionic1) bionic; urgency=medium
+
+  * Python 3.8.0 alpha 4 release.
+  * Remove m abiflag following upstream.
+
+ -- Anthony Sottile <asottile@umich.edu>  Tue, 07 May 2019 18:43:53 -0700
+
+python3.8 (3.8.0~a3-1+bionic1) bionic; urgency=medium
+
+  * Python 3.8.0 alpha 3 release.
+
+ -- Anthony Sottile <asottile@umich.edu>  Tue, 26 Mar 2019 20:46:44 -0700
+
+python3.8 (3.8.0~a2-1+bionic1) bionic; urgency=medium
+
+  * Python 3.8.0 alpha 2 release.
+
+ -- Anthony Sottile <asottile@umich.edu>  Mon, 25 Feb 2019 15:11:49 -0800
+
+python3.8 (3.8.0~a1-1+bionic1) bionic; urgency=medium
+
+  * Remove apport support.
+  * Build with older sphinx.
+  * Build without python3-doc-theme.
+  * Add proper python-{distutils,gdbm,lib2to3,tk} support.
+  * Use bundled wheels for ensurepip.
+  * Disable `make check` during build (takes too long).
+
+ -- Anthony Sottile <asottile@umich.edu>  Fri, 15 Feb 2019 12:21:58 -0800
+
+python3.8 (3.8.0~a1-0ubuntu1) disco; urgency=medium
+
+  * Python 3.8.0 alpha 1 release.
+  * Update VCS attributes.
+  * Refresh patches.
+  * Update symbols files.
+  * Fix some lintian warnings.
+  * Add pathlib to the set of the minimal modules.
+
+ -- Matthias Klose <doko@ubuntu.com>  Wed, 06 Feb 2019 08:51:02 +0100
+
+python3.7 (3.7.1-1) unstable; urgency=medium
+
+  * Python 3.7.1 release.
+
+ -- Matthias Klose <doko@debian.org>  Sun, 21 Oct 2018 10:03:53 +0200
+
+python3.7 (3.7.1~rc2-1) unstable; urgency=medium
+
+  * Python 3.7.1 release candidate 2.
+
+ -- Matthias Klose <doko@debian.org>  Mon, 15 Oct 2018 11:24:12 +0200
+
+python3.7 (3.7.1~rc1-1) unstable; urgency=medium
+
+  * Python 3.7.1 release candidate 1.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 27 Sep 2018 11:41:42 +0200
+
+python3.7 (3.7.0-7) unstable; urgency=medium
+
+  * Update to 20180925 from the 3.7 branch.
+  * Don't run OpenSSL related tests during the build. Hanging on
+    some buildds.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 25 Sep 2018 16:01:24 +0200
+
+python3.7 (3.7.0-6) unstable; urgency=medium
+
+  * Update to 20180901 from the 3.7 branch.
+    - Fixes the build with OpenSSL 1.1.1. Closes: #907031.
+  * Don't run the test_ftplib and test_ssl autopkg tests, not yet ready
+    for OpenSSL 1.1.1.
+
+ -- Matthias Klose <doko@debian.org>  Sat, 01 Sep 2018 01:21:37 +0200
+
+python3.7 (3.7.0-5) unstable; urgency=medium
+
+  * Update to 20180820 from the 3.7 branch.
+  * Avoid usage of distutils in the platform module. See issue #26544.
+  * Fix some issues on architectures from the computer museum (Jason Duerstock).
+    Closes: #905536.
+    - Disable -O3 on ia64 (see PR rtl-optimization/85412).
+    - Remove the -O2 override on m68k (see Debian #326903).
+    - Remove the -mieee and -O2 overrides for DEC Alpha (see Debian #212912).
+  * Add more breaks for packages not compatible with Python 3.7:
+    - python3-aiomeasures. See #906159.
+    - python3-motor (updated). See #903527.
+  * Again close the RC issue about the syntax errors triggered by Python 3.7.
+    Closes: #902788.
+  * Update symbols files.
+
+ -- Matthias Klose <doko@debian.org>  Mon, 20 Aug 2018 19:52:20 +0200
+
+python3.7 (3.7.0-4) unstable; urgency=medium
+
+  * Update to 20180802 from the 3.7 branch.
+  * Add more breaks for packages not compatible with Python 3.7:
+    - python3-pyatspi. See #902989.
+  * Move test/__main__.py into libpython3.7-stdlib.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 02 Aug 2018 08:46:56 +0200
+
+python3.7 (3.7.0-3) unstable; urgency=medium
+
+  * Update to 20180730 from the 3.7 branch.
+  * Add more breaks for packages not compatible with Python 3.7:
+    - python3-trollius. See #903888.
+    - python3-sleekxmpp. See #904453.
+    - voltron. See #904657.
+    - visidata. See #904656.
+    - salt-common. See #903654.
+    - python3-yowsup. See #904653.
+    - python3-websockets. See #904650.
+    - python3-txfixtures. See #904649.
+    - python3-tweepy. See #904648.
+    - python3-slixmpp. See #904644.
+    - python3-signaller. See #904642.
+    - python3-rpyc. See #904615.
+    - python3-protorpc-standalone. See #904603.
+    - python3-nova. See #904587.
+    - python3-murano. See #904581.
+    - python3-mastodon. See #904579.
+    - python3-hug. See #904576.
+    - python3-async. See #904492.
+    - python3-pylama. See #904491.
+    - python3-exabgp. See #904390.
+    - python3-glance. See #904389.
+    - python3-gbulb. See #904388.
+    - python3-engineio. See #904383.
+    - python3-doublex. See #904382.
+    - python3-dns. See #904381.
+    - python3-opcua. See #904373.
+    - openscap-daemon. See #904.
+    - oca-core. See #904370.
+    - patroni. See #904369.
+    - python3-panoramisk. See #904368.
+    - linux-show-player-. See #904367.
+    - python3-cs. See #904365.
+    - python3-azure. See #904364.
+    - python3-applicationinsights. See #904363.
+    - python3-aiopg. See #904361.
+    - python3-aiozmq. See #904358.
+    - python3-pysnmp4. See #904357.
+    - python3-astroquery. See #904351.
+    - snakemake. See #904350.
+    - fail2ban. See #902817.
+    - python3-morse-simulator. See #904343.
+    - python3-tango. See #904298.
+    - python3-pycuda. See #903826.
+    - python3-pycsw. See #903784.
+    - gnome3-builder. See #903558.
+  * Close the RC issue about the syntax errors triggered by Python 3.7, now
+    that all the breaks are in place. Closes: #902788.
+  * Mark the lib2to3 and site tests as succeeding again, mark the tcl test
+    as failing (issue #34178).
+
+ -- Matthias Klose <doko@debian.org>  Mon, 30 Jul 2018 06:39:20 +0200
+
+python3.7 (3.7.0-2) unstable; urgency=medium
+
+  * Update to 20180720 from the 3.7 branch.
+  * Add breaks for packages not compatible with Python 3.7:
+    - python3-twisted. See #902766.
+    - python3-pexpect. See #902646.
+    - python3-cxx-dev. See #902673.
+    - libboost-python1.62.0. See #902702.
+    - python3-psycopg2. See #902715.
+    - python3-maxminddb. See #902756.
+    - python3-blist. See #902757.
+    - python3-django. See #902761.
+    - diffoscope. See #902650.
+    - gpodder. See #902704.
+    - python3-http-parser. See: #902759.
+    - python3-celery. See #902900.
+    - python3-astroid. See #902631.
+    - python3-ubjson. See #902762.
+    - python3-protobuf. See #902597.
+    - python3-opengl. See #903218.
+    - python3-ws4py. See #903529.
+    - python3-dropbox. See #903525.
+    - python3-pycuda. See #903826.
+    - python3-libcloud. See #903388.
+    - python3-motor. See #903527.
+    - python3-jira. See #903526.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 20 Jul 2018 15:51:14 +0200
+
+python3.7 (3.7.0-1~18.04) bionic-proposed; urgency=medium
+
+  * SRU: LP: #1792140. Update Python 3.7 to the final 3.7.0 release.
+
+ -- Matthias Klose <doko@ubuntu.com>  Wed, 12 Sep 2018 20:30:08 +0200
+
+python3.7 (3.7.0-1) unstable; urgency=medium
+
+  * Python 3.7.0 release.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 27 Jun 2018 16:40:03 +0200
+
+python3.7 (3.7.0~rc1-3) unstable; urgency=medium
+
+  * Update to 20180622 from the 3.7 branch.
+    - Fix installation of the idlelib tests.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 22 Jun 2018 10:11:22 +0200
+
+python3.7 (3.7.0~rc1-2) unstable; urgency=medium
+
+  * Update to 20180619 from the 3.7 branch.
+  * Let ensurepip work with pip versions 9 or 10. Addresses: #901797.
+  * pdb(1): Fix pointer to HTML documentation. Addresses: #901603.
+
+ -- Matthias Klose <doko@debian.org>  Tue, 19 Jun 2018 09:10:27 +0200
+
+python3.7 (3.7.0~rc1-1) unstable; urgency=medium
+
+  * Python 3.7.0 release candidate 1.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 13 Jun 2018 10:04:13 +0200
+
+python3.7 (3.7.0~b5-1) unstable; urgency=medium
+
+  * Python 3.7.0 beta 5 release.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 31 May 2018 12:14:46 +0200
+
+python3.7 (3.7.0~b4-5) unstable; urgency=medium
+
+  * Update to 20180529 from the 3.7 branch.
+  * sysconfig: The 'posix_local' schema name is the default unless the env var
+    DEB_PYTHON_INSTALL_LAYOUT is set to 'deb' or 'deb_system'.  Use the latter
+    for package buillds.
+
+ -- Matthias Klose <doko@ubuntu.com>  Tue, 29 May 2018 13:54:38 +0200
+
+python3.7 (3.7.0~b4-4) unstable; urgency=medium
+
+  * Update to 20180516 from the 3.7 branch.
+  * Fix building cmath and build cmath as a builtin instead of an extension.
+  * Run the test_code_module, test_dbm, test_zipfile tests in the autopkg
+    tests again.
+
+ -- Matthias Klose <doko@debian.org>  Wed, 16 May 2018 16:51:00 -0400
+
+python3.7 (3.7.0~b4-3) unstable; urgency=medium
+
+  * python3.7: Add breaks on python3-all (<< 3.6.5~rc1-1),
+    python3-dev (<< 3.6.5~rc1-1), python3-venv (<< 3.6.5-2). Addresses: #898401.
+  * Restore the sysconfig-debian-schemes patch.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 11 May 2018 11:18:40 -0400
+
+python3.7 (3.7.0~b4-2) unstable; urgency=medium
+
+  * Fix the lto build for extensions, passing -fPIC to the linker.
+
+ -- Matthias Klose <doko@debian.org>  Mon, 07 May 2018 19:24:57 +0200
+
+python3.7 (3.7.0~b4-1) unstable; urgency=medium
+
+  * Python 3.7.0 beta 4 release.
+  * Fix library name in python debug pkgconfig file. Addresses: #894498.
+  * Re-enable pgo/lto builds.
+  * Update autopkg tests to really run with 3.7.
+  * Make the build of the shared modules verbose again.
+
+ -- Matthias Klose <doko@debian.org>  Thu, 03 May 2018 13:45:04 +0200
+
+python3.7 (3.7.0~b3-1) unstable; urgency=medium
+
+  * Python 3.7.0 beta 3 release.
+  * libpython3.7-stdlib: Add missing python3-distutils breaks. Closes: #894204.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 30 Mar 2018 12:35:22 +0800
+
+python3.7 (3.7.0~b2-2) unstable; urgency=medium
+
+  * libpython3.7-stdlib: Ship again distutils/{__init__,version}.py.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 23 Mar 2018 11:21:34 +0800
+
+python3.7 (3.7.0~b2-1) unstable; urgency=medium
+
+  * Python 3.7.0 beta 2 release.
     - Fix issue #32185: The SSL module no longer sends IP addresses in SNI TLS
       extension on platforms with OpenSSL 1.0.2+ or inet_pton. See #892814.
-  * Add support for riscv64 (Aurelien Jarno). Closes: #892328.
-  * Update symbols file.
+  * Add support for riscv64 (Aurelien Jarno). Addresses: #892328.
+  * Update symbols files.
 
- -- Matthias Klose <doko@debian.org>  Wed, 14 Mar 2018 07:54:23 +0100
+ -- Matthias Klose <doko@debian.org>  Tue, 13 Mar 2018 20:55:14 +0100
 
-python3.6 (3.6.4-4) unstable; urgency=medium
+python3.7 (3.7.0~b1-1) unstable; urgency=medium
 
-  * Update to 20180212 from the 3.6 branch.
-  * Add test_idle as expected to fail in the autopkg tests.
-  * Update symbols file.
+  * Python 3.7.0 beta 1 release.
+  * Update symbols files.
 
- -- Matthias Klose <doko@debian.org>  Mon, 12 Feb 2018 09:25:03 +0100
+ -- Matthias Klose <doko@debian.org>  Thu, 01 Feb 2018 08:36:28 +0100
 
-python3.6 (3.6.4-3) unstable; urgency=medium
+python3.7 (3.7.0~a4-1) unstable; urgency=medium
 
-  * Stop building python3.6-2to3, now replaced by 2to3 and python3-lib2to3.
+  * Python 3.7.0 alpha 4 release.
 
- -- Matthias Klose <doko@debian.org>  Fri, 05 Jan 2018 03:13:53 +0100
+ -- Matthias Klose <doko@debian.org>  Wed, 10 Jan 2018 13:34:16 +0100
 
-python3.6 (3.6.4-2) unstable; urgency=medium
+python3.7 (3.7.0~a3-4) unstable; urgency=medium
+
+  * Stop building python3.7-2to3, now replaced by 2to3 and python3-lib2to3.
+
+ -- Matthias Klose <doko@debian.org>  Fri, 05 Jan 2018 03:45:13 +0100
+
+python3.7 (3.7.0~a3-3) unstable; urgency=medium
 
   * Stop shipping lib2to3, now shipped in python3-lib2to3.
 
- -- Matthias Klose <doko@debian.org>  Wed, 27 Dec 2017 14:02:49 +0100
+ -- Matthias Klose <doko@debian.org>  Wed, 27 Dec 2017 14:04:53 +0100
 
-python3.6 (3.6.4-1) unstable; urgency=medium
+python3.7 (3.7.0~a3-2) unstable; urgency=medium
 
-  * Python 3.6.4 release.
+  * Split out a python3.7-2to3 package.
+  * Stop shipping the tkinter and distutils modules in libpython3.7-stdlib.
 
- -- Matthias Klose <doko@debian.org>  Tue, 19 Dec 2017 15:09:48 +0100
+ -- Matthias Klose <doko@debian.org>  Wed, 13 Dec 2017 12:18:54 +0100
 
-python3.6 (3.6.4~rc1-2) unstable; urgency=medium
+python3.7 (3.7.0~a3-1) unstable; urgency=medium
 
-  * Build documentation in info format (Benjamin Moody). Closes: #881959.
-  * Split out a python3.6-2to3 package.
-  * Stop shipping the tkinter and distutils modules in libpython3.6-stdlib.
+  * Python 3.7.0 alpha 3 release.
+  * Add support for mipsr6 triplets (YunQiang Su). Addresses: #881942.
+  * Move the idle library into the idle-python3.7 package.
+  * Build documentation in info format (Benjamin Moody). Addresses: #881959.
 
- -- Matthias Klose <doko@debian.org>  Wed, 13 Dec 2017 12:08:21 +0100
+ -- Matthias Klose <doko@debian.org>  Wed, 06 Dec 2017 13:24:25 +0100
 
-python3.6 (3.6.4~rc1-1) unstable; urgency=medium
+python3.7 (3.7.0~a2-1) experimental; urgency=medium
 
-  * Python 3.6.4 release candidate 1.
+  * Python 3.7.0 alpha 2 release.
 
- -- Matthias Klose <doko@debian.org>  Wed, 06 Dec 2017 11:08:29 +0100
+ -- Matthias Klose <doko@debian.org>  Wed, 18 Oct 2017 20:58:26 +0200
 
-python3.6 (3.6.3-2) unstable; urgency=medium
+python3.7 (3.7.0~a1-2) experimental; urgency=medium
 
-  * Update to 20171205 from the 3.6 branch.
-  * Add support for mipsr6 triplets (YunQiang Su). Closes: #881942.
-  * Move the idle library into the idle-python3.6 package.
+  * Build with -fstack-protector instead of -fstack-protector-strong.
+    Performance improvements of around 1-2% according to LP #1638695.
 
- -- Matthias Klose <doko@debian.org>  Tue, 05 Dec 2017 11:22:15 +0100
+ -- Matthias Klose <doko@debian.org>  Wed, 20 Sep 2017 14:12:51 +0200
 
-python3.6 (3.6.3-1) unstable; urgency=medium
+python3.7 (3.7.0~a1-1) experimental; urgency=medium
 
-  * Python 3.6.3 release.
-  * Don't run test_platform/test_linux_distribution_encoding, Fedora only.
-  * test_*: Run tests with TLSv1_2.
-  * Update symbols files.
-
- -- Matthias Klose <doko@debian.org>  Tue, 03 Oct 2017 23:16:13 +0200
-
-python3.6 (3.6.2-5) unstable; urgency=medium
-
-  * Fix symbols files.
-
- -- Matthias Klose <doko@debian.org>  Tue, 05 Sep 2017 22:23:28 +0200
-
-python3.6 (3.6.2-4) unstable; urgency=medium
-
-  * Add package breaks for extensions referencing symbols for the removed
-    _PyFPE module. Addresses: #873921.
-  * Bump standards version.
-
- -- Matthias Klose <doko@debian.org>  Tue, 05 Sep 2017 21:20:29 +0200
-
-python3.6 (3.6.2-3) unstable; urgency=medium
-
-  * Stop building the fpectl extension.
-  * Break python3-numpy (<< 1:1.12.1-3.1), referencing the now missing fpectl
-    modules. Closes: #873791.
-
- -- Matthias Klose <doko@debian.org>  Wed, 23 Aug 2017 15:37:24 +0200
-
-python3.6 (3.6.2-2) unstable; urgency=medium
-
-  * Move test_support.py and libregrtest from libpython3.6-testsuite to
-    libpython3.6-stdlib.
-
- -- Matthias Klose <doko@debian.org>  Fri, 04 Aug 2017 10:35:04 -0400
-
-python3.6 (3.6.2-1) unstable; urgency=medium
-
-  * Python 3.6.2 release.
-
- -- Matthias Klose <doko@debian.org>  Mon, 17 Jul 2017 15:39:29 +0200
-
-python3.6 (3.6.2~rc2-2) unstable; urgency=medium
-
-  * Python 3.6.2 release candidate 2.
-
- -- Matthias Klose <doko@debian.org>  Sat, 08 Jul 2017 16:29:22 +0200
-
-python3.6 (3.6.2~rc1-1) unstable; urgency=medium
-
-  * Python 3.6.2 release candidate 1.
-  * Update symbols files.
+  * Python 3.7.0 alpha 1 release.
+  * Explicitly use the system python for byte compilation in postinst scripts.
+    Addresses: #852163. LP: #1682934.
   * Build using -fexceptions on ppc64 and ppc64el.
     Addresses: #862925. LP: #1691848.
 
- -- Matthias Klose <doko@debian.org>  Tue, 20 Jun 2017 14:51:36 +0200
+ -- Matthias Klose <doko@debian.org>  Wed, 20 Sep 2017 14:12:51 +0200
 
-python3.6 (3.6.1-2) unstable; urgency=medium
+python3.7 (3.7-20170522-1) experimental; urgency=medium
 
-  * Update to 20170607 from the 3.6 branch.
-  * Explicitly use the system python for byte compilation in postinst scripts.
+  * Python 3.7 snapshot 20170522.
 
- -- Matthias Klose <doko@debian.org>  Wed, 07 Jun 2017 12:00:24 -0700
-
-python3.6 (3.6.1-1) unstable; urgency=medium
-
-  * Python 3.6.1 release.
-
- -- Matthias Klose <doko@debian.org>  Wed, 22 Mar 2017 07:17:05 +0100
-
-python3.6 (3.6.1~rc1-1) unstable; urgency=medium
-
-  * Python 3.6.1 release candidate 1.
-
- -- Matthias Klose <doko@debian.org>  Sun, 05 Mar 2017 13:34:53 +0100
-
-python3.6 (3.6.0-2) experimental; urgency=medium
-
-  * Update to 20170203 from the 3.6 branch.
-
- -- Matthias Klose <doko@debian.org>  Fri, 03 Feb 2017 09:23:51 +0100
-
-python3.6 (3.6.0-1) experimental; urgency=medium
-
-  * Python 3.6.0 release.
-
- -- Matthias Klose <doko@debian.org>  Thu, 29 Dec 2016 05:29:02 +0100
-
-python3.6 (3.6.0~rc1-1) experimental; urgency=medium
-
-  * Python 3.6.0 release candidate 1.
-
- -- Matthias Klose <doko@debian.org>  Wed, 07 Dec 2016 09:56:22 +0100
+ -- Matthias Klose <doko@ubuntu.com>  Mon, 22 May 2017 14:32:31 -0700
 
 python3.6 (3.6.0~b4-1) experimental; urgency=medium
 

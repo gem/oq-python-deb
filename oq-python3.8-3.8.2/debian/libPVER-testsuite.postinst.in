@@ -4,11 +4,11 @@ set -e
 
 case "$1" in
     configure)
-    files=$(dpkg -L lib@PVER@-testsuite | sed -n '/^\/opt\/openquake\/lib\/@OPVER@\/.*\.py$/p' | egrep -v '/lib2to3/tests/data|/test/bad')
+    files=$(dpkg -L lib@PVER@-testsuite | sed -n '/^\/usr\/lib\/@PVER@\/.*\.py$/p' | egrep -v '/lib2to3/tests/data|/test/bad')
     if [ -n "$files" ]; then
-	/opt/openquake/bin/@OPVER@ -E -S /opt/openquake/lib/@OPVER@/py_compile.py $files
+	/usr/bin/@PVER@ -E -S /usr/lib/@PVER@/py_compile.py $files
 	if grep -sq '^byte-compile[^#]*optimize' /etc/python/debian_config; then
-	    /opt/openquake/bin/@OPVER@ -E -S -O /opt/openquake/lib/@OPVER@/py_compile.py $files
+	    /usr/bin/@PVER@ -E -S -O /usr/lib/@PVER@/py_compile.py $files
 	fi
     else
 	echo >&2 "@PVER@: can't get files for byte-compilation"
