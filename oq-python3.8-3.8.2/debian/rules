@@ -853,13 +853,16 @@ endif
 
 	mkdir -p $(d)/opt/openquake/share/man/man1
 	cp -p Misc/python.man $(d)/opt/openquake/share/man/man1/python$(VER).1
+	gzip $(d)/opt/openquake/share/man/man1/python$(VER).1
 	cp -p debian/pydoc.1 $(d)/opt/openquake/share/man/man1/pydoc$(VER).1
+	gzip $(d)/opt/openquake/share/man/man1/pydoc$(VER).1
 
 	: # Symlinks to /usr/bin for some tools
 	ln -sf ../lib/python$(VER)/pdb.py $(d)/opt/openquake/bin/pdb$(VER)
 	cp -p debian/pdb.1 $(d)/opt/openquake/share/man/man1/pdb$(VER).1
+	gzip $(d)/opt/openquake/share/man/man1/pdb$(VER).1
 	cp -p debian/pysetup3.1 $(d)/opt/openquake/share/man/man1/pysetup$(VER).1
-
+	gzip $(d)/opt/openquake/share/man/man1/pysetup$(VER).1
 	: # versioned install only
 	rm -f $(d)/opt/openquake/bin/{2to3,idle3,pydoc3,pysetup3,python3,python3-config}
 	rm -f $(d)/opt/openquake/lib/*/pkgconfig/python3{,-embed}.pc
@@ -926,7 +929,7 @@ endif
 		opt/openquake/share/man/man1
 	$(dh_compat2) dh_movefiles -p$(p_min) --sourcedir=$(d) \
 		opt/openquake/bin/python$(VER) \
-		opt/openquake/share/man/man1/python$(VER).1
+		opt/openquake/share/man/man1/python$(VER).1.gz
 
 	rv=0; \
 	for i in $(MIN_EXTS); do \
@@ -994,6 +997,8 @@ endif
 	: # in $(p_ldev), prefix python-config with triplets
 	cp -p debian/python3-config.1 \
 		$(d_ldev)/opt/openquake/share/man/man1/$(DEB_HOST_MULTIARCH)-$(OPVER)-config.1
+	gzip $(d_ldev)/opt/openquake/share/man/man1/$(DEB_HOST_MULTIARCH)-$(OPVER)-config.1
+
 ifneq ($(DEB_HOST_MULTIARCH),$(DEB_HOST_GNU_TYPE))
 	ln -sf $(DEB_HOST_MULTIARCH)-$(OPVER)-config \
 		$(d_ldev)/opt/openquake/bin/$(DEB_HOST_GNU_TYPE)-$(OPVER)-config
@@ -1049,6 +1054,7 @@ endif
 	rm -rf \
 		$(d)/opt/openquake/bin/2to3-$(VER) \
 		$(d)/opt/openquake/share/man/man1/2to3-$(VER).1 \
+		$(d)/opt/openquake/share/man/man1/2to3-$(VER).1.gz \
 		$(d)/opt/openquake/lib/python$(VER)/lib2to3
 
 	: # Move the demos and tools into $(p_exam)'s doc directory
@@ -1074,6 +1080,7 @@ endif
 		opt/openquake/bin/idle-python$(VER) \
 		opt/openquake/lib/$(OPVER)/idlelib
 	cp -p debian/idle-$(PVER).1 $(d_idle)/opt/openquake/share/man/man1/
+	gzip $(d_idle)/opt/openquake/share/man/man1/idle-$(PVER).1
 
 	: # Replace all '#!' calls to python with $(PY_INTERPRETER)
 	: # and make them executable
