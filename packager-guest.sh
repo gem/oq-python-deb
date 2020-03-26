@@ -44,6 +44,11 @@ cp python3.8_3.8.2.orig.tar.gz oq-python3.8_3.8.2.orig.tar.gz
 cd "$PKG_DIR"
 
 UBUNTU_SERIE="$(lsb_release -s -c)"
+if [ -d debian.${UBUNTU_SERIE} ]; then
+    cp -r debian.${UBUNTU_SERIE}/* debian/
+fi
+rm -rf debian.*
+
 sed -i "/^${GEM_DEB_PACKAGE}.*/s/${BUILD_UBUVER_REFERENCE}/${UBUNTU_SERIE}/g" debian/changelog
 
 export GEM_DEBIAN_INSTALL_LAYOUT=deb
