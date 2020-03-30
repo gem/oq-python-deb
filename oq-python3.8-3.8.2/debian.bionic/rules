@@ -1306,7 +1306,7 @@ ifeq ($(with_udeb),yes)
 		$(d_udeb)/opt/openquake/$(scriptdir)/config-$(VER)-$(DEB_HOST_MULTIARCH)/
 	cp -p $(d_min)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OPVER)/pyconfig.h \
 		$(d_udeb)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OPVER)/
-	cp -p $(d_min)/opt/openquake/$(scriptdir)/site.py $(d_udeb)/$(scriptdir)/
+	cp -p $(d_min)/opt/openquake/$(scriptdir)/site.py $(d_udeb)/opt/openquake/$(scriptdir)/
 	cp -p debian/sitecustomize.py $(d_udeb)/etc/$(PVER)/
 	dh_link -p$(p_udeb) /etc/$(PVER)/sitecustomize.py \
 		/opt/openquake/$(scriptdir)/sitecustomize.py
