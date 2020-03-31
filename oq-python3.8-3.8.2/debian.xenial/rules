@@ -1083,10 +1083,10 @@ endif
 	$(dh_compat2) dh_movefiles -p$(p_exam) --sourcedir=$(d) \
 		opt/openquake/$(scriptdir)/turtledemo
 
-	cp -rp Tools/* $(d_exam)/usr/share/doc/python$(PVER)/examples/
-	rm -rf $(d_exam)/usr/share/doc/python$(PVER)/examples/Tools/{buildbot,msi}
+	cp -rp Tools/* $(d_exam)/usr/share/doc/$(PVER)/examples/
+	rm -rf $(d_exam)/usr/share/doc/$(PVER)/examples/Tools/{buildbot,msi}
 	: # XXX: We don't need rgb.txt, we'll use our own:
-	rm -rf $(d_exam)/usr/share/doc/python$(PVER)/examples/Tools/pynche/X
+	rm -rf $(d_exam)/usr/share/doc/$(PVER)/examples/Tools/pynche/X
 
 	: # IDLE
 	mv $(d)opt/openquake/bin/idle$(VER) $(d)/opt/openquake/bin/idle-python$(VER)
