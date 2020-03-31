@@ -864,7 +864,7 @@ endif
 
 	mkdir -p $(d)/opt/openquake/share/man/man1
 	cp -p Misc/python.man $(d)/opt/openquake/share/man/man1/python$(VER).1
-	gzip $(d)/opt/openquake/share/man/man1/pydoc$(VER).1
+	gzip $(d)/opt/openquake/share/man/man1/python$(VER).1
 	cp -p debian/pydoc.1 $(d)/opt/openquake/share/man/man1/pydoc$(VER).1
 	gzip $(d)/opt/openquake/share/man/man1/pydoc$(VER).1
 
