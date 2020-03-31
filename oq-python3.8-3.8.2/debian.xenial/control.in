@@ -31,7 +31,8 @@ Depends: @PVER@-minimal (= ${binary:Version}),
  mime-support,
  ${shlibs:Depends}, ${misc:Depends}
 Suggests: @PVER@-venv, @PVER@-doc, binutils
-Breaks: ${python38:Breaks}
+Replaces: @PPVER@, @PPPVER@
+Breaks: @PPVER@, @PPPVER@
 Description: Interactive high-level object-oriented language (version @VER@)
  Python is a high-level, interactive, object-oriented language. Its @VER@ version
  includes an extensive class library with lots of goodies for
@@ -54,13 +55,14 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: @PVER@-venv
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Priority: @PRIO@
 Depends: @PVER@ (= ${binary:Version}),
  @PVER@-distutils,
  ${shlibs:Depends}, ${misc:Depends},
-Breaks: python3-pip (<< 1.5.6-4)
+Replaces: @PPVER@-venv, @PPPVER@-venv
+Breaks: @PPVER@-venv, @PPPVER@-venv
 Description: Interactive high-level object-oriented language (pyvenv binary, version @VER@)
  Python is a high-level, interactive, object-oriented language. Its @VER@ version
  includes an extensive class library with lots of goodies for
@@ -85,11 +87,13 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: lib@PVER@-stdlib
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Priority: @PRIO@
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-minimal (= ${binary:Version}), mime-support, ${shlibs:Depends}, ${misc:Depends}
+Replaces: lib@PPVER@-stdlib, lib@PPPVER@-stdlib
+Breaks: lib@PPVER@-stdlib, lib@PPPVER@-stdlib
 Description: Interactive high-level object-oriented language (standard library, version @VER@)
  Python is a high-level, interactive, object-oriented language. Its @VER@ version
  includes an extensive class library with lots of goodies for
@@ -115,7 +119,7 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: @PVER@-minimal
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Priority: @MINPRIO@
 Pre-Depends: ${shlibs:Pre-Depends}
@@ -123,6 +127,8 @@ Depends: lib@PVER@-minimal (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depe
 Recommends: @PVER@
 Suggests: binfmt-support
 Conflicts: binfmt-support (<< 1.1.2)
+Replaces: @PPVER@-minimal, @PPPVER@-minimal
+Breaks: @PPVER@-minimal, @PPPVER@-minimal
 Description: Minimal subset of the Python language (version @VER@)
  This package contains the interpreter and some essential modules.  It can
  be used in the boot process for some basic tasks.
@@ -146,13 +152,15 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: lib@PVER@-minimal
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Priority: @MINPRIO@
 Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Recommends: lib@PVER@-stdlib
 Conflicts: binfmt-support (<< 1.1.2)
+Replaces: lib@PPVER@-minimal, lib@PPPVER@-minimal
+Breaks: lib@PPVER@-minimal, lib@PPPVER@-minimal
 Description: Minimal subset of the Python language (version @VER@)
  This package contains some essential modules. It is normally not
  used on it's own, but as a dependency of @PVER@-minimal.
@@ -174,12 +182,14 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: lib@PVER@
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Section: libs
 Priority: @PRIO@
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-stdlib (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Replaces: lib@PPVER@, lib@PPPVER@
+Breaks: lib@PPVER@, lib@PPPVER@
 Description: Shared Python runtime library (version @VER@)
  Python is a high-level, interactive, object-oriented language. Its @VER@ version
  includes an extensive class library with lots of goodies for
@@ -212,10 +222,12 @@ Description: Examples for the Python language (v@VER@)
  the upstream Python distribution (v@VER@).
 
 Package: @PVER@-dev
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Depends: @PVER@ (= ${binary:Version}), lib@PVER@-dev (= ${binary:Version}), lib@PVER@ (= ${binary:Version}), libexpat1-dev, ${shlibs:Depends}, ${misc:Depends}
 Recommends: libc6-dev | libc-dev
+Replaces: @PPVER@-dev, @PPPVER@-dev
+Breaks: @PPVER@-dev, @PPPVER@-dev
 Description: Header files and a static library for Python (v@VER@)
  Header files, a static library and development tools for building
  Python (v@VER@) modules, extending the Python interpreter or embedding
@@ -241,11 +253,13 @@ Description: transitional package
 
 Package: lib@PVER@-dev
 Section: libdevel
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-stdlib (= ${binary:Version}), lib@PVER@ (= ${binary:Version}), libexpat1-dev, ${shlibs:Depends}, ${misc:Depends}
 Recommends: libc6-dev | libc-dev
+Replaces: lib@PPVER@-dev, lib@PPPVER@-dev
+Breaks: lib@PPVER@-dev, lib@PPPVER@-dev
 Description: Header files and a static library for Python (v@VER@)
  Header files, a static library and development tools for building
  Python (v@VER@) modules, extending the Python interpreter or embedding
@@ -277,6 +291,8 @@ Section: libdevel
 Architecture: all
 Depends: @PVER@ (>= ${binary:Version}), ${misc:Depends}, net-tools
 Suggests: python3.8-gdbm, python3.8-tk
+Replaces: lib@PPVER@-testsuite, lib@PPPVER@-testsuite
+Breaks: lib@PPVER@-testsuite, lib@PPPVER@-testsuite
 Description: Testsuite for the Python standard library (v@VER@)
  The complete testsuite for the Python standard library.  Note that
  a subset is found in the lib@PVER@-stdlib package, which should
@@ -306,6 +322,8 @@ Depends: @PVER@, @PVER@-tk,
   ${misc:Depends},
   libjs-mathjax,
 Enhances: @PVER@
+Replaces: idle-@PPVER@, idle-@PPPVER@
+Breaks: idle-@PPVER@, idle-@PPPVER@
 Description: IDE for Python (v@VER@) using Tkinter
  IDLE is an Integrated Development Environment for Python (v@VER@).
  IDLE is written using Tkinter and therefore quite platform-independent.
@@ -332,6 +350,8 @@ Architecture: all
 Multi-Arch: foreign
 Depends: libjs-jquery, libjs-underscore, ${misc:Depends}
 Suggests: @PVER@
+Replaces: @PPVER@-doc
+Breaks: @PPVER@-doc
 Description: Documentation for the high-level object-oriented language Python (v@VER@)
  These is the official set of documentation for the interactive high-level
  object-oriented language Python (v@VER@). All documents are provided
@@ -366,11 +386,13 @@ Description: transitional package
 
 Package: @PVER@-dbg
 Section: debug
-Architecture: any
+Architecture: amd64
 Multi-Arch: allowed
 Depends: @PVER@ (= ${binary:Version}), lib@PVER@-dbg (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Recommends: gdb
 Suggests: python3.8-gdbm-dbg, python3.8-tk-dbg
+Replaces: @PPVER@-dbg
+Breaks: @PPVER@-dbg
 Description: Debug Build of the Python Interpreter (version @VER@)
  The package holds two things:
  .
@@ -399,10 +421,12 @@ Description: transitional package
 
 Package: lib@PVER@-dbg
 Section: debug
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Pre-Depends: ${misc:Pre-Depends}
 Depends: lib@PVER@-stdlib (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Replaces: lib@PPVER@-dbg, lib@PPPVER@-dbg
+Breaks: lib@PPVER@-dbg, lib@PPPVER@-dbg
 Description: Debug Build of the Python Interpreter (version @VER@)
  The package holds two things:
  .
@@ -410,16 +434,6 @@ Description: Debug Build of the Python Interpreter (version @VER@)
  - Debug information for standard python extensions.
  .
  See the README.debug for more information.
-
-Package: @PVER@-tk
-Architecture: any
-Multi-Arch: same
-Depends: @PVER@, ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
-Provides: ${python:Provides}
-Suggests: tix, @PVER@-tk-dbg
-Description: Tkinter - Writing Tk applications with Python (version @VER@)
- A module for writing portable GUI applications with Python (version @VER@)
- using Tk. Also known as Tkinter.
 
 Package: lib@PPVER@-dbg
 Depends: lib@PVER@-dbg, ${misc:Depends}
@@ -436,6 +450,16 @@ Priority: optional
 Section: oldlibs
 Description: transitional package
  This is a transitional package. It can safely be removed.
+
+Package: @PVER@-tk
+Architecture: any
+Multi-Arch: same
+Depends: @PVER@, ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
+Provides: ${python:Provides}
+Suggests: tix, @PVER@-tk-dbg
+Description: Tkinter - Writing Tk applications with Python (version @VER@)
+ A module for writing portable GUI applications with Python (version @VER@)
+ using Tk. Also known as Tkinter.
 
 Package: @PVER@-gdbm
 Architecture: any
