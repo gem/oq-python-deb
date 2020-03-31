@@ -819,7 +819,7 @@ else
 	$(MAKE) -C $(buildd_shared) install DESTDIR=$(CURDIR)/$(d)
 endif
 	mkdir -p $(d)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)
-	mv $(d)/opt/openquake/include/$(PVER)/pyconfig.h \
+	mv $(d)/opt/openquake/include/$(OPVER)/pyconfig.h \
 		$(d)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)/.
 	rm -f $(d)/$(scriptdir)/lib-dynload/*.py
 	ls -l $(d)/opt/openquake/$(scriptdir)/_sysconfigdata*
@@ -1289,7 +1289,7 @@ endif
 	done
 	cp -p $(buildd_debug)/pyconfig.h $(d_ldbg)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(PVER)d/
 	sed 's/@subdir@/$(PVER)d/;s/@header@/pyconfig.h/' \
-		debian/multiarch.h.in > $(d_ldbg)/opt/openquake/include/$(PVER)d/pyconfig.h
+		debian/multiarch.h.in > $(d_ldbg)/opt/openquake/include/$(OPVER)d/pyconfig.h
 
 	ln -sf $(OPVER).1.gz $(d_dbg)/opt/openquake/share/man/man1/$(OPVER)-dbg.1.gz
 
