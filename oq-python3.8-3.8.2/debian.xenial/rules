@@ -1388,7 +1388,7 @@ binary-indep: build-indep install stamps/stamp-control
 		/usr/share/doc/$(p_base)/html /usr/share/devhelp/books/$(OPVER)
 
 	# for i in $(p_ltst); do \
-        #   ls $(p_base) || true; \
+	#   ls $(p_base) || true; \
 	#   ls debian/$$i/opt/openquake/share/doc/$$i || true; \
 	#   ls -dl debian/$$i || true; \
 	#   ls -dl debian/liboq-python3.8-testsuite/opt/openquake/share/doc || true; \
@@ -1448,8 +1448,9 @@ ifneq ($(with_gdbm),yes)
 	rm -f $(d_lbase)/$(scriptdir)/lib-dynload/_gdbm*.so
 endif
 
-	find $(d_ldbg) $(d_ldev) -name '*.a' ! -type l \
-		| xargs -n 1 $(DEB_HOST_GNU_TYPE)-objcopy -p --remove-section=.gnu.lto_.*
+	# FIXME MN
+	# find $(d_ldbg) $(d_ldev) -name '*.a' ! -type l \
+	#		| xargs -n 1 $(DEB_HOST_GNU_TYPE)-objcopy -p --remove-section=.gnu.lto_.*
 	dh_strip -a -N$(p_dbg) -N$(p_ldbg) -Xdebug -Xdbg --dbg-package=$(p_dbg)
 	mkdir -p $(d_dbg)/opt/openquake/share/gdb/auto-load/usr/bin
 	cp Tools/gdb/libpython.py $(d_dbg)/opt/openquake/share/gdb/auto-load/usr/bin/$(OPVER)-gdb.py
