@@ -1460,7 +1460,7 @@ endif
 	ln -sf ../../bin/$(OPVER)-gdb.py \
 		$(d_dbg)/opt/openquake/share/gdb/auto-load/usr/lib/$(DEB_HOST_MULTIARCH)/lib$(OPVER).so.1.0-gdb.py
 	ln -sf ../../bin/$(OPVER)-gdb.py \
-		$(d_dbg)/usr/share/gdb/auto-load/usr/lib/$(DEB_HOST_MULTIARCH)/lib$(OPVER)d.so.1.0-gdb.py
+		$(d_dbg)/opt/openquake/share/gdb/auto-load/usr/lib/$(DEB_HOST_MULTIARCH)/lib$(OPVER)d.so.1.0-gdb.py
 	dh_link -a
 	dh_compress -a -X.py
 	dh_fixperms -a
