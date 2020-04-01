@@ -1387,10 +1387,14 @@ binary-indep: build-indep install stamps/stamp-control
 	dh_link -p$(p_doc) \
 		/usr/share/doc/$(p_base)/html /usr/share/devhelp/books/$(OPVER)
 
-	for i in $(p_ltst); do \
-	  rm -rf debian/$$i/usr/share/doc/$$i; \
-	  ln -s $(p_base) debian/$$i/usr/share/doc/$$i; \
-	done
+	# for i in $(p_ltst); do \
+        #   ls $(p_base) || true; \
+	#   ls debian/$$i/opt/openquake/share/doc/$$i || true; \
+	#   ls -dl debian/$$i || true; \
+	#   ls -dl debian/liboq-python3.8-testsuite/opt/openquake/share/doc || true; \
+	#   rm -rf debian/$$i/opt/openquake/share/doc/$$i; \
+	#   ln -s $(p_base) debian/$$i/opt/openquake/share/doc/$$i; \
+	# done
 
 	dh_installdebconf -i $(dh_args)
 	dh_installexamples -i $(dh_args)
