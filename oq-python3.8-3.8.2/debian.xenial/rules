@@ -1464,6 +1464,7 @@ endif
 	dh_link -a
 	dh_compress -a -X.py
 	dh_fixperms -a
+	find $(d_lmin) || true
 	chmod 644 $(d_lmin)/opt/openquake/$(scriptdir)/token.py
 
 	: # make python scripts starting with '#!' executable
