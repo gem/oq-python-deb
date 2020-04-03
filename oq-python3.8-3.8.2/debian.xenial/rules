@@ -912,6 +912,9 @@ endif
 		> $(d)/opt/openquake/$(scriptdir)/config-$(VER)-$(DEB_HOST_MULTIARCH)/Makefile
 
 	: # Move the minimal libraries into $(p_lmin).
+	echo "MN: test MIN_EXTS"
+	echo "$(MIN_EXTS)"
+	echo "MN: finish"
 	dh_installdirs -p$(p_lmin) \
 		etc/$(PVER) \
 		opt/openquake/bin \
