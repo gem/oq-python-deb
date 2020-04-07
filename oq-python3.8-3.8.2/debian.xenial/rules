@@ -820,7 +820,7 @@ else
 endif
 	mkdir -p $(d)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OPVER)
 	mv $(d)/opt/openquake/include/$(OPVER)/pyconfig.h \
-		$(d)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OqPVER)/.
+		$(d)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OPVER)/.
 	rm -f $(d)/opt/openquake$(scriptdir)/lib-dynload/*.py
 	ls -l $(d)/opt/openquake/$(scriptdir)/_sysconfigdata*
 	sed -i $(sysconfig_substflags) \
@@ -1136,7 +1136,7 @@ endif
 
 	mkdir -p $(d_idle)/opt/openquake/share/applications
 	cp -p debian/idle.desktop \
-		$(d_idle)/opt/openquake/share/applications/idle-$(PVER).desktop
+		$(d_idle)/opt/openquake/share/applications/idle-$(OPVER).desktop
 
 	: # those packages have own README.Debian's
 	install -m 644 -p debian/README.$(p_base) \
