@@ -820,7 +820,7 @@ else
 endif
 	mkdir -p $(d)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OPVER)
 	mv $(d)/opt/openquake/include/$(OPVER)/pyconfig.h \
-		$(d)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(PVER)/.
+		$(d)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OqPVER)/.
 	rm -f $(d)/opt/openquake$(scriptdir)/lib-dynload/*.py
 	ls -l $(d)/opt/openquake/$(scriptdir)/_sysconfigdata*
 	sed -i $(sysconfig_substflags) \
@@ -986,7 +986,7 @@ endif
 	sed -i \
 	    -e '/^Cflags:/s,$$, -I$${includedir}/$(DEB_HOST_MULTIARCH)/python$(VER),' \
 	    -e '/^libdir=/d;s/-L\$${libdir} *//' \
-		$(d_ldev)/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(OVER).pc
+		$(d_ldev)/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/pkgconfig/python-$(VER).pc
 
 	dh_link -p$(p_ldev) \
 	    /opt/openquake/lib/$(PVER)/config-$(VER)-$(DEB_HOST_MULTIARCH)/libpython$(VER).a \
@@ -1352,7 +1352,7 @@ ifeq ($(with_udeb),yes)
 		$(d_udeb)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OPVER)/
 	cp -p $(d_min)/opt/openquake/$(scriptdir)/site.py $(d_udeb)/opt/openquake/$(scriptdir)/
 	cp -p debian/sitecustomize.py $(d_udeb)/etc/$(PVER)/
-	dh_link -p$(p_udeb) /etc/$(OPVER)/sitecustomize.py \
+	dh_link -p$(p_udeb) /etc/$(PVER)/sitecustomize.py \
 		/opt/openquake/$(scriptdir)/sitecustomize.py
 endif
 
