@@ -769,7 +769,7 @@ stamps/stamp-control:
 	: # We have to prepare the various control files
 
 	for f in debian/*.in; do \
-	  f2=`echo $$f | sed "s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
+	  f2=`echo $$f | sed "s,OPVER,$(OPVER),g;s,PVER,$(PVER),g;s/@VER@/$(VER)/g;s,\.in$$,,"`; \
 	  if [ $$f2 != debian/control ]; then \
 	    sed -e "s/@OPVER@/$(OPVER)/g;s/@PVER@/$(PVER)/g;s/@VER@/$(VER)/g;s/@SVER@/$(SVER)/g" \
 		    -e "s/@PRIORITY@/$(PRIORITY)/g" \
