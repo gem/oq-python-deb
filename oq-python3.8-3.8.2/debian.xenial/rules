@@ -820,8 +820,8 @@ else
 endif
 	mkdir -p $(d)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OPVER)
 	mv $(d)/opt/openquake/include/$(OPVER)/pyconfig.h \
-		$(d)/usr/include/$(DEB_HOST_MULTIARCH)/$(PVER)/.
-	rm -f $(d)/$(scriptdir)/lib-dynload/*.py
+		$(d)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(PVER)/.
+	rm -f $(d)/opt/openquake$(scriptdir)/lib-dynload/*.py
 	ls -l $(d)/opt/openquake/$(scriptdir)/_sysconfigdata*
 	sed -i $(sysconfig_substflags) \
 		$(d)/opt/openquake/$(scriptdir)/_sysconfigdata__$(PLAT)_$(DEB_HOST_MULTIARCH).py
