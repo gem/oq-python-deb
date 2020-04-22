@@ -1,6 +1,6 @@
 oq-python3.8 (3.8.2-1+bionic5~gem01) bionic; urgency=medium
 
-  * Import new version of python 3.8.2 from Ubuntu bionic
+  * Import new version of python 3.8.2 from Ubuntu
 
  -- Matteo Nastasi (GEM Foundation) <nastasi@openquake.org>  Mon, 24 Feb 2020 14:29:42 +0000
 
