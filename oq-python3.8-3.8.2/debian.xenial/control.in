@@ -452,7 +452,7 @@ Description: transitional package
  This is a transitional package. It can safely be removed.
 
 Package: @PVER@-tk
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Depends: @PVER@, ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Provides: ${python:Provides}
@@ -462,7 +462,7 @@ Description: Tkinter - Writing Tk applications with Python (version @VER@)
  using Tk. Also known as Tkinter.
 
 Package: @PVER@-gdbm
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Depends: @PVER@, ${python:Depends}, ${shlibs:Depends}, ${misc:Depends}
 Provides: ${python:Provides}
@@ -472,7 +472,7 @@ Description: GNU dbm database support for Python (version @VER@)
  create or read GNU dbm database files with Python.
 
 Package: @PVER@-tk-dbg
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Priority: extra
 Section: debug
@@ -484,7 +484,7 @@ Description: Tkinter - Writing Tk applications with Python (version @VER@ debug 
  This package contains the extensions built for the Python debug interpreter.
 
 Package: @PVER@-gdbm-dbg
-Architecture: any
+Architecture: amd64
 Multi-Arch: same
 Priority: extra
 Section: debug
