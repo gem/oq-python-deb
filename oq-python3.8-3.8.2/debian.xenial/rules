@@ -1283,7 +1283,7 @@ endif
 	    /opt/openquake/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)d.so \
 		/opt/openquake/$(scriptdir)/config-$(VER)d-$(DEB_HOST_MULTIARCH)/libpython$(VER).so \
 	    /opt/openquake/$(scriptdir)/config-$(VER)d-$(DEB_HOST_MULTIARCH)/libpython$(VER)d.a \
-	    	/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)d.a
+		/opt/openquake/lib/$(DEB_HOST_MULTIARCH)/libpython$(VER)d.a
 
 	for i in $(d_ldev)/opt/openquake/include/$(OPVER)/*; do \
 	  i=$$(basename $$i); \
