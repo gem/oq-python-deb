@@ -313,9 +313,9 @@ PROFILE_EXCLUDES += \
 
 # TODO: update profiled-build.diff to support --next
 #       --next=20
-PROFILE_TASK = -m test.regrtest --pgo \
-	-x $(sort $(TEST_EXCLUDES) $(PROFILE_EXCLUDES))
-# PROFILE_TASK = -c '\'print\("skip test"\)\''
+#PROFILE_TASK = -m test.regrtest --pgo \
+#	-x $(sort $(TEST_EXCLUDES) $(PROFILE_EXCLUDES))
+PROFILE_TASK = -c '\'print\("skip test"\)\''
 
 stamps/stamp-build-static: stamps/stamp-configure-static
 	dh_testdir
@@ -1451,9 +1451,8 @@ ifneq ($(with_gdbm),yes)
 	rm -f $(d_lbase)/$(scriptdir)/lib-dynload/_gdbm*.so
 endif
 
-	# FIXME MN
-	# find $(d_ldbg) $(d_ldev) -name '*.a' ! -type l \
-	#		| xargs -n 1 $(DEB_HOST_GNU_TYPE)-objcopy -p --remove-section=.gnu.lto_.*
+	find $(d_ldbg) $(d_ldev) -name '*.a' ! -type l \
+			| xargs -n 1 $(DEB_HOST_GNU_TYPE)-objcopy -p --remove-section=.gnu.lto_.*
 	dh_strip -a -N$(p_dbg) -N$(p_ldbg) -Xdebug -Xdbg --dbg-package=$(p_dbg)
 	mkdir -p $(d_dbg)/opt/openquake/share/gdb/auto-load/usr/bin
 	cp Tools/gdb/libpython.py $(d_dbg)/opt/openquake/share/gdb/auto-load/usr/bin/$(OPVER)-gdb.py
@@ -1467,7 +1466,6 @@ endif
 	dh_link -a
 	dh_compress -a -X.py
 	dh_fixperms -a
-	find $(d_lmin) || true
 	chmod 644 $(d_lmin)/opt/openquake/$(scriptdir)/token.py
 
 	: # make python scripts starting with '#!' executable
