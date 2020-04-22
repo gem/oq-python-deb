@@ -821,7 +821,7 @@ endif
 	mkdir -p $(d)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OPVER)
 	mv $(d)/opt/openquake/include/$(OPVER)/pyconfig.h \
 		$(d)/opt/openquake/include/$(DEB_HOST_MULTIARCH)/$(OPVER)/.
-	rm -f $(d)/opt/openquake$(scriptdir)/lib-dynload/*.py
+	rm -f $(d)/opt/openquake/$(scriptdir)/lib-dynload/*.py
 	ls -l $(d)/opt/openquake/$(scriptdir)/_sysconfigdata*
 	sed -i $(sysconfig_substflags) \
 		$(d)/opt/openquake/$(scriptdir)/_sysconfigdata__$(PLAT)_$(DEB_HOST_MULTIARCH).py
@@ -868,7 +868,7 @@ endif
 	cp -p debian/pydoc.1 $(d)/opt/openquake/share/man/man1/pydoc$(VER).1
 	gzip $(d)/opt/openquake/share/man/man1/pydoc$(VER).1
 
-        : # Symlinks to /usr/bin for some tools
+	: # Symlinks to /usr/bin for some tools
 	ln -sf ../lib/python$(VER)/pdb.py $(d)/opt/openquake/bin/pdb$(VER)
 	cp -p debian/pdb.1 $(d)/opt/openquake/share/man/man1/pdb$(VER).1
 	gzip $(d)/opt/openquake/share/man/man1/pdb$(VER).1
@@ -913,9 +913,6 @@ endif
 		> $(d)/opt/openquake/$(scriptdir)/config-$(VER)-$(DEB_HOST_MULTIARCH)/Makefile
 
 	: # Move the minimal libraries into $(p_lmin).
-	echo "MN: test MIN_EXTS"
-	echo "$(MIN_EXTS)"
-	echo "MN: finish"
 	dh_installdirs -p$(p_lmin) \
 		etc/$(PVER) \
 		opt/openquake/bin \
