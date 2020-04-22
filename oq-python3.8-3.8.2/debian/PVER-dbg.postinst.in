@@ -3,7 +3,7 @@
 set -e
 
 if [ "$1" = configure ]; then
-    files=$(dpkg -L lib@PVER@-dbg@HOST_QUAL@ | sed -n '/^\/opt\/openquake\/lib\/@PVER@\/.*\.py$/p')
+    files=$(dpkg -L lib@PVER@-dbg@HOST_QUAL@ | sed -n '/^\/opt\/openquake\/lib\/@OPVER@\/.*\.py$/p')
     if [ -n "$files" ]; then
 	opt/openquake/bin/@OPVER@ -E -S /opt/openquake/lib/@OPVER@/py_compile.py $files
 	if grep -sq '^byte-compile[^#]*optimize' /etc/python/debian_config; then
