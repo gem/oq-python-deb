@@ -313,9 +313,9 @@ PROFILE_EXCLUDES += \
 
 # TODO: update profiled-build.diff to support --next
 #       --next=20
-#PROFILE_TASK = -m test.regrtest --pgo \
-#	-x $(sort $(TEST_EXCLUDES) $(PROFILE_EXCLUDES))
-PROFILE_TASK = -c '\'print\("skip test"\)\''
+PROFILE_TASK = -m test.regrtest --pgo \
+	-x $(sort $(TEST_EXCLUDES) $(PROFILE_EXCLUDES))
+# PROFILE_TASK = -c '\'print\("skip test"\)\''
 
 stamps/stamp-build-static: stamps/stamp-configure-static
 	dh_testdir
