@@ -1347,7 +1347,7 @@ binary-indep: build-indep install stamps/stamp-control
 		> ../$(d_doc)/usr/share/doc/$(p_base)/html/$(OPVER).devhelp
 	gzip -9nv $(d_doc)/usr/share/doc/$(p_base)/html/$(OPVER).devhelp
 	dh_link -p$(p_doc) \
-		/usr/share/doc/$(p_base)/html /usr/share/devhelp/books/$(OPVER)
+		/usr/share/doc/$(p_base)/html /usr/share/devhelp/books/$(PVER)
 
 	for i in $(p_ltst); do \
 	  rm -rf debian/$$i/usr/share/doc/$$i; \
