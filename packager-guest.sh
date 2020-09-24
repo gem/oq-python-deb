@@ -26,7 +26,7 @@ PKG_DIR=oq-python3.8-3.8.2
 #
 # original url: BASE_URL="https://launchpad.net/debian/+archive/primary/+files"
 BASE_URL="https://ftp.openquake.org/ubuntu-src"
-BUILD_UBUVER_REFERENCE="xenial"
+BUILD_UBUVER_REFERENCE="bionic"
 
 sudo apt-get -y --force-yes install git curl build-essential dpatch fakeroot devscripts equivs lintian quilt lsb-release
 
