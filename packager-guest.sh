@@ -20,7 +20,7 @@ if [ -n "$GEM_SET_DEBUG" -a "$GEM_SET_DEBUG" != "false" ]; then
     set -x
 fi
 
-PKG_DIR=oq-python3.8-3.8.2
+PKG_DIR=oq-python3.8-3.8.5
 
 # NOTE: this is the page for python 3.6: https://packages.ubuntu.com/source/bionic/python3.6
 #
@@ -31,15 +31,15 @@ BUILD_UBUVER_REFERENCE="bionic"
 sudo apt-get -y --force-yes install git curl build-essential dpatch fakeroot devscripts equivs lintian quilt lsb-release
 
 # for f in python3.6_3.6.5-3.debian.tar.xz python3.6_3.6.5-3.dsc python3.6_3.6.5.orig.tar.xz; do
-for f in python3.8_3.8.2.orig.tar.gz; do
+for f in python3.8_3.8.5.orig.tar.gz; do
     if [ -f "$f" ]; then
         continue
     fi
     curl -o "$f" -L "${BASE_URL}/${f}"
 done
 
-tar -xvf python3.8_3.8.2.orig.tar.gz -C "$PKG_DIR" --strip-components=1
-cp python3.8_3.8.2.orig.tar.gz oq-python3.8_3.8.2.orig.tar.gz
+tar -xvf python3.8_3.8.5.orig.tar.gz -C "$PKG_DIR" --strip-components=1
+cp python3.8_3.8.5.orig.tar.gz oq-python3.8_3.8.5.orig.tar.gz
 
 cd "$PKG_DIR"
 
