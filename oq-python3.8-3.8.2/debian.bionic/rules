@@ -864,8 +864,8 @@ endif
 	cp -p debian/pysetup3.1 $(d)/opt/openquake/share/man/man1/pysetup$(VER).1
 	gzip $(d)/opt/openquake/share/man/man1/pysetup$(VER).1
 	: # versioned install only
-	rm -f $(d)/opt/openquake/bin/{2to3,idle3,pydoc3,pysetup3,python3,python3-config}
-	rm -f $(d)/opt/openquake/lib/*/pkgconfig/python3{,-embed}.pc
+	: # rm -f $(d)/opt/openquake/bin/{2to3,idle3,pydoc3,pysetup3,python3,python3-config}
+	: # rm -f $(d)/opt/openquake/lib/*/pkgconfig/python3{,-embed}.pc
 
 	dh_installdirs -p$(p_lib) \
 		opt/openquake/lib/$(DEB_HOST_MULTIARCH) \
