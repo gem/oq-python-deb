@@ -1,4 +1,10 @@
-oq-python3.8 (3.8.5-1+bionic5~gem01) bionic; urgency=medium
+oq-python3.8 (3.8.5-2+bionic5~gem01) bionic; urgency=medium
+
+  * Fix bugs in xenial and bionic rules file
+
+ -- Matteo Nastasi (GEM Foundation) <nastasi@openquake.org>  Mon, 28 Sep 2020 16:47:21 +0000
+
+ooq-python3.8 (3.8.5-1+bionic5~gem01) bionic; urgency=medium
 
   * Import new version of python 3.8.5 from Ubuntu
 
