@@ -22,6 +22,16 @@ fi
 
 PKG_DIR=oq-python3.8-3.8.5
 
+action="$1"
+
+if [ "$action" = "buildfromsrc" ]; then
+    set -e
+    
+    # here the code
+
+    exit 0
+fi
+
 # NOTE: this is the page for python 3.6: https://packages.ubuntu.com/source/bionic/python3.6
 #
 # original url: BASE_URL="https://launchpad.net/debian/+archive/primary/+files"

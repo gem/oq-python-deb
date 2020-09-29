@@ -296,6 +296,82 @@ _build_innervm_run () {
 
 
 #
+#  _build_innervm_run <lxc_ip> <branch>
+#
+#      <lxc_ip>   the IP address of lxc instance
+#      <branch>   name of the tested branch
+#
+_buildfromsrc_innervm_run () {
+    local lxc_ip="$1" branch="$2"
+    local i old_ifs pkgs_list dep
+
+    trap 'local LASTERR="$?" ; trap ERR ; (exit $LASTERR) ; return' ERR
+
+    ssh "$lxc_ip" "rm -f ssh.log"
+
+    ssh "$lxc_ip" "sudo apt-get update"
+    ssh "$lxc_ip" "sudo apt-get -y upgrade"
+    gpg -a --export | ssh "$lxc_ip" "sudo apt-key add -"
+
+#    add_custom_pkg_repo
+
+    ssh "$lxc_ip" "sudo apt-get upgrade -y"
+
+    if [ -f _jenkins_deps_info ]; then
+        source _jenkins_deps_info
+    fi
+
+    dt="$(cat gem_date_file)"
+
+    
+    # HERE RETRIEVE SOURCE TO BUILD BINARIES
+    # ~/monotone/xenial/source/
+    # oq-python3.8_3.8.5-2~xenial01~dev1601370504+9375508_source.changes
+    # oq-python3.8_3.8.5-2~xenial01~dev1601370504+9375508.dsc
+    # oq-python3.8_3.8.5-2~xenial01~dev1601370504+9375508.debian.tar.xz
+    # oq-python3.8_3.8.5.orig.tar.gz
+
+    # install sources of this package
+    cw="$(pwd)"
+    cwb="$(basename "$cw")"
+    cd ..
+    scp -r "$cwb" "$lxc_ip:${GEM_GIT_PACKAGE}"
+    cd -
+
+    #    git archive --prefix "${GEM_GIT_PACKAGE}/" HEAD | ssh "$lxc_ip" "tar xv"
+
+    # configure the machine to run tests
+    if [ -z "$GEM_DEVTEST_SKIP_TESTS" ]; then
+        echo "TODO: tests management"
+    fi
+
+    ssh -t "$lxc_ip" "
+        set -e
+        export GEM_DEB_PACKAGE=\"$GEM_DEB_PACKAGE\"
+        export BUILD_UBUVER=\"$BUILD_UBUVER\"
+        export dt=\"$dt\"
+        export DEBEMAIL=\"$DEBEMAIL\"
+        export DEBFULLNAME=\"$DEBFULLNAME\"
+        export GEM_SET_DEBUG=\"$GEM_SET_DEBUG\"
+        export DEB_BUILD_OPTIONS=\"noopt notest nocheck nobench parallel=16\"
+        export BUILD_SOURCES_COPY=\"$BUILD_SOURCES_COPY\"
+        export UNSIGN_ARGS=\"$UNSIGN_ARGS\"
+        export BUILD_DEVEL=\"$BUILD_DEVEL\"
+
+        cd \"${GEM_GIT_PACKAGE}\"
+        ./packager-guest.sh buildfromsrc"
+
+    # scp "$lxc_ip:${GEM_GIT_PACKAGE}/oq-*.{tar.?z,changes,dsc,buildinfo}" "${GEM_BUILD_ROOT}" || true
+    scp "$lxc_ip:${GEM_GIT_PACKAGE}/*.deb" "${GEM_BUILD_ROOT}" || true
+
+    trap ERR
+
+    return
+}
+
+
+
+#
 #  build_run <branch> - main function to build on LXC machine
 #      <branch>    name of the tested branch
 #
@@ -330,6 +406,121 @@ build_run () {
     _wait_ssh "$lxc_ip"
     set +e
     _build_innervm_run "$lxc_ip" "$branch"
+    inner_ret=$?
+    if [ "$GEM_WAIT_BEFORE_DESTROY" ]; then
+        sleep 20000 || true
+    fi
+    sudo $LXC_TERM -n "$lxc_name"
+
+    if [ $inner_ret -ne 0 ]; then
+        return $inner_ret
+    fi
+
+    set -e
+    commit="$(git log --pretty='format:%h' -1)"
+
+    #
+    #  prepare repo and install $GEM_DEB_PACKAGE package
+    cd ${GEM_BUILD_ROOT}
+    dpkg-scanpackages . /dev/null >Packages
+    cat Packages | gzip -9c > Packages.gz
+    dpkg-scansources . > Sources
+    cat Sources | gzip > Sources.gz
+    cat > Release <<EOF
+Origin: openquake-${BUILD_UBUVER}
+Label: OpenQuake Local Ubuntu Repository
+Codename: $BUILD_UBUVER
+Date: $(date -R -u)
+Architectures: amd64
+Components: main
+Description: OpenQuake Local Ubuntu Repository
+SHA256:
+EOF
+    ( printf ' '"$(sha256sum Packages | cut --delimiter=' ' --fields=1)"' %16d Packages\n' \
+             "$(wc --bytes Packages | cut --delimiter=' ' --fields=1)"
+      printf ' '"$(sha256sum Packages.gz | cut --delimiter=' ' --fields=1)"' %16d Packages.gz\n' \
+             "$(wc --bytes Packages.gz | cut --delimiter=' ' --fields=1)"
+      printf ' '"$(sha256sum Sources | cut --delimiter=' ' --fields=1)"' %16d Sources\n' \
+             "$(wc --bytes Sources | cut --delimiter=' ' --fields=1)"
+      printf ' '"$(sha256sum Sources.gz | cut --delimiter=' ' --fields=1)"' %16d Sources.gz\n' \
+             "$(wc --bytes Sources.gz | cut --delimiter=' ' --fields=1)" ) >> Release
+    gpg --armor --detach-sign --output Release.gpg --local-user "$DEBFULLNAME" Release
+    cd -
+
+    #
+    # in build Ubuntu package each branch package is saved in a separated
+    # directory with a well known name syntax to be able to use
+    # correct dependencies during the "test Ubuntu package" procedure
+    #
+    if [ "$BUILD_REPOSITORY" -eq 1 -a -d "${GEM_DEB_REPO}" ]; then
+        if [ "$branch" != "" ]; then
+            repo_id="$(repo_id_get)"
+            if [ "git://$repo_id" != "$GEM_GIT_REPO" -o "$branch" != "$GEM_MASTER_BRANCH" ]; then
+                CUSTOM_SERIE="devel/$(echo "$repo_id" | sed "s@/@__@g;s/\./-/g")__${branch}"
+                if [ "$CUSTOM_SERIE" != "" ]; then
+                    GEM_DEB_SERIE="$CUSTOM_SERIE"
+                fi
+            fi
+        fi
+        mkdir -p "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}"
+        repo_tmpdir="$(mktemp -d "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}.XXXXXX")"
+
+        # if the monotone directory exists and is the "gem" repo and is the "master" branch then ...
+        if [ -d "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary" ]; then
+            if [ "git://$repo_id" == "$GEM_GIT_REPO" -a "$branch" == "$GEM_MASTER_BRANCH" ]; then
+                cp ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.deb \
+                   ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.changes \
+                    ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.dsc ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.tar.?z \
+                    "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary"
+                cp ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.buildinfo \
+                    "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary" || true
+                PKG_COMMIT="$(git rev-parse HEAD | cut -c 1-7)"
+                grep '_COMMIT' _jenkins_deps_info \
+                  | sed 's/\(^.*=[0-9a-f]\{7\}\).*/\1/g' \
+                  > "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/${GEM_DEB_PACKAGE}_${PKG_COMMIT}_deps.txt"
+            fi
+        fi
+
+        cp ${GEM_BUILD_ROOT}/*.deb ${GEM_BUILD_ROOT}/*.changes \
+           ${GEM_BUILD_ROOT}/*.dsc ${GEM_BUILD_ROOT}/*.tar.?z ${GEM_BUILD_ROOT}/*.buildinfo \
+           ${GEM_BUILD_ROOT}/Packages* ${GEM_BUILD_ROOT}/Sources* \
+           ${GEM_BUILD_ROOT}/Release* "${repo_tmpdir}" || true
+
+        if [ "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}" ]; then
+            rm -rf "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}"
+        fi
+        mv "${repo_tmpdir}" "${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}"
+        echo "The package is saved here: ${GEM_DEB_REPO}/${BUILD_UBUVER}/${GEM_DEB_SERIE}/${GEM_DEB_PACKAGE}.${commit}"
+    fi
+
+    return $inner_ret
+}
+
+
+#
+#  build_run <branch> - main function to build on LXC machine
+#      <branch>    name of the tested branch
+#
+buildfromsrc_run () {
+    local branch="$1"
+#    local dep dep_item dep_type old_ifs branch_cur
+
+
+    #
+    #  dependencies repos
+    #
+    # in test sources different repositories and branches can be tested
+    # consistently: for each openquake dependency it try to use
+    # the same repository and the same branch OR the gem repository
+    # and the same branch OR the gem repository and the "master" branch
+    #
+
+    sudo ${GEM_EPHEM_EXE} 2>&1 | tee /tmp/packager.eph.$$.log &
+    _lxc_name_and_ip_get /tmp/packager.eph.$$.log
+
+    _wait_ssh "$lxc_ip"
+    set +e
+    _buildfromsrc_innervm_run "$lxc_ip" "$branch"
     inner_ret=$?
     if [ "$GEM_WAIT_BEFORE_DESTROY" ]; then
         sleep 20000 || true
@@ -485,6 +676,10 @@ while [ $# -gt 0 ]; do
             build_run "$(echo "$2" | sed 's@.*/@@g')"
             break
             ;;
+
+        buildfromsrc)
+            buildfromsrc_run "$(echo "$2" | sed 's@.*/@@g')"
+            break
 
         *)
             usage 1
