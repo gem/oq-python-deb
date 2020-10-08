@@ -337,7 +337,8 @@ _buildfromsrc_innervm_run () {
         pkg_base="$(echo "$pkg_dsc" | sed 's/.dsc$//g')"
         pkg_changes="${pkg_bass}_source.changes"
         pkg_debarch="${pkg_base}.debian.tar.xz"
-        pkg_orig="$(echo "$pkg_dsc" | sed "s/^\(${GEM_DEB_PACKAGE}[^-]\+\)-.*/\1/g").orig.tar.gz"
+        pkg_orig="${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/source"
+        pkg_orig="${pkg_orig}/$(basename "$pkg_dsc" | sed "s/\(${GEM_DEB_PACKAGE}[^\-]\+\)-.*/\1/g").orig.tar.gz"
         if [ ! -e "$pkg_dsc" -o ! -e "$pkg_changes" -o ! -e "$pkg_debarch" -o ! -e "$pkg_orig" ]; then
             exit 3
         fi
