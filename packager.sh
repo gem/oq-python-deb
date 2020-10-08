@@ -687,7 +687,7 @@ while [ $# -gt 0 ]; do
         buildfromsrc)
             buildfromsrc_run "$(echo "$2" | sed 's@.*/@@g')"
             break
-
+            ;;
         *)
             usage 1
     esac
