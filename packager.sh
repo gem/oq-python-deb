@@ -335,7 +335,7 @@ _buildfromsrc_innervm_run () {
         PKG_COMMIT="$(git rev-parse HEAD | cut -c 1-7)"
         pkg_dsc="$(ls ${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/source/${GEM_DEB_PACKAGE}_*~dev${dt}+${PKG_COMMIT}.dsc)"
         pkg_base="$(echo "$pkg_dsc" | sed 's/.dsc$//g')"
-        pkg_changes="${pkg_bass}_source.changes"
+        pkg_changes="${pkg_base}_source.changes"
         pkg_debarch="${pkg_base}.debian.tar.xz"
         pkg_orig="${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/source"
         pkg_orig="${pkg_orig}/$(basename "$pkg_dsc" | sed "s/\(${GEM_DEB_PACKAGE}[^\-]\+\)-.*/\1/g").orig.tar.gz"
