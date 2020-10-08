@@ -346,7 +346,7 @@ _buildfromsrc_innervm_run () {
         echo "FOR PRODUCTION"
     fi
 
-    scp packager-guest.sh "$pkg_dsc" "$pkg_changes" "$pkg_debarch" "$pkg_orig" "$lxc_ip"
+    scp packager-guest.sh "$pkg_dsc" "$pkg_changes" "$pkg_debarch" "$pkg_orig" "${lxc_ip}:"
 
     # configure the machine to run tests
     if [ -z "$GEM_DEVTEST_SKIP_TESTS" ]; then
