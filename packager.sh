@@ -323,22 +323,29 @@ _buildfromsrc_innervm_run () {
 
     dt="$(cat gem_date_file)"
 
-    
-    # HERE RETRIEVE SOURCE TO BUILD BINARIES
-    # ~/monotone/xenial/source/
-    # oq-python3.8_3.8.5-2~xenial01~dev1601370504+9375508_source.changes
-    # oq-python3.8_3.8.5-2~xenial01~dev1601370504+9375508.dsc
-    # oq-python3.8_3.8.5-2~xenial01~dev1601370504+9375508.debian.tar.xz
-    # oq-python3.8_3.8.5.orig.tar.gz
 
-    # install sources of this package
-    cw="$(pwd)"
-    cwb="$(basename "$cw")"
-    cd ..
-    scp -r "$cwb" "$lxc_ip:${GEM_GIT_PACKAGE}"
-    cd -
+    if [ $BUILD_DEVEL -eq 1 ]; then
+        # HERE RETRIEVE SOURCE TO BUILD BINARIES
+        # ~/monotone/xenial/source/
+        # oq-python3.8_3.8.5-2~xenial01~dev1601370504+9375508_source.changes
+        # oq-python3.8_3.8.5-2~xenial01~dev1601370504+9375508.dsc
+        # oq-python3.8_3.8.5-2~xenial01~dev1601370504+9375508.debian.tar.xz
+        # oq-python3.8_3.8.5.orig.tar.gz
 
-    #    git archive --prefix "${GEM_GIT_PACKAGE}/" HEAD | ssh "$lxc_ip" "tar xv"
+        PKG_COMMIT="$(git rev-parse HEAD | cut -c 1-7)"
+        pkg_dsc="$(ls ${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/source/${GEM_DEB_PACKAGE}_*~dev${dt}+${PKG_COMMIT}.dsc)"
+        pkg_base="$(echo "$pkg_dsc" | sed 's/.dsc$//g')"
+        pkg_changes="${pkg_bass}_source.changes"
+        pkg_debarch="${pkg_base}.debian.tar.xz"
+        pkg_orig="$(echo "$pkg_dsc" | sed 's/-.*//g').orig.tar.gz"
+        if [ ! -e "$pkg_dsc" -o ! -e "$pkg_changes" -o ! -e "$pkg_debarch" -o ! -e "$pkg_orig" ]; then
+            exit 3
+        fi
+    else
+        echo "FOR PRODUCTION"
+    fi
+
+    scp packager-guest.sh "$pkg_dsc" "$pkg_changes" "$pkg_debarch" "$pkg_orig" "$lxc_ip"
 
     # configure the machine to run tests
     if [ -z "$GEM_DEVTEST_SKIP_TESTS" ]; then
