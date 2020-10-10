@@ -365,7 +365,7 @@ _buildfromsrc_innervm_run () {
         export BUILD_SOURCES_COPY=\"$BUILD_SOURCES_COPY\"
         export UNSIGN_ARGS=\"$UNSIGN_ARGS\"
         export BUILD_DEVEL=\"$BUILD_DEVEL\"
-
+        export PKG_DSC=\"$pkg_dsc\"
         ./packager-guest.sh buildfromsrc"
 
     # scp "$lxc_ip:${GEM_GIT_PACKAGE}/oq-*.{tar.?z,changes,dsc,buildinfo}" "${GEM_BUILD_ROOT}" || true
