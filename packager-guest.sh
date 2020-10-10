@@ -26,7 +26,15 @@ action="$1"
 
 if [ "$action" = "buildfromsrc" ]; then
     set -e
-    
+    sudo apt-get -y --force-yes install git curl build-essential dpatch fakeroot devscripts equivs lintian quilt lsb-release
+    sudo apt-get install dpkg-dev
+    sudo apt-get install equivs
+    sudo apt-get install build-essential pbuilder
+
+    dpkg-source -x "$PKG_DSC"
+    cd "$GEM_DEB_PACKAGE"
+    mk-build-deps debian/control --install --root-cmd sudo --remove
+    debuild -i -b
     # here the code
 
     exit 0
