@@ -31,7 +31,7 @@ if [ "$action" = "buildfromsrc" ]; then
     sudo apt-get install equivs
     sudo apt-get install build-essential pbuilder
 
-    dpkg-source -x "$PKG_DSC"
+    dpkg-source -x $(basename "$PKG_DSC")
     cd "$GEM_DEB_PACKAGE"
     mk-build-deps debian/control --install --root-cmd sudo --remove
     debuild -i -b
