@@ -32,7 +32,7 @@ if [ "$action" = "buildfromsrc" ]; then
     sudo apt-get install build-essential pbuilder
 
     dpkg-source -x $(basename "$PKG_DSC")
-    cd "$GEM_DEB_PACKAGE"
+    cd "$PKG_DIR"
     mk-build-deps debian/control --install --root-cmd sudo --remove
     debuild -i -b
     # here the code
