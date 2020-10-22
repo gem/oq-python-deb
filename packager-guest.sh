@@ -33,7 +33,7 @@ if [ "$action" = "buildfromsrc" ]; then
 
     dpkg-source -x $(basename "$PKG_DSC")
     cd "$PKG_DIR"
-    mk-build-deps debian/control --install --root-cmd sudo --remove
+    echo | mk-build-deps debian/control --install --root-cmd sudo --remove
     debuild -i -b
     # here the code
 
