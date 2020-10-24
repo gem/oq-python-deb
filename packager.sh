@@ -506,13 +506,24 @@ EOF
 
 
 #
-#  build_run <branch> - main function to build on LXC machine
+#  buildfromsrc_run <branch> - main function to build on LXC machine
 #      <branch>    name of the tested branch
 #
 buildfromsrc_run () {
     local branch="$1"
-#    local dep dep_item dep_type old_ifs branch_cur
+    #    local dep dep_item dep_type old_ifs branch_cur
 
+    if [ ! -d "out_${BUILD_UBUVER}" ]; then
+        mkdir "out_${BUILD_UBUVER}"
+    fi
+
+    if [ ! -d "${GEM_BUILD_ROOT}" ]; then
+        mkdir "${GEM_BUILD_ROOT}"
+    fi
+
+    if [ ! -d _jenkins_deps ]; then
+        mkdir _jenkins_deps
+    fi
 
     #
     #  dependencies repos
