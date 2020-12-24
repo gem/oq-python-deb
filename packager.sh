@@ -693,11 +693,19 @@ while [ $# -gt 0 ]; do
         build)
             # Sed removes 'origin/' from the branch name
             build_run "$(echo "$2" | sed 's@.*/@@g')"
+            ret=$?
+            if [ $ret -ne 0 ]; then
+                exit $ret
+            fi
             break
             ;;
 
         buildfromsrc)
             buildfromsrc_run "$(echo "$2" | sed 's@.*/@@g')"
+            ret=$?
+            if [ $ret -ne 0 ]; then
+                exit $ret
+            fi
             break
             ;;
         *)
