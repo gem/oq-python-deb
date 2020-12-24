@@ -27,9 +27,7 @@ action="$1"
 if [ "$action" = "buildfromsrc" ]; then
     set -e
     sudo apt-get -y --force-yes install git curl build-essential dpatch fakeroot devscripts equivs lintian quilt lsb-release
-    sudo apt-get install dpkg-dev
-    sudo apt-get install equivs
-    sudo apt-get install build-essential pbuilder
+    sudo apt-get -y --force-yes install dpkg-dev equivs pbuilder
 
     mkdir "$GEM_GIT_PACKAGE"
     cd "$GEM_GIT_PACKAGE"
