@@ -24,7 +24,6 @@ GEM_GIT_REPO="git://github.com/gem"
 GEM_GIT_PACKAGE="oq-python-deb"
 
 GEM_DEB_PACKAGE="oq-python3.8"
-GEM_DEB_SERIE="master"
 if [ -z "$GEM_DEB_REPO" ]; then
     GEM_DEB_REPO="$HOME/gem_ubuntu_repo"
 fi
@@ -35,6 +34,9 @@ fi
 
 if [ -z "$GEM_MASTER_BRANCH" ]; then
     export GEM_MASTER_BRANCH="master"
+    GEM_DEB_SERIE="master"
+else
+    GEM_DEB_SERIE="$GEM_MASTER_BRANCH"
 fi
 
 GEM_BUILD_ROOT="build-deb"
