@@ -603,9 +603,9 @@ EOF
         if [ -d "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary" ]; then
             if [ "git://$repo_id" == "$GEM_GIT_REPO" -a "$branch" == "$GEM_MASTER_BRANCH" ]; then
                 cp ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.deb \
+                   "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary"
 #                   ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.changes \
 #                    ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.dsc ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.tar.?z \
-                    "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary"
                 cp ${GEM_BUILD_ROOT}/${GEM_DEB_PACKAGE}_*.buildinfo \
                     "${GEM_DEB_MONOTONE}/${BUILD_UBUVER}/binary" || true
                 PKG_COMMIT="$(git rev-parse HEAD | cut -c 1-7)"
