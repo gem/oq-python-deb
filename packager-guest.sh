@@ -20,29 +20,53 @@ if [ -n "$GEM_SET_DEBUG" -a "$GEM_SET_DEBUG" != "false" ]; then
     set -x
 fi
 
-PKG_DIR=oq-python3.6-3.6.5
+PKG_DIR=oq-python3.8-3.8.5
+
+action="$1"
+
+if [ "$action" = "buildfromsrc" ]; then
+    set -e
+    sudo apt-get -y --force-yes install git curl build-essential dpatch fakeroot devscripts equivs lintian quilt lsb-release
+    sudo apt-get -y --force-yes install dpkg-dev equivs pbuilder
+
+    mkdir "$GEM_GIT_PACKAGE"
+    cd "$GEM_GIT_PACKAGE"
+    dpkg-source -x ../$(basename "$PKG_DSC")
+    cd "$PKG_DIR"
+    echo | mk-build-deps debian/control --install --root-cmd sudo --remove
+    debuild -i -b
+    # here the code
+
+    exit 0
+fi
 
 # NOTE: this is the page for python 3.6: https://packages.ubuntu.com/source/bionic/python3.6
 #
 # original url: BASE_URL="https://launchpad.net/debian/+archive/primary/+files"
 BASE_URL="https://ftp.openquake.org/ubuntu-src"
-BUILD_UBUVER_REFERENCE="xenial"
+BUILD_UBUVER_REFERENCE="bionic"
 
 sudo apt-get -y --force-yes install git curl build-essential dpatch fakeroot devscripts equivs lintian quilt lsb-release
 
-for f in python3.6_3.6.5-3.debian.tar.xz python3.6_3.6.5-3.dsc python3.6_3.6.5.orig.tar.xz; do
+# for f in python3.6_3.6.5-3.debian.tar.xz python3.6_3.6.5-3.dsc python3.6_3.6.5.orig.tar.xz; do
+for f in python3.8_3.8.5.orig.tar.gz; do
     if [ -f "$f" ]; then
         continue
     fi
     curl -o "$f" -L "${BASE_URL}/${f}"
 done
 
-tar -xvf python3.6_3.6.5.orig.tar.xz -C "$PKG_DIR" --strip-components=1
-cp python3.6_3.6.5.orig.tar.xz oq-python3.6_3.6.5.orig.tar.xz
+tar -xvf python3.8_3.8.5.orig.tar.gz -C "$PKG_DIR" --strip-components=1
+cp python3.8_3.8.5.orig.tar.gz oq-python3.8_3.8.5.orig.tar.gz
 
 cd "$PKG_DIR"
 
 UBUNTU_SERIE="$(lsb_release -s -c)"
+if [ -d debian.${UBUNTU_SERIE} ]; then
+    cp -r debian.${UBUNTU_SERIE}/* debian/
+fi
+rm -rf debian.*
+
 sed -i "/^${GEM_DEB_PACKAGE}.*/s/${BUILD_UBUVER_REFERENCE}/${UBUNTU_SERIE}/g" debian/changelog
 
 export GEM_DEBIAN_INSTALL_LAYOUT=deb

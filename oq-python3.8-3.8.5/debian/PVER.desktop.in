@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=OpenQuake Python (v@VER@)
+Comment=Openquake Python Interpreter (v@VER@)
+Exec=/opt/openquake/bin/@PVER@
+Icon=/usr/share/pixmaps/@PVER@.xpm
+Terminal=true
+Type=Application
+Categories=Development;
+StartupNotify=true
+NoDisplay=true
