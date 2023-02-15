@@ -763,7 +763,7 @@ clean: control-file
 	    rm -f $$f2; \
 	  fi; \
 	done
-
+	if [ -f ./Lib/ensurepip/_bundled/setuptools-47.1.0-py3-none-any.whl ]; then rm ./Lib/ensurepip/_bundled/setuptools-47.1.0-py3-none-any.whl; fi
 	dh_clean
 
 stamps/stamp-control:

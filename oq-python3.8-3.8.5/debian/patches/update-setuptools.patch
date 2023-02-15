@@ -1,0 +1,13 @@
+Index: oq-python3.8-3.8.5/Lib/ensurepip/__init__.py
+===================================================================
+--- oq-python3.8-3.8.5.orig/Lib/ensurepip/__init__.py
++++ oq-python3.8-3.8.5/Lib/ensurepip/__init__.py
+@@ -9,7 +9,7 @@ import tempfile
+ __all__ = ["version", "bootstrap"]
+ 
+ 
+-_SETUPTOOLS_VERSION = "47.1.0"
++_SETUPTOOLS_VERSION = "59.8.0"
+ 
+ _PIP_VERSION = "20.1.1"
+ 

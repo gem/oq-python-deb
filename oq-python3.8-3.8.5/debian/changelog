@@ -1,3 +1,9 @@
+oq-python3.8 (3.8.5-6+bionic5~gem01) bionic; urgency=medium
+
+  * Replace setuptools with 59.8.0 version
+
+ -- Matteo Nastasi (GEM Foundation) <nastasi@openquake.org>  Wed, 15 Feb 2023 09:04:47 +0000
+
 oq-python3.8 (3.8.5-2+bionic5~gem01) bionic; urgency=medium
 
   * Fix bugs in xenial and bionic rules file
