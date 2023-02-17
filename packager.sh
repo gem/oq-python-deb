@@ -20,7 +20,7 @@ if [ -n "$GEM_SET_DEBUG" -a "$GEM_SET_DEBUG" != "false" ]; then
     set -x
 fi
 set -e
-GEM_GIT_REPO="git://github.com/gem"
+GEM_GIT_REPO="git@github.com/gem"
 GEM_GIT_PACKAGE="oq-python-deb"
 
 GEM_DEB_PACKAGE="oq-python3.8"
